@@ -197,3 +197,45 @@ body {
         width: 100%;
     }
 }
+
+
+/* 留言气泡样式 */
+#messages-content ul {
+    list-style: none;
+    padding: 0;
+}
+
+#messages-content li {
+    background-color: #21262d; /* 气泡背景色 */
+    border-radius: 10px; /* 圆角 */
+    padding: 10px 15px;
+    margin-bottom: 10px;
+    max-width: 80%; /* 限制气泡宽度 */
+    word-wrap: break-word; /* 自动换行 */
+    position: relative;
+}
+
+#messages-content li strong {
+    color: #58a6ff; /* 用户名颜色 */
+    margin-right: 5px;
+}
+
+
+/* 滚动条样式 */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #161b22;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #30363d;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #444c56;
+}
