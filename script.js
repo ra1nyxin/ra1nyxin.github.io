@@ -5,7 +5,7 @@ const pageContents = {
             <p>这里是小雨的一个位于GitHub托管的小网站，欢迎喵！</p>
             <section class="card">
                 <h2>关于</h2>
-                <p>这个项目旨在展示如何使用纯前端技术创建一个具有现代感和响应式设计的网站。</p>
+                <p>这个项目旨在展示如何使用纯前端技术创建一个具有现代感和响应式设计的网站</p>
             </section>
             <section class="card">
                 <h2>功能</h2>
@@ -20,7 +20,7 @@ const pageContents = {
     notes: `
         <div class="container">
             <h1>笔记</h1>
-            <p>这里是我的笔记内容。</p>
+            <p>这里是我的笔记内容</p>
             <div id="git-commands-tutorial"></div>
             <div id="terminal-commands-tutorial"></div>
         </div>
@@ -28,10 +28,10 @@ const pageContents = {
     test: `
         <div class="container">
             <h1>测试页面</h1>
-            <p>这是一个用于测试的页面。</p>
+            <p>这是一个用于测试的页面</p>
             <section class="card">
                 <h2>测试区域</h2>
-                <p>你可以在这里进行各种测试。</p>
+                <p>你可以在这里进行各种测试</p>
             </section>
         </div>
     `,
@@ -51,10 +51,10 @@ const pageContents = {
     other: `
         <div class="container">
             <h1>其他</h1>
-            <p>这里是其他内容。</p>
+            <p>这里是其他内容</p>
             <section class="card">
                 <h2>更多信息</h2>
-                <p>敬请期待更多内容。</p>
+                <p>敬请期待更多内容</p>
             </section>
         </div>
     `
@@ -111,7 +111,7 @@ function loadContent(page) {
             loadMarkdownContent('notes_terminal_commands.md', 'terminal-commands-tutorial');
         }
     } else {
-        mainContent.innerHTML = `<div class="container"><h1>页面未找到</h1><p>您请求的页面不存在。</p></div>`;
+        mainContent.innerHTML = `<div class="container"><h1>页面未找到</h1><p>您请求的页面不存在</p></div>`;
     }
 }
 
@@ -137,8 +137,8 @@ function copyCode(button) {
             console.error('复制失败:', err);
         });
     } else {
-        console.error('无法找到要复制的代码块。');
+        console.error('无法找到要复制的代码块');
     }
 }
 
-console.log("网站已加载。");
+console.log("网站已加载");
