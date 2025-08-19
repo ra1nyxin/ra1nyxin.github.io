@@ -5,14 +5,14 @@ const pageContents = {
             <p>这里是小雨的一个位于GitHub托管的小网站，欢迎喵！</p>
             <section class="card">
                 <h2>关于</h2>
-                <p>这个项目旨在展示如何使用纯前端技术创建一个具有现代感和响应式设计的网站</p>
+                <p>一个平平无奇的小网站喵喵喵</p>
             </section>
             <section class="card">
-                <h2>功能</h2>
+                <h2>占位符</h2>
                 <ul>
-                    <li>深色主题</li>
-                    <li>顶部导航栏</li>
-                    <li>响应式布局</li>
+                    <li>占</li>
+                    <li>位</li>
+                    <li>符</li>
                 </ul>
             </section>
         </div>
@@ -140,5 +140,3 @@ function copyCode(button) {
         console.error('无法找到要复制的代码块');
     }
 }
-
-console.log("网站已加载");
