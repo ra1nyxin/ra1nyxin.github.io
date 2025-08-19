@@ -1,0 +1,199 @@
+/* 全局样式 */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+    margin: 0;
+    background-color: #0d1117; /* GitHub深色背景 */
+    color: #c9d1d9; /* GitHub深色文本颜色 */
+    line-height: 1.5;
+}
+
+.container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 16px;
+}
+
+/* 顶部导航栏 */
+.navbar {
+    background-color: #161b22; /* GitHub深色导航栏背景 */
+    padding: 16px 0;
+    border-bottom: 1px solid #21262d;
+}
+
+.navbar .container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.navbar-brand .logo {
+    color: #c9d1d9;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+}
+
+.navbar-brand .logo svg {
+    fill: #c9d1d9;
+    margin-right: 8px;
+}
+
+.navbar-nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+}
+
+.navbar-nav li {
+    margin-right: 16px;
+}
+
+.navbar-nav a {
+    color: #c9d1d9;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.navbar-nav a:hover {
+    color: #58a6ff; /* GitHub链接悬停颜色 */
+}
+
+.navbar-search input {
+    background-color: #0d1117;
+    border: 1px solid #30363d;
+    border-radius: 6px; /* 全圆角 */
+    padding: 8px 12px;
+    color: #c9d1d9;
+    width: 250px; /* 恢复宽度 */
+    font-size: 14px;
+    outline: none;
+}
+
+.navbar-search input::placeholder {
+    color: #8b949e;
+}
+
+.navbar-actions a {
+    color: #c9d1d9;
+    text-decoration: none;
+    margin-left: 16px;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.navbar-actions .avatar {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    vertical-align: middle;
+}
+
+/* 主要内容区域 */
+.content {
+    padding: 32px 0;
+}
+
+.content h1 {
+    color: #58a6ff;
+    margin-bottom: 16px;
+}
+
+.content p {
+    margin-bottom: 16px;
+}
+
+.card {
+    background-color: #161b22;
+    border: 1px solid #21262d;
+    border-radius: 6px;
+    padding: 24px;
+    margin-bottom: 24px;
+}
+
+.card h2 {
+    color: #c9d1d9;
+    margin-top: 0;
+    margin-bottom: 16px;
+    border-bottom: 1px solid #21262d;
+    padding-bottom: 8px;
+}
+
+.card ul {
+    list-style: none;
+    padding: 0;
+}
+
+.card li {
+    margin-bottom: 8px;
+}
+
+/* 代码块样式 */
+.code-block {
+    position: relative;
+    background-color: #0d1117;
+    border: 1px solid #30363d;
+    border-radius: 6px;
+    margin-bottom: 16px;
+    padding: 12px;
+    overflow-x: auto;
+}
+
+.code-block pre {
+    margin: 0;
+    padding-right: 40px; /* 为复制按钮留出空间 */
+}
+
+.code-block code {
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+    font-size: 12px;
+    color: #c9d1d9;
+}
+
+.code-block .copy-button {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background-color: #21262d;
+    color: #c9d1d9;
+    border: 1px solid #30363d;
+    border-radius: 6px;
+    padding: 4px 8px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: background-color 0.2s ease;
+}
+
+.code-block .copy-button:hover {
+    background-color: #30363d;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .navbar .container {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .navbar-brand,
+    .navbar-nav,
+    .navbar-search,
+    .navbar-actions {
+        width: 100%;
+        text-align: center;
+        margin-bottom: 10px;
+    }
+
+    .navbar-nav ul {
+        justify-content: center;
+    }
+
+    .navbar-nav li {
+        margin: 0 8px;
+    }
+
+    .navbar-search input {
+        width: 100%;
+    }
+}
