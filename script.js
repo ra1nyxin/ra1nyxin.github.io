@@ -22,10 +22,7 @@ const pageContents = {
             <h1>笔记</h1>
             <p>这里是我的笔记内容。</p>
             <div id="git-commands-tutorial"></div>
-            <section class="card">
-                <h2>第二篇笔记</h2>
-                <p>这是关于JavaScript的入门。</p>
-            </section>
+            <div id="terminal-commands-tutorial"></div>
         </div>
     `,
     test: `
@@ -111,6 +108,7 @@ function loadContent(page) {
         mainContent.innerHTML = pageContents[page];
         if (page === 'notes') {
             loadMarkdownContent('notes_git_commands.md', 'git-commands-tutorial');
+            loadMarkdownContent('notes_terminal_commands.md', 'terminal-commands-tutorial');
         }
     } else {
         mainContent.innerHTML = `<div class="container"><h1>页面未找到</h1><p>您请求的页面不存在。</p></div>`;
