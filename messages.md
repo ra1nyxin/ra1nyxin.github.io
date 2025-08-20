@@ -4,6 +4,7 @@
 
 - **ra1nyxin**: 喵喵喵 Owo
 - **helloworld**: 你好世界
+- **VincentZyu**: 你好。
 
 ---
 
@@ -49,3 +50,4 @@
     *   填写 PR 标题和描述，然后点击 `Create pull request`。
 
 您的留言将在审核通过后合并到主网站中。感谢您的贡献！
+
