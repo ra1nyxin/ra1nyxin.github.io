@@ -5,6 +5,7 @@
 - **ra1nyxin**: 喵喵喵 Owo
 - **helloworld**: 你好世界
 - **VincentZyu233**: 你好。
+- **lexibai**: 好硬核的留言方式<a onclick="alert('准备好了嘛~ 我要来入侵你的心咯~')">😜</a>
 
 ---
 
