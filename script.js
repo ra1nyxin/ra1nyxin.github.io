@@ -81,7 +81,7 @@ async function loadMarkdownContent(filePath, targetElementId) {
                             avatarImg.src = avatarUrl;
                             avatarImg.alt = `${username}'s GitHub Avatar`;
                             avatarImg.classList.add('github-avatar');
-                            listItem.insertBefore(avatarImg, strongTag);
+                            strongTag.parentNode.insertBefore(avatarImg, strongTag);
                         }
                     }
                 });
