@@ -5,6 +5,7 @@
 - **ra1nyxin**: 喵喵喵 Owo
 - **helloworld**: 你好世界
 - **VincentZyu233**: 你好。
+- **lexibai**: 好硬核的留言方式
 
 ---
 
