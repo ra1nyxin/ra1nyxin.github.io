@@ -71,7 +71,7 @@ async function loadMarkdownContent(filePath, targetElementId) {
 
             if (filePath === 'messages.md') {
                 // Process messages to add GitHub avatars
-                targetElement.querySelectorAll('li').forEach(listItem => {
+                targetElement.querySelectorAll('ul li').forEach(listItem => {
                     const strongTag = listItem.querySelector('strong');
                     if (strongTag) {
                         const username = strongTag.textContent.replace(':', '').trim();
