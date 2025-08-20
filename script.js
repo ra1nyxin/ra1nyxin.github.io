@@ -64,10 +64,29 @@ async function loadMarkdownContent(filePath, targetElementId) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
         const markdown = await response.text();
-        const html = marked.parse(markdown);
+        let html = marked.parse(markdown);
         const targetElement = document.getElementById(targetElementId);
         if (targetElement) {
             targetElement.innerHTML = html;
+
+            if (filePath === 'messages.md') {
+                // Process messages to add GitHub avatars
+                targetElement.querySelectorAll('li').forEach(listItem => {
+                    const strongTag = listItem.querySelector('strong');
+                    if (strongTag) {
+                        const username = strongTag.textContent.replace(':', '').trim();
+                        if (username) {
+                            const avatarUrl = `https://github.com/${username}.png`;
+                            const avatarImg = document.createElement('img');
+                            avatarImg.src = avatarUrl;
+                            avatarImg.alt = `${username}'s GitHub Avatar`;
+                            avatarImg.classList.add('github-avatar');
+                            listItem.insertBefore(avatarImg, strongTag);
+                        }
+                    }
+                });
+            }
+
             // Add copy buttons to code blocks after rendering
             targetElement.querySelectorAll('pre code').forEach(codeBlock => {
                 const preElement = codeBlock.parentNode;

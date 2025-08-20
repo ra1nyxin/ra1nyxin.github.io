@@ -239,3 +239,13 @@ body {
 ::-webkit-scrollbar-thumb:hover {
     background: #444c56;
 }
+
+/* GitHub 头像样式 */
+.github-avatar {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%; /* 使图片变为圆形 */
+    vertical-align: middle; /* 垂直居中对齐 */
+    margin-right: 8px; /* 与用户名之间留出一些间距 */
+    border: 1px solid #30363d; /* 添加一个细边框 */
+}
