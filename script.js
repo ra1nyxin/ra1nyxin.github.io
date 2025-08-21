@@ -150,6 +150,31 @@ function renderGallery() {
                 galleryItem.appendChild(folderInfo);
                 galleryGrid.appendChild(galleryItem);
             });
+
+            // Initialize Masonry after images are added
+            // imagesLoaded is usually included with Masonry CDN, or can be loaded separately
+            if (typeof imagesLoaded !== 'undefined') {
+                imagesLoaded(galleryGrid, function() {
+                    new Masonry(galleryGrid, {
+                        itemSelector: '.gallery-item',
+                        columnWidth: '.gallery-item', // Masonry will use the width of the first item
+                        gutter: 10, // Match gap from CSS
+                        percentPosition: true // Use percentage for columnWidth
+                    });
+                });
+            } else {
+                // Fallback if imagesLoaded is not available (less reliable)
+                console.warn('imagesLoaded not found. Masonry layout might be incorrect if images load slowly.');
+                setTimeout(() => {
+                    new Masonry(galleryGrid, {
+                        itemSelector: '.gallery-item',
+                        columnWidth: '.gallery-item',
+                        gutter: 10,
+                        percentPosition: true
+                    });
+                }, 500); // Give some time for images to load
+            }
+
         } else {
             galleryGrid.innerHTML = '<p>No images found in gallery. Please add images to the `img/` directory and push to GitHub to generate `gallery_data.js`.</p>';
         }

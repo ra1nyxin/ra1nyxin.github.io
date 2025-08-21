@@ -252,26 +252,15 @@ body {
 
 /* 图库布局样式 */
 .gallery-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* 响应式列，最小200px，最大1fr */
-    grid-auto-flow: dense; /* 尝试填充空白区域 */
-    gap: 10px; /* 网格间距 */
-}
-
-.gallery-grid img {
-    width: 100%;
-    height: auto; /* 允许高度自适应，保持图片比例 */
-    border-radius: 6px;
-    border: 1px solid #21262d;
-}
-
-@media (max-width: 768px) {
-    .gallery-grid {
-        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    }
+    /* Masonry will handle the layout, so remove grid properties */
+    /* display: block; */ /* Or just remove display: grid */
+    margin: 0 auto; /* Center the grid */
+    padding: 0; /* Remove padding if any */
 }
 
 .gallery-item {
+    width: calc(33.33% - 10px); /* Adjust based on desired columns and gutter */
+    margin-bottom: 10px; /* Gutter for Masonry */
     background-color: #161b22;
     border: 1px solid #21262d;
     border-radius: 6px;
@@ -294,4 +283,10 @@ body {
     font-size: 0.8em;
     color: #8b949e;
     margin-top: auto; /* Push to bottom if flex column */
+}
+
+@media (max-width: 768px) {
+    .gallery-item {
+        width: calc(50% - 10px); /* Two columns on smaller screens */
+    }
 }
