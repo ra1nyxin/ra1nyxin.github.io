@@ -144,7 +144,7 @@ function renderGallery() {
 
                 const folderInfo = document.createElement('p');
                 folderInfo.classList.add('gallery-folder-info');
-                folderInfo.textContent = `Folder: ${image.folder}`;
+                folderInfo.textContent = `Path: ${image.path}`;
 
                 galleryItem.appendChild(img);
                 galleryItem.appendChild(folderInfo);

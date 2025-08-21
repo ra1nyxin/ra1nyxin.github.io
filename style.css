@@ -254,13 +254,14 @@ body {
 .gallery-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* 响应式列，最小200px，最大1fr */
+    grid-auto-rows: minmax(100px, auto); /* 自动行高，最小100px，最大自适应 */
+    grid-auto-flow: dense; /* 尝试填充空白区域 */
     gap: 10px; /* 网格间距 */
 }
 
 .gallery-grid img {
     width: 100%;
-    height: 150px; /* 固定高度，或根据需要调整 */
-    object-fit: cover; /* 裁剪图片以填充容器，保持比例 */
+    height: auto; /* 允许高度自适应，保持图片比例 */
     border-radius: 6px;
     border: 1px solid #21262d;
 }
@@ -280,6 +281,7 @@ body {
     flex-direction: column;
     align-items: center;
     text-align: center;
+    height: auto; /* 确保高度自适应 */
 }
 
 .gallery-item img {
