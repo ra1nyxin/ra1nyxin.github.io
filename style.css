@@ -254,7 +254,6 @@ body {
 .gallery-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* 响应式列，最小200px，最大1fr */
-    grid-auto-rows: minmax(100px, auto); /* 自动行高，最小100px，最大自适应 */
     grid-auto-flow: dense; /* 尝试填充空白区域 */
     gap: 10px; /* 网格间距 */
 }
