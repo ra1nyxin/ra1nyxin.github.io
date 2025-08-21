@@ -1,5 +1,3 @@
-
-
 const pageContents = {
     home: `
         <div class="container">
@@ -45,7 +43,7 @@ const pageContents = {
     gallery: `
         <div class="container">
             <h1>图库</h1>
-            <p>这里是您的图片库。请将实际图片文件放置在 `img/` 目录下的子文件夹中，并更新 `script.js` 中的 `galleryImages` 数组。</p>
+            <p>这里是您的图片库。请将实际图片文件放置在 `img/` 目录下的子文件夹中，并更新 `gallery_data.js` 文件。</p>
             <div class="gallery-grid"></div>
         </div>
     `,
@@ -135,22 +133,27 @@ function renderGallery() {
     const galleryGrid = document.querySelector('.gallery-grid');
     if (galleryGrid) {
         galleryGrid.innerHTML = ''; // Clear existing content
-        galleryImages.forEach(image => {
-            const galleryItem = document.createElement('div');
-            galleryItem.classList.add('gallery-item');
+        // Ensure galleryImages is defined globally by gallery_data.js
+        if (typeof galleryImages !== 'undefined' && galleryImages.length > 0) {
+            galleryImages.forEach(image => {
+                const galleryItem = document.createElement('div');
+                galleryItem.classList.add('gallery-item');
 
-            const img = document.createElement('img');
-            img.src = image.path;
-            img.alt = `Image from ${image.folder} folder`;
+                const img = document.createElement('img');
+                img.src = image.path;
+                img.alt = `Image from ${image.folder} folder`;
 
-            const folderInfo = document.createElement('p');
-            folderInfo.classList.add('gallery-folder-info');
-            folderInfo.textContent = `Folder: ${image.folder}`;
+                const folderInfo = document.createElement('p');
+                folderInfo.classList.add('gallery-folder-info');
+                folderInfo.textContent = `Folder: ${image.folder}`;
 
-            galleryItem.appendChild(img);
-            galleryItem.appendChild(folderInfo);
-            galleryGrid.appendChild(galleryItem);
-        });
+                galleryItem.appendChild(img);
+                galleryItem.appendChild(folderInfo);
+                galleryGrid.appendChild(galleryItem);
+            });
+        } else {
+            galleryGrid.innerHTML = '<p>No images found in gallery. Please add images to the `img/` directory and push to GitHub to generate `gallery_data.js`.</p>';
+        }
     }
 }
 
