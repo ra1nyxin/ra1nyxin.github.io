@@ -24,6 +24,10 @@ const pageContents = {
             <div id="git-commands-tutorial"></div>
             <div id="terminal-commands-tutorial"></div>
             <div id="proxy-settings-tutorial"></div>
+            <div id="npm-commands-tutorial"></div>
+            <div id="gcc-gpp-commands-tutorial"></div>
+            <div id="dotnet-commands-tutorial"></div>
+            <div id="powershell-commands-tutorial"></div>
         </div>
     `,
     test: `
@@ -126,6 +130,10 @@ function loadContent(page) {
             loadMarkdownContent('notes_git_commands.md', 'git-commands-tutorial');
             loadMarkdownContent('notes_terminal_commands.md', 'terminal-commands-tutorial');
             loadMarkdownContent('notes_proxy_settings.md', 'proxy-settings-tutorial');
+            loadMarkdownContent('notes_npm_commands.md', 'npm-commands-tutorial');
+            loadMarkdownContent('notes_gcc_g++_commands.md', 'gcc-gpp-commands-tutorial');
+            loadMarkdownContent('notes_dotnet_commands.md', 'dotnet-commands-tutorial');
+            loadMarkdownContent('notes_powershell_commands.md', 'powershell-commands-tutorial');
         } else if (page === 'message') {
             loadMarkdownContent('messages.md', 'messages-content');
         }
