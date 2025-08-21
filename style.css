@@ -46,7 +46,7 @@ body {
 }
 
 .navbar-nav li {
-    margin-right: 16px;
+    margin-right: 32px;
 }
 
 .navbar-nav a {
@@ -248,4 +248,49 @@ body {
     vertical-align: middle; /* 垂直居中对齐 */
     margin-right: 8px; /* 与用户名之间留出一些间距 */
     border: 1px solid #30363d; /* 添加一个细边框 */
+}
+
+/* 图库布局样式 */
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* 响应式列，最小200px，最大1fr */
+    gap: 10px; /* 网格间距 */
+}
+
+.gallery-grid img {
+    width: 100%;
+    height: 150px; /* 固定高度，或根据需要调整 */
+    object-fit: cover; /* 裁剪图片以填充容器，保持比例 */
+    border-radius: 6px;
+    border: 1px solid #21262d;
+}
+
+@media (max-width: 768px) {
+    .gallery-grid {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    }
+}
+
+.gallery-item {
+    background-color: #161b22;
+    border: 1px solid #21262d;
+    border-radius: 6px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.gallery-item img {
+    max-width: 100%;
+    height: auto; /* Allow height to adjust based on aspect ratio */
+    border-radius: 4px;
+    margin-bottom: 8px;
+}
+
+.gallery-folder-info {
+    font-size: 0.8em;
+    color: #8b949e;
+    margin-top: auto; /* Push to bottom if flex column */
 }
