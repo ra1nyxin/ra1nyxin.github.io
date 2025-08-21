@@ -8,6 +8,8 @@ on: # Trigger on push to main branch
 jobs:
   generate_data:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
     - name: Checkout repository
