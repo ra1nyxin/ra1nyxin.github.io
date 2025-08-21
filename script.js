@@ -43,7 +43,6 @@ const pageContents = {
     gallery: `
         <div class="container">
             <h1>图库</h1>
-            <p>这里是您的图片库。请将实际图片文件放置在 `img/` 目录下的子文件夹中，并更新 `gallery_data.js` 文件。</p>
             <div class="gallery-grid"></div>
         </div>
     `,
