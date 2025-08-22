@@ -259,7 +259,7 @@ body {
 }
 
 .gallery-item {
-    width: calc(33.33% - 10px); /* Adjust based on desired columns and gutter */
+    width: calc(25% - 10px); /* Adjust based on desired columns and gutter */
     margin-bottom: 10px; /* Gutter for Masonry */
     background-color: #161b22;
     border: 1px solid #21262d;
@@ -287,6 +287,6 @@ body {
 
 @media (max-width: 768px) {
     .gallery-item {
-        width: calc(50% - 10px); /* Two columns on smaller screens */
+        width: calc(33.33% - 10px); /* Two columns on smaller screens */
     }
 }
