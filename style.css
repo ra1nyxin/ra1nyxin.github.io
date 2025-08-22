@@ -252,8 +252,8 @@ body {
 
 /* 图库布局样式 */
 .gallery-grid {
-    /* Masonry will handle the layout, so remove grid properties */
-    /* display: block; */ /* Or just remove display: grid */
+    display: block; /* Masonry will handle the layout */
+    position: relative; /* Required for Masonry items to be positioned absolutely */
     margin: 0 auto; /* Center the grid */
     padding: 0; /* Remove padding if any */
 }
@@ -270,6 +270,7 @@ body {
     align-items: center;
     text-align: center;
     height: auto; /* 确保高度自适应 */
+    box-sizing: border-box; /* Include padding and border in the element's total width and height */
 }
 
 .gallery-item img {
