@@ -283,7 +283,7 @@ body {
 .gallery-folder-info {
     font-size: 0.8em;
     color: #8b949e;
-    margin: 0; /* 移除所有默认margin */
+    margin: auto;
 }
 
 @media (max-width: 768px) {
