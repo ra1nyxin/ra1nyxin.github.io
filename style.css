@@ -101,7 +101,7 @@ body {
 }
 
 .content p {
-    margin-bottom: 16px;
+    margin-bottom: 0px;
 }
 
 .card {
@@ -283,7 +283,7 @@ body {
 .gallery-folder-info {
     font-size: 0.8em;
     color: #8b949e;
-    margin-top: auto; /* Push to bottom if flex column */
+    margin: 0; /* 移除所有默认margin */
 }
 
 @media (max-width: 768px) {
