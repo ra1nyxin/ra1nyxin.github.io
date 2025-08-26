@@ -100,10 +100,6 @@ body {
     margin-bottom: 16px;
 }
 
-.content p {
-    margin-bottom: 0px;
-}
-
 .card {
     background-color: #161b22;
     border: 1px solid #21262d;
