@@ -246,7 +246,6 @@ body {
     border: 1px solid #30363d; /* 添加一个细边框 */
 }
 
-/* 图库布局样式 */
 .gallery-grid {
     display: block; /* Masonry will handle the layout */
     position: relative; /* Required for Masonry items to be positioned absolutely */

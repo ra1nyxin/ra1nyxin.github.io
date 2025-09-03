@@ -203,7 +203,6 @@ function loadContent(page) {
     }
 }
 
-// 页面加载完成后默认加载主页内容
 document.addEventListener('DOMContentLoaded', () => {
     loadContent('home');
 });
