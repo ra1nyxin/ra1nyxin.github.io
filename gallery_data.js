@@ -5,7 +5,31 @@ const galleryImages = [
         "folder": "project"
     },
     {
+        "path": "img/project/20250904-004132.jpg",
+        "folder": "project"
+    },
+    {
+        "path": "img/project/20250904-001022.jpg",
+        "folder": "project"
+    },
+    {
+        "path": "img/project/20250904-014336.jpg",
+        "folder": "project"
+    },
+    {
+        "path": "img/project/20250904-000757.jpg",
+        "folder": "project"
+    },
+    {
         "path": "img/project/131077864_p0.jpg",
+        "folder": "project"
+    },
+    {
+        "path": "img/project/20250904-014238.jpg",
+        "folder": "project"
+    },
+    {
+        "path": "img/project/20250904-014510.jpg",
         "folder": "project"
     },
     {
@@ -13,11 +37,15 @@ const galleryImages = [
         "folder": "project"
     },
     {
-        "path": "img/project/116505606_p0.jpg",
+        "path": "img/project/134583131_p0.jpg",
         "folder": "project"
     },
     {
-        "path": "img/project/133745294_p0.png",
+        "path": "img/project/20250904-001232.jpg",
+        "folder": "project"
+    },
+    {
+        "path": "img/project/116505606_p0.jpg",
         "folder": "project"
     },
     {
@@ -25,7 +53,15 @@ const galleryImages = [
         "folder": "project"
     },
     {
+        "path": "img/project/20250904-013832.jpg",
+        "folder": "project"
+    },
+    {
         "path": "img/project/131436827_p0.jpg",
+        "folder": "project"
+    },
+    {
+        "path": "img/project/20250904-001115.jpg",
         "folder": "project"
     },
     {
@@ -34,6 +70,10 @@ const galleryImages = [
     },
     {
         "path": "img/project/132275568_p0.jpg",
+        "folder": "project"
+    },
+    {
+        "path": "img/project/20250904-000838.jpg",
         "folder": "project"
     }
 ];
