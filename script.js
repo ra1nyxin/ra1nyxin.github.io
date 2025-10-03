@@ -64,8 +64,36 @@ const pageContents = {
                 <p>敬请期待更多内容</p>
             </section>
         </div>
+    `,
+    manual: `
+        <div class="container">
+            <h1>操作手册</h1>
+            <p>这里是我的操作手册内容</p>
+            <div id="manual-content"></div>
+        </div>
     `
 };
+
+async function loadTextContent(filePath, targetElementId) {
+    try {
+        const response = await fetch(filePath);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const text = await response.text();
+        const targetElement = document.getElementById(targetElementId);
+        if (targetElement) {
+            // For plain text, we just set innerText to preserve formatting
+            targetElement.innerText = text;
+        }
+    } catch (error) {
+        console.error('Error loading text content:', error);
+        const targetElement = document.getElementById(targetElementId);
+        if (targetElement) {
+            targetElement.innerHTML = `<p style="color: red;">加载内容失败: ${error.message}</p>`;
+        }
+    }
+}
 
 async function loadMarkdownContent(filePath, targetElementId) {
     try {
@@ -197,6 +225,8 @@ function loadContent(page) {
             renderGallery();
         } else if (page === 'message') {
             loadMarkdownContent('messages.md', 'messages-content');
+        } else if (page === 'manual') {
+            loadTextContent('operationmanual.txt', 'manual-content');
         }
     } else {
         mainContent.innerHTML = `<div class="container"><h1>页面未找到</h1><p>您请求的页面不存在</p></div>`;
