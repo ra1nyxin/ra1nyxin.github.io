@@ -36,7 +36,12 @@ const pageContents = {
             <p>这是一个用于测试的页面</p>
             <section class="card">
                 <h2>测试区域</h2>
-                <p>你可以在这里进行各种测试</p>
+                <div id="video-player-container">
+                    <video id="nggyu-video" width="100%" controls loop autoplay>
+                        <source src="nggyu.mp4" type="video/mp4">
+                        您的浏览器不支持视频播放。
+                    </video>
+                </div>
             </section>
         </div>
     `,
@@ -206,6 +211,19 @@ function loadContent(page) {
             loadMarkdownContent('messages.md', 'messages-content');
         } else if (page === 'manual') {
             loadMarkdownContent('operationmanual.txt', 'manual-content');
+        } else if (page === 'test') {
+            // 确保视频在加载测试页面后自动播放并解除静音
+            const videoElement = document.getElementById('nggyu-video');
+            if (videoElement) {
+                videoElement.muted = true; // 初始静音以允许自动播放
+                videoElement.play().then(() => {
+                    videoElement.muted = false; // 播放后解除静音
+                }).catch(error => {
+                    console.error('视频自动播放失败:', error);
+                    // 如果自动播放失败，可以提示用户手动播放
+                    // 或者显示一个播放按钮
+                });
+            }
         }
     } else {
         mainContent.innerHTML = `<div class="container"><h1>页面未找到</h1><p>您请求的页面不存在</p></div>`;
