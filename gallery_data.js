@@ -5,6 +5,10 @@ const galleryImages = [
         "folder": "project"
     },
     {
+        "path": "img/project/0563281547622630123.jpg",
+        "folder": "project"
+    },
+    {
         "path": "img/project/20250904-014336.jpg",
         "folder": "project"
     },
@@ -38,6 +42,14 @@ const galleryImages = [
     },
     {
         "path": "img/project/116505606_p0.jpg",
+        "folder": "project"
+    },
+    {
+        "path": "img/project/007012370937055356303131633.jpg",
+        "folder": "project"
+    },
+    {
+        "path": "img/project/23003060604530955.jpg",
         "folder": "project"
     },
     {
