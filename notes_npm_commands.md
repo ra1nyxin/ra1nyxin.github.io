@@ -1,42 +1,40 @@
 # npm 常用命令
 
-`npm` (Node Package Manager) 是 Node.js 的包管理器，用于安装、管理和发布 Node.js 包。以下是一些常用的 npm 命令：
-
 ## 包管理
 
 -   **`npm init`**
     初始化一个新的 Node.js 项目，会在当前目录创建一个 `package.json` 文件，用于定义项目信息和依赖。
     ```bash
     npm init
-    npm init -y # 快速初始化，跳过提问
+    npm init -y
     ```
 
 -   **`npm install`**
     安装项目依赖。如果在项目根目录运行，会根据 `package.json` 中的 `dependencies` 和 `devDependencies` 安装所有依赖。
     ```bash
     npm install
-    npm i # 简写
+    npm i
     ```
 
 -   **`npm install <package-name>`**
     安装指定的包到项目的 `node_modules` 目录，并将其添加到 `package.json` 的 `dependencies` 中。
     ```bash
     npm install express
-    npm i express # 简写
+    npm i express
     ```
 
 -   **`npm install <package-name> --save-dev` 或 `npm install <package-name> -D`**
     安装指定的包作为开发依赖，并将其添加到 `package.json` 的 `devDependencies` 中。开发依赖通常用于开发和测试，而不是生产环境。
     ```bash
     npm install webpack --save-dev
-    npm i webpack -D # 简写
+    npm i webpack -D
     ```
 
 -   **`npm install <package-name> --global` 或 `npm install <package-name> -g`**
     全局安装指定的包。全局安装的包通常是命令行工具，可以在系统的任何位置运行。
     ```bash
     npm install nodemon --global
-    npm i nodemon -g # 简写
+    npm i nodemon -g
     ```
 
 -   **`npm uninstall <package-name>`**
@@ -63,14 +61,14 @@
     列出当前项目安装的所有依赖包及其版本。
     ```bash
     npm list
-    npm ls # 简写
+    npm ls
     ```
 
 -   **`npm list -g`**
     列出所有全局安装的包。
     ```bash
     npm list -g
-    npm ls -g # 简写
+    npm ls -g
     ```
 
 -   **`npm view <package-name> versions`**

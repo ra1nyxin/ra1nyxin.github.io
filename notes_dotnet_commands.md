@@ -1,7 +1,5 @@
 # .NET 常用命令
 
-`.NET CLI` (Command-Line Interface) 是一个跨平台的工具集，用于开发、构建、运行和发布 .NET 应用程序。以下是一些常用的 `dotnet` 命令及其参数示例：
-
 ## 项目管理
 
 -   **`dotnet new`**
@@ -155,5 +153,3 @@
     ```bash
     dotnet --info
     ```
-
-这些命令涵盖了 .NET CLI 的大部分常用功能，可以帮助你进行 .NET 项目的开发、构建、发布和管理。

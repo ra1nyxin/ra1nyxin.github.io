@@ -470,7 +470,5 @@
     导入和导出 CSV 文件。
     ```powershell
     Import-Csv -Path C:\Data\users.csv
-    Get-Service | Export-Csv -Path C:\Data\services.csv -NoTypeInformation # 导出服务信息到 CSV
+    Get-Service | Export-Csv -Path C:\Data\services.csv -NoTypeInformation
     ```
-
-这些命令涵盖了 PowerShell 的广泛功能，从基本的文件操作到复杂的系统管理和自动化任务。

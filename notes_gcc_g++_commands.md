@@ -1,7 +1,5 @@
 # GCC / G++ 常用命令
 
-`GCC` (GNU Compiler Collection) 和 `G++` (GCC 的 C++ 前端) 是广泛使用的编译器，用于将 C 和 C++ 源代码编译成可执行文件、库等。以下是一些常用的 `gcc` 和 `g++` 命令及其参数示例：
-
 ## 基本编译
 
 -   **编译 C 语言源文件**
@@ -158,5 +156,3 @@
     ```bash
     arm-linux-gnueabihf-gcc source.c -o myprogram_arm
     ```
-
-这些命令涵盖了 `gcc` 和 `g++` 的大部分常用功能，可以帮助你进行 C/C++ 项目的编译和管理。
