@@ -212,16 +212,13 @@ function loadContent(page) {
         } else if (page === 'manual') {
             loadMarkdownContent('operationmanual.txt', 'manual-content');
         } else if (page === 'test') {
-            // 确保视频在加载测试页面后自动播放并解除静音
             const videoElement = document.getElementById('nggyu-video');
             if (videoElement) {
-                videoElement.muted = true; // 初始静音以允许自动播放
+                videoElement.muted = true;
                 videoElement.play().then(() => {
-                    videoElement.muted = false; // 播放后解除静音
+                    videoElement.muted = false;
                 }).catch(error => {
-                    console.error('视频自动播放失败:', error);
-                    // 如果自动播放失败，可以提示用户手动播放
-                    // 或者显示一个播放按钮
+                    console.error(error);
                 });
             }
         }

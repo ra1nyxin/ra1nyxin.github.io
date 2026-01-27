@@ -1,7 +1,5 @@
 # PowerShell 常用命令
 
-PowerShell 是一个跨平台的命令行 shell 和脚本语言，主要用于自动化任务和配置管理。以下是一些常用的 PowerShell 命令及其参数示例：
-
 ## 基础概念与帮助
 
 -   **`Get-Command`**
