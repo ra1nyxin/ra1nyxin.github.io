@@ -51,6 +51,13 @@ const pageContents = {
             <div class="gallery-grid"></div>
         </div>
     `,
+    docs: `
+        <div class="container">
+            <h1>文档</h1>
+            <p>这里展示指定的 Markdown 文档</p>
+            <div id="docs-content"></div>
+        </div>
+    `,
     message: `
         <div class="container">
             <h1>留言板</h1>
@@ -209,6 +216,8 @@ function loadContent(page) {
             renderGallery();
         } else if (page === 'message') {
             loadMarkdownContent('messages.md', 'messages-content');
+        } else if (page === 'docs') {
+            loadMarkdownContent('doc_winexesec.md', 'docs-content');
         } else if (page === 'manual') {
             loadMarkdownContent('operationmanual.txt', 'manual-content');
         } else if (page === 'test') {
