@@ -52,8 +52,8 @@ const pageContents = {
     docs: `
         <div class="container">
             <h1>文档</h1>
-            <p>这里展示指定的 Markdown 文档</p>
-            <div id="docs-content"></div>
+            <p>所有 <code>doc_*.md</code> 文件将自动加载并展示。</p>
+            <div id="docs-content" class="docs-grid"></div>
         </div>
     `,
     message: `
@@ -198,6 +198,15 @@ function renderGallery() {
     }
 }
 
+const DOCS_REPO_OWNER = 'ra1nyxin';
+const DOCS_REPO_NAME = 'ra1nyxin.github.io';
+const docFallbackFiles = [
+    'doc_winexesec.md',
+    'doc_to_msf_c_payload.md',
+    'doc_to_msf_cpp_payload.md',
+    'doc_to_msf_go_payload.md'
+];
+
 function loadContent(page) {
     const mainContent = document.querySelector('main.content');
     if (pageContents[page]) {
@@ -215,7 +224,7 @@ function loadContent(page) {
         } else if (page === 'message') {
             loadMarkdownContent('messages.md', 'messages-content');
         } else if (page === 'docs') {
-            loadMarkdownContent('doc_winexesec.md', 'docs-content');
+            loadDocsPage();
         } else if (page === 'manual') {
             loadMarkdownContent('operationmanual.txt', 'manual-content');
         } else if (page === 'test') {
@@ -258,6 +267,67 @@ function copyCode(button) {
     } else {
         console.error('无法找到要复制的代码块');
     }
+}
+
+async function loadDocsPage() {
+    const docsContainer = document.getElementById('docs-content');
+    if (!docsContainer) return;
+
+    docsContainer.innerHTML = '<p>正在加载文档列表...</p>';
+    const docFiles = await fetchDocFileList();
+
+    if (!docFiles.length) {
+        docsContainer.innerHTML = '<p>没有找到任何 doc_*.md 文档。</p>';
+        return;
+    }
+
+    docsContainer.innerHTML = '';
+    docFiles.forEach(fileName => {
+        const section = document.createElement('section');
+        section.classList.add('card', 'doc-card');
+
+        const title = document.createElement('h2');
+        title.textContent = formatDocTitle(fileName);
+        section.appendChild(title);
+
+        const contentId = `doc-section-${sanitizeId(fileName)}`;
+        const contentDiv = document.createElement('div');
+        contentDiv.id = contentId;
+        section.appendChild(contentDiv);
+
+        docsContainer.appendChild(section);
+        loadMarkdownContent(fileName, contentId);
+    });
+}
+
+async function fetchDocFileList() {
+    const apiUrl = `https://api.github.com/repos/${DOCS_REPO_OWNER}/${DOCS_REPO_NAME}/contents/`;
+    try {
+        const response = await fetch(apiUrl, { headers: { 'Accept': 'application/vnd.github+json' } });
+        if (!response.ok) {
+            throw new Error(`GitHub API 返回 ${response.status}`);
+        }
+        const data = await response.json();
+        const docFiles = data
+            .filter(item => item.type === 'file' && /^doc_.*\.md$/i.test(item.name))
+            .map(item => item.name)
+            .sort();
+        if (docFiles.length > 0) {
+            return docFiles;
+        }
+    } catch (error) {
+        console.error('获取 doc_*.md 列表失败，使用本地回退名单:', error);
+    }
+    return docFallbackFiles;
+}
+
+function formatDocTitle(fileName) {
+    const base = fileName.replace(/^doc_/i, '').replace(/\.md$/i, '');
+    return base.replace(/[_-]+/g, ' ').replace(/\b\w/g, char => char.toUpperCase());
+}
+
+function sanitizeId(fileName) {
+    return fileName.replace(/[^a-z0-9]/gi, '-').toLowerCase();
 }
 
 function initStarfield() {

@@ -139,6 +139,17 @@ body {
     margin-bottom: 8px;
 }
 
+.docs-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.doc-card h2 {
+    margin-top: 0;
+    margin-bottom: 12px;
+}
+
 /* 代码块样式 */
 .code-block {
     position: relative;
