@@ -10,9 +10,7 @@ const pageContents = {
             <section class="card">
                 <h2>占位符</h2>
                 <ul>
-                    <li>占</li>
-                    <li>位</li>
-                    <li>符</li>
+                    <li>主页还没想到写什么好捏 qwq</li>
                 </ul>
             </section>
         </div>
