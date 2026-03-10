@@ -25,11 +25,11 @@ body {
 
 /* 顶部导航栏 */
 .navbar {
-    background-color: rgba(22, 27, 34, 0.75); /* 半透明深色 */
-    backdrop-filter: blur(6px);
+    background-color: rgba(22, 27, 34, 0.55); /* 更高透明度 */
+    backdrop-filter: blur(10px);
     padding: 16px 0;
-    border-bottom: 1px solid rgba(33, 38, 45, 0.8);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    border-bottom: 1px solid rgba(33, 38, 45, 0.6);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
 }
 
 .navbar .container {
@@ -113,13 +113,13 @@ body {
 }
 
 .card {
-    background-color: rgba(22, 27, 34, 0.6);
-    border: 1px solid rgba(33, 38, 45, 0.6);
-    border-radius: 12px;
+    background-color: rgba(22, 27, 34, 0.45);
+    border: 1px solid rgba(33, 38, 45, 0.4);
+    border-radius: 14px;
     padding: 24px;
     margin-bottom: 24px;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
-    backdrop-filter: blur(4px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(8px);
 }
 
 .card h2 {
