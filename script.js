@@ -238,6 +238,7 @@ function loadContent(page) {
 
 document.addEventListener('DOMContentLoaded', () => {
     loadContent('home');
+    initStarfield();
 });
 
 function copyCode(button) {
@@ -259,4 +260,58 @@ function copyCode(button) {
     } else {
         console.error('无法找到要复制的代码块');
     }
+}
+
+function initStarfield() {
+    const canvas = document.getElementById('starfield');
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    let stars = [];
+    const starCount = 140;
+    const minRadius = 0.4;
+    const maxRadius = 1.2;
+
+    function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        createStars();
+    }
+
+    function createStars() {
+        stars = [];
+        for (let i = 0; i < starCount; i++) {
+            stars.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                radius: minRadius + Math.random() * (maxRadius - minRadius),
+                alpha: Math.random(),
+                twinkleSpeed: 0.005 + Math.random() * 0.015
+            });
+        }
+    }
+
+    function drawStars() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = '#ffffff';
+
+        stars.forEach(star => {
+            ctx.globalAlpha = star.alpha;
+            ctx.beginPath();
+            ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+            ctx.fill();
+
+            star.alpha += star.twinkleSpeed;
+            if (star.alpha >= 1 || star.alpha <= 0.1) {
+                star.twinkleSpeed = -star.twinkleSpeed;
+            }
+        });
+
+        ctx.globalAlpha = 1;
+        requestAnimationFrame(drawStars);
+    }
+
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+    drawStars();
 }
