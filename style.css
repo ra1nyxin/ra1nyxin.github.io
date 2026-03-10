@@ -25,9 +25,11 @@ body {
 
 /* 顶部导航栏 */
 .navbar {
-    background-color: #161b22; /* GitHub深色导航栏背景 */
+    background-color: rgba(22, 27, 34, 0.75); /* 半透明深色 */
+    backdrop-filter: blur(6px);
     padding: 16px 0;
-    border-bottom: 1px solid #21262d;
+    border-bottom: 1px solid rgba(33, 38, 45, 0.8);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
 }
 
 .navbar .container {
@@ -111,11 +113,13 @@ body {
 }
 
 .card {
-    background-color: #161b22;
-    border: 1px solid #21262d;
-    border-radius: 6px;
+    background-color: rgba(22, 27, 34, 0.6);
+    border: 1px solid rgba(33, 38, 45, 0.6);
+    border-radius: 12px;
     padding: 24px;
     margin-bottom: 24px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+    backdrop-filter: blur(4px);
 }
 
 .card h2 {
@@ -204,8 +208,6 @@ body {
     }
 }
 
-
-/* 留言气泡样式 */
 #messages-content ul {
     list-style: none;
     padding: 0;
@@ -226,8 +228,6 @@ body {
     margin-right: 5px;
 }
 
-
-/* 滚动条样式 */
 ::-webkit-scrollbar {
     width: 8px;
     height: 8px;
@@ -246,7 +246,6 @@ body {
     background: #444c56;
 }
 
-/* GitHub 头像样式 */
 .github-avatar {
     width: 24px;
     height: 24px;
@@ -293,11 +292,10 @@ body {
 
 @media (max-width: 768px) {
     .gallery-item {
-        width: calc(33.33% - 10px); /* Two columns on smaller screens */
+        width: calc(33.33% - 10px);
     }
 }
 
-/* Markdown 表格样式 - GitHub Dark 风格 */
 .content table {
     width: 100%;
     border-collapse: collapse;
