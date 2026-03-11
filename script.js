@@ -204,7 +204,10 @@ const docFallbackFiles = [
     'doc_winexesec.md',
     'doc_to_msf_c_payload.md',
     'doc_to_msf_cpp_payload.md',
-    'doc_to_msf_go_payload.md'
+    'doc_to_msf_go_payload.md',
+    'doc_msf_install.md',
+    'doc_msf_use.md',
+    'doc_msf_config.md'
 ];
 
 function loadContent(page) {
