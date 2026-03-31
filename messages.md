@@ -2,6 +2,7 @@
 
 **请注意：为了正确显示您的 GitHub 头像，留言中的昵称必须是您的 GitHub 用户名。**
 
+- **fabaonb**：Hello
 - **ra1nyxin**: 喵喵喵 Owo
 - **helloworld**: 你好世界
 - **VincentZyu233**: 你好。
