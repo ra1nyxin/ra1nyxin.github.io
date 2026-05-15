@@ -418,6 +418,32 @@ body {
     color: var(--muted-color);
 }
 
+.game-picker {
+    display: inline-flex;
+    gap: 6px;
+    margin-top: 14px;
+    padding: 4px;
+    background-color: var(--input-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+}
+
+.game-picker button {
+    background-color: transparent;
+    color: var(--muted-color);
+    border: 0;
+    border-radius: 6px;
+    padding: 7px 11px;
+    cursor: pointer;
+    font-weight: 700;
+}
+
+.game-picker button:hover,
+.game-picker button.is-active {
+    background-color: var(--button-bg);
+    color: var(--accent-color);
+}
+
 .game-stats {
     display: flex;
     gap: 10px;

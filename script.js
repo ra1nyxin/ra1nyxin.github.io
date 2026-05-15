@@ -54,8 +54,12 @@ const pageContents = {
             <div class="game-shell">
                 <div class="game-header">
                     <div>
-                        <h1>Void Runner</h1>
-                        <p>Drift through the quiet edge of space.</p>
+                        <h1 id="game-title">Void Runner</h1>
+                        <p id="game-subtitle">Drift through the quiet edge of space.</p>
+                        <div class="game-picker" role="tablist" aria-label="Game selection">
+                            <button type="button" class="is-active" data-game-choice="runner">Void Runner</button>
+                            <button type="button" data-game-choice="orbit">Orbit Drift</button>
+                        </div>
                     </div>
                     <div class="game-stats">
                         <span>Score <strong id="game-score">0</strong></span>
@@ -63,7 +67,7 @@ const pageContents = {
                     </div>
                 </div>
                 <div class="game-stage-wrap" id="void-runner-wrap">
-                    <div id="void-runner" class="game-stage" aria-label="Void Runner game area"></div>
+                    <div id="void-runner" class="game-stage" aria-label="Game area"></div>
                     <div class="game-overlay" id="game-overlay">
                         <strong>Void Runner</strong>
                         <span>Press Space or tap to launch.</span>
@@ -72,8 +76,8 @@ const pageContents = {
                 <div class="game-controls">
                     <button type="button" id="game-start">Start</button>
                     <button type="button" id="game-pause">Pause</button>
-                    <span>Space / tap: jump</span>
-                    <span>Shift / down: slide</span>
+                    <span id="game-help-primary">Space / tap: jump</span>
+                    <span id="game-help-secondary">Shift / down: slide, down in air: fast drop</span>
                 </div>
             </div>
         </div>
@@ -115,6 +119,7 @@ const pageContents = {
 
 const THEME_STORAGE_KEY = 'owo-theme';
 const VOID_RUNNER_BEST_KEY = 'void-runner-best';
+const ORBIT_DRIFT_BEST_KEY = 'orbit-drift-best';
 let cleanupCurrentPage = null;
 
 function applyTheme(theme) {
@@ -324,20 +329,40 @@ function initVoidRunner() {
     const pauseButton = document.getElementById('game-pause');
     const scoreElement = document.getElementById('game-score');
     const bestElement = document.getElementById('game-best');
+    const titleElement = document.getElementById('game-title');
+    const subtitleElement = document.getElementById('game-subtitle');
+    const primaryHelpElement = document.getElementById('game-help-primary');
+    const secondaryHelpElement = document.getElementById('game-help-secondary');
+    const pickerButtons = Array.from(document.querySelectorAll('[data-game-choice]'));
 
     if (!mount || typeof Phaser === 'undefined') {
         if (overlay) {
-            overlay.innerHTML = '<strong>Void Runner</strong><span>Game engine failed to load.</span>';
+            overlay.innerHTML = '<strong>Game failed</strong><span>Phaser did not load.</span>';
         }
         return null;
     }
 
-    const bestScore = Number(localStorage.getItem(VOID_RUNNER_BEST_KEY) || 0);
     let game;
     let sceneApi = null;
     let destroyed = false;
+    let activeGame = 'runner';
 
-    if (bestElement) bestElement.textContent = String(bestScore);
+    const gameMeta = {
+        runner: {
+            title: 'Void Runner',
+            subtitle: 'Drift through the quiet edge of space.',
+            bestKey: VOID_RUNNER_BEST_KEY,
+            primaryHelp: 'Space / tap: jump',
+            secondaryHelp: 'Shift / down: slide, down in air: fast drop'
+        },
+        orbit: {
+            title: 'Orbit Drift',
+            subtitle: 'Hold your orbit and thread the debris field.',
+            bestKey: ORBIT_DRIFT_BEST_KEY,
+            primaryHelp: 'Space / tap: reverse orbit',
+            secondaryHelp: 'Avoid debris and collect blue sparks'
+        }
+    };
 
     const getCssColor = (name, fallback) => {
         return getComputedStyle(document.documentElement).getPropertyValue(name).trim() || fallback;
@@ -359,6 +384,43 @@ function initVoidRunner() {
         }
     };
 
+    const getBest = gameKey => Number(localStorage.getItem(gameMeta[gameKey].bestKey) || 0);
+
+    const saveBest = (gameKey, score) => {
+        const best = getBest(gameKey);
+        if (score > best) {
+            localStorage.setItem(gameMeta[gameKey].bestKey, String(score));
+            if (bestElement && activeGame === gameKey) bestElement.textContent = String(score);
+            return score;
+        }
+        return best;
+    };
+
+    const updateChrome = gameKey => {
+        const meta = gameMeta[gameKey];
+        if (titleElement) titleElement.textContent = meta.title;
+        if (subtitleElement) subtitleElement.textContent = meta.subtitle;
+        if (primaryHelpElement) primaryHelpElement.textContent = meta.primaryHelp;
+        if (secondaryHelpElement) secondaryHelpElement.textContent = meta.secondaryHelp;
+        if (scoreElement) scoreElement.textContent = '0';
+        if (bestElement) bestElement.textContent = String(getBest(gameKey));
+        if (pauseButton) pauseButton.textContent = 'Pause';
+        pickerButtons.forEach(button => {
+            const isActive = button.dataset.gameChoice === gameKey;
+            button.classList.toggle('is-active', isActive);
+            button.setAttribute('aria-selected', String(isActive));
+        });
+    };
+
+    const destroyGame = () => {
+        sceneApi = null;
+        if (game) {
+            game.destroy(true);
+            game = null;
+        }
+        mount.innerHTML = '';
+    };
+
     class RunnerScene extends Phaser.Scene {
         constructor() {
             super('runner');
@@ -367,11 +429,13 @@ function initVoidRunner() {
             this.isPaused = false;
             this.isSliding = false;
             this.score = 0;
-            this.best = bestScore;
+            this.best = getBest('runner');
             this.speed = 320;
             this.spawnTimer = 0;
             this.spawnDelay = 1450;
             this.starLayers = [];
+            this.groundY = 0;
+            this.dropHeld = false;
         }
 
         create() {
@@ -380,7 +444,7 @@ function initVoidRunner() {
             const textColor = getCssColor('--text-color', '#c9d1d9');
             const accentColor = getCssColor('--accent-color', '#58a6ff');
             const borderColor = getCssColor('--border-color', '#30363d');
-            const floorY = height - 72;
+            this.groundY = height - 58;
 
             this.physics.world.gravity.y = 1550;
             this.cameras.main.setBackgroundColor('rgba(0,0,0,0)');
@@ -388,13 +452,13 @@ function initVoidRunner() {
             this.createTextures(textColor, accentColor, borderColor);
             this.buildStarLayers(width, height);
 
-            this.floorLine = this.add.rectangle(width / 2, floorY + 28, width, 2, toHex(borderColor, '#30363d'), 0.95);
-            this.ground = this.physics.add.staticImage(width / 2, floorY + 8, 'ground');
+            this.floorLine = this.add.rectangle(width / 2, this.groundY, width, 2, toHex(borderColor, '#30363d'), 0.95);
+            this.ground = this.physics.add.staticImage(width / 2, this.groundY + 9, 'ground');
             this.ground.setDisplaySize(width, 18).setVisible(false).refreshBody();
-            this.runner = this.physics.add.sprite(96, floorY, 'runner');
+            this.runner = this.physics.add.sprite(96, this.groundY, 'runner');
             this.runner.setOrigin(0.5, 1);
             this.runner.setCollideWorldBounds(true);
-            this.runner.body.setSize(34, 50).setOffset(15, 12);
+            this.setRunnerBody(false);
             this.physics.add.collider(this.runner, this.ground);
 
             this.obstacles = this.physics.add.staticGroup();
@@ -410,12 +474,12 @@ function initVoidRunner() {
 
             this.input.on('pointerdown', pointer => {
                 if (pointer.downY > height * 0.62) {
-                    this.slide(true);
+                    this.dropOrSlide(true);
                 } else {
                     this.jumpOrStart();
                 }
             });
-            this.input.on('pointerup', () => this.slide(false));
+            this.input.on('pointerup', () => this.dropOrSlide(false));
 
             sceneApi = {
                 start: () => this.startRun(),
@@ -427,21 +491,21 @@ function initVoidRunner() {
         createTextures(textColor, accentColor, borderColor) {
             const runnerGraphics = this.make.graphics({ x: 0, y: 0, add: false });
             runnerGraphics.fillStyle(toHex(accentColor, '#58a6ff'), 1);
-            runnerGraphics.fillRoundedRect(18, 10, 30, 42, 10);
+            runnerGraphics.fillRoundedRect(18, 8, 30, 44, 10);
             runnerGraphics.fillStyle(toHex(textColor, '#c9d1d9'), 1);
-            runnerGraphics.fillCircle(42, 19, 4);
-            runnerGraphics.fillRect(13, 46, 11, 16);
-            runnerGraphics.fillRect(38, 46, 11, 16);
+            runnerGraphics.fillCircle(42, 18, 4);
+            runnerGraphics.fillRect(13, 48, 11, 16);
+            runnerGraphics.fillRect(38, 48, 11, 16);
             runnerGraphics.lineStyle(2, toHex(borderColor, '#30363d'), 1);
-            runnerGraphics.strokeRoundedRect(18, 10, 30, 42, 10);
+            runnerGraphics.strokeRoundedRect(18, 8, 30, 44, 10);
             runnerGraphics.generateTexture('runner', 64, 64);
             runnerGraphics.destroy();
 
             const cometGraphics = this.make.graphics({ x: 0, y: 0, add: false });
             cometGraphics.fillStyle(toHex(borderColor, '#30363d'), 1);
-            cometGraphics.fillTriangle(10, 54, 28, 14, 46, 54);
+            cometGraphics.fillTriangle(10, 64, 28, 22, 46, 64);
             cometGraphics.fillStyle(toHex(accentColor, '#58a6ff'), 0.85);
-            cometGraphics.fillTriangle(24, 47, 28, 25, 34, 47);
+            cometGraphics.fillTriangle(24, 55, 28, 34, 34, 55);
             cometGraphics.generateTexture('spike', 56, 64);
             cometGraphics.destroy();
 
@@ -497,7 +561,7 @@ function initVoidRunner() {
                 this.jumpOrStart();
             }
 
-            this.slide(this.keys.slide.isDown || this.keys.down.isDown);
+            this.dropOrSlide(this.keys.slide.isDown || this.keys.down.isDown);
 
             if (!this.started || this.gameOver || this.isPaused) return;
 
@@ -523,6 +587,18 @@ function initVoidRunner() {
             this.updateScore();
         }
 
+        isGrounded() {
+            return this.runner.body.blocked.down || this.runner.body.touching.down;
+        }
+
+        setRunnerBody(sliding) {
+            if (sliding) {
+                this.runner.body.setSize(34, 25).setOffset(15, 37);
+            } else {
+                this.runner.body.setSize(28, 44).setOffset(20, 18);
+            }
+        }
+
         jumpOrStart() {
             if (this.gameOver) {
                 this.startRun();
@@ -532,21 +608,34 @@ function initVoidRunner() {
                 this.startRun();
                 return;
             }
-            if (this.runner.body.blocked.down || this.runner.body.touching.down) {
+            if (this.isGrounded()) {
+                this.dropHeld = false;
                 this.runner.setVelocityY(-650);
             }
         }
 
-        slide(active) {
+        dropOrSlide(active) {
             if (!this.started || this.gameOver || this.isPaused) return;
-            if (active && !this.isSliding && (this.runner.body.blocked.down || this.runner.body.touching.down)) {
+            if (active && !this.isGrounded()) {
+                this.dropHeld = true;
+                this.runner.setVelocityY(980);
+                return;
+            }
+            if (!active) {
+                this.dropHeld = false;
+            }
+            if (this.dropHeld && this.isGrounded()) {
+                this.dropHeld = false;
+            }
+
+            if (active && !this.isSliding && this.isGrounded()) {
                 this.isSliding = true;
                 this.runner.setScale(1, 0.62);
-                this.runner.body.setSize(40, 30).setOffset(12, 31);
+                this.setRunnerBody(true);
             } else if (!active && this.isSliding) {
                 this.isSliding = false;
                 this.runner.setScale(1, 1);
-                this.runner.body.setSize(34, 50).setOffset(15, 12);
+                this.setRunnerBody(false);
             }
         }
 
@@ -557,8 +646,11 @@ function initVoidRunner() {
             this.score = 0;
             this.speed = 320;
             this.spawnTimer = 700;
-            this.slide(false);
-            this.runner.setPosition(96, this.scale.height - 72);
+            this.isSliding = false;
+            this.dropHeld = false;
+            this.runner.setScale(1, 1);
+            this.setRunnerBody(false);
+            this.runner.setPosition(96, this.groundY);
             this.runner.setVelocity(0, 0);
             this.obstacles.clear(true, true);
             setOverlay('', '', false);
@@ -575,15 +667,14 @@ function initVoidRunner() {
         }
 
         spawnObstacle() {
-            const floorY = this.scale.height - 72;
             const useGate = this.score > 120 && Math.random() > 0.62;
             const texture = useGate ? 'gate' : 'spike';
-            const obstacle = this.obstacles.create(this.scale.width + 40, useGate ? floorY - 22 : floorY, texture);
+            const obstacle = this.obstacles.create(this.scale.width + 40, this.groundY, texture);
             obstacle.setOrigin(0.5, 1);
             if (useGate) {
-                obstacle.body.setSize(22, 72).setOffset(7, 10);
+                obstacle.body.setSize(16, 64).setOffset(10, 27);
             } else {
-                obstacle.body.setSize(30, 42).setOffset(13, 16);
+                obstacle.body.setSize(16, 30).setOffset(20, 34);
             }
             obstacle.refreshBody();
         }
@@ -596,11 +687,7 @@ function initVoidRunner() {
             this.cameras.main.shake(130, 0.004);
 
             const finalScore = Math.floor(this.score);
-            if (finalScore > this.best) {
-                this.best = finalScore;
-                localStorage.setItem(VOID_RUNNER_BEST_KEY, String(finalScore));
-                if (bestElement) bestElement.textContent = String(finalScore);
-            }
+            this.best = saveBest('runner', finalScore);
 
             setOverlay('Run Ended', `Score ${finalScore}. Press Space or Start to retry.`);
         }
@@ -611,38 +698,320 @@ function initVoidRunner() {
         }
     }
 
-    game = new Phaser.Game({
-        type: Phaser.AUTO,
-        parent: mount,
-        width: 960,
-        height: 360,
-        transparent: true,
-        scale: {
-            mode: Phaser.Scale.FIT,
-            autoCenter: Phaser.Scale.CENTER_BOTH
-        },
-        physics: {
-            default: 'arcade',
-            arcade: {
-                debug: false
+    class OrbitScene extends Phaser.Scene {
+        constructor() {
+            super('orbit');
+            this.started = false;
+            this.gameOver = false;
+            this.isPaused = false;
+            this.score = 0;
+            this.best = getBest('orbit');
+            this.angle = -90;
+            this.direction = 1;
+            this.radius = 92;
+            this.spawnTimer = 0;
+            this.collectTimer = 0;
+            this.hazards = null;
+            this.sparks = null;
+            this.starLayers = [];
+        }
+
+        create() {
+            const width = this.scale.width;
+            const height = this.scale.height;
+            this.center = { x: width / 2, y: height / 2 + 8 };
+            this.cameras.main.setBackgroundColor('rgba(0,0,0,0)');
+            this.physics.world.gravity.y = 0;
+            this.createOrbitTextures();
+            this.buildStarLayers(width, height);
+
+            const borderColor = toHex(getCssColor('--border-color', '#30363d'), '#30363d');
+            const accentColor = toHex(getCssColor('--accent-color', '#58a6ff'), '#58a6ff');
+            this.orbitRing = this.add.circle(this.center.x, this.center.y, this.radius, borderColor, 0.12);
+            this.orbitRing.setStrokeStyle(2, borderColor, 0.9);
+            this.innerRing = this.add.circle(this.center.x, this.center.y, 26, accentColor, 0.14);
+            this.innerRing.setStrokeStyle(2, accentColor, 0.75);
+
+            this.ship = this.physics.add.sprite(this.center.x, this.center.y - this.radius, 'orbit-ship');
+            this.ship.body.setAllowGravity(false);
+            this.ship.body.setCircle(11, 8, 8);
+
+            this.hazards = this.physics.add.group();
+            this.sparks = this.physics.add.group();
+            this.physics.add.overlap(this.ship, this.hazards, () => this.endRun(), null, this);
+            this.physics.add.overlap(this.ship, this.sparks, (ship, spark) => {
+                spark.destroy();
+                this.score += 18;
+                this.updateScore();
+            }, null, this);
+
+            this.keys = this.input.keyboard.addKeys({
+                action: Phaser.Input.Keyboard.KeyCodes.SPACE,
+                left: Phaser.Input.Keyboard.KeyCodes.LEFT,
+                right: Phaser.Input.Keyboard.KeyCodes.RIGHT,
+                pause: Phaser.Input.Keyboard.KeyCodes.P
+            });
+            this.input.on('pointerdown', () => this.reverseOrStart());
+
+            sceneApi = {
+                start: () => this.startRun(),
+                pause: () => this.togglePause()
+            };
+        }
+
+        createOrbitTextures() {
+            const accentColor = toHex(getCssColor('--accent-color', '#58a6ff'), '#58a6ff');
+            const textColor = toHex(getCssColor('--text-color', '#c9d1d9'), '#c9d1d9');
+            const borderColor = toHex(getCssColor('--border-color', '#30363d'), '#30363d');
+
+            const shipGraphics = this.make.graphics({ x: 0, y: 0, add: false });
+            shipGraphics.fillStyle(accentColor, 1);
+            shipGraphics.fillTriangle(24, 4, 42, 44, 6, 44);
+            shipGraphics.fillStyle(textColor, 0.9);
+            shipGraphics.fillCircle(24, 27, 5);
+            shipGraphics.lineStyle(2, borderColor, 1);
+            shipGraphics.strokeTriangle(24, 4, 42, 44, 6, 44);
+            shipGraphics.generateTexture('orbit-ship', 48, 48);
+            shipGraphics.destroy();
+
+            const hazardGraphics = this.make.graphics({ x: 0, y: 0, add: false });
+            hazardGraphics.fillStyle(borderColor, 1);
+            hazardGraphics.fillCircle(18, 18, 17);
+            hazardGraphics.fillStyle(0xffffff, 0.18);
+            hazardGraphics.fillCircle(12, 10, 4);
+            hazardGraphics.generateTexture('orbit-hazard', 36, 36);
+            hazardGraphics.destroy();
+
+            const sparkGraphics = this.make.graphics({ x: 0, y: 0, add: false });
+            sparkGraphics.fillStyle(accentColor, 0.95);
+            sparkGraphics.fillCircle(12, 12, 8);
+            sparkGraphics.fillStyle(textColor, 0.9);
+            sparkGraphics.fillCircle(9, 8, 2);
+            sparkGraphics.generateTexture('orbit-spark', 24, 24);
+            sparkGraphics.destroy();
+        }
+
+        buildStarLayers(width, height) {
+            const starColor = toHex(getCssColor('--star-color', '#ffffff'), '#ffffff');
+            for (let layer = 0; layer < 2; layer++) {
+                const key = `orbit-stars-${layer}`;
+                const graphics = this.make.graphics({ x: 0, y: 0, add: false });
+                graphics.fillStyle(starColor, 0.32 + layer * 0.22);
+                for (let i = 0; i < 56 + layer * 36; i++) {
+                    graphics.fillCircle(
+                        Phaser.Math.Between(0, width),
+                        Phaser.Math.Between(20, height - 20),
+                        Phaser.Math.FloatBetween(0.8, 1.8 + layer * 0.5)
+                    );
+                }
+                graphics.generateTexture(key, width, height);
+                graphics.destroy();
+                const tile = this.add.tileSprite(0, 0, width, height, key);
+                tile.setOrigin(0, 0);
+                this.starLayers.push({ tile, speed: 0.05 + layer * 0.06 });
             }
-        },
-        scene: RunnerScene
-    });
+        }
+
+        update(time, delta) {
+            const dt = delta / 1000;
+            this.starLayers.forEach(layer => {
+                layer.tile.tilePositionX += 90 * layer.speed * dt;
+            });
+
+            if (Phaser.Input.Keyboard.JustDown(this.keys.pause)) this.togglePause();
+            if (
+                Phaser.Input.Keyboard.JustDown(this.keys.action) ||
+                Phaser.Input.Keyboard.JustDown(this.keys.left) ||
+                Phaser.Input.Keyboard.JustDown(this.keys.right)
+            ) {
+                this.reverseOrStart();
+            }
+
+            if (!this.started || this.gameOver || this.isPaused) return;
+
+            this.score += delta * 0.01;
+            this.angle += this.direction * (112 + Math.min(86, this.score * 0.5)) * dt;
+            const rad = Phaser.Math.DegToRad(this.angle);
+            this.ship.setPosition(
+                this.center.x + Math.cos(rad) * this.radius,
+                this.center.y + Math.sin(rad) * this.radius
+            );
+            this.ship.rotation = rad + Math.PI / 2;
+
+            this.spawnTimer -= delta;
+            this.collectTimer -= delta;
+            if (this.spawnTimer <= 0) {
+                this.spawnHazard();
+                this.spawnTimer = Phaser.Math.Between(760, 1280);
+            }
+            if (this.collectTimer <= 0) {
+                this.spawnSpark();
+                this.collectTimer = Phaser.Math.Between(1350, 2200);
+            }
+
+            [...this.hazards.getChildren(), ...this.sparks.getChildren()].forEach(item => {
+                item.rotation += item.getData('spin') * dt;
+                item.x += item.getData('vx') * dt;
+                item.y += item.getData('vy') * dt;
+                if (item.x < -80 || item.x > this.scale.width + 80 || item.y < -80 || item.y > this.scale.height + 80) {
+                    item.destroy();
+                }
+            });
+
+            this.updateScore();
+        }
+
+        reverseOrStart() {
+            if (this.gameOver || !this.started) {
+                this.startRun();
+                return;
+            }
+            this.direction *= -1;
+        }
+
+        startRun() {
+            this.started = true;
+            this.gameOver = false;
+            this.isPaused = false;
+            this.score = 0;
+            this.angle = -90;
+            this.direction = 1;
+            this.spawnTimer = 650;
+            this.collectTimer = 1200;
+            this.hazards.clear(true, true);
+            this.sparks.clear(true, true);
+            setOverlay('', '', false);
+            if (pauseButton) pauseButton.textContent = 'Pause';
+            this.updateScore();
+        }
+
+        togglePause() {
+            if (!this.started || this.gameOver) return;
+            this.isPaused = !this.isPaused;
+            if (pauseButton) pauseButton.textContent = this.isPaused ? 'Resume' : 'Pause';
+            setOverlay('Paused', 'Press P or Resume to continue.', this.isPaused);
+        }
+
+        spawnHazard() {
+            const side = Phaser.Math.Between(0, 3);
+            const pos = this.edgePosition(side);
+            const target = Phaser.Math.RotateAround(
+                { x: this.center.x + this.radius, y: this.center.y },
+                this.center.x,
+                this.center.y,
+                Phaser.Math.FloatBetween(0, Math.PI * 2)
+            );
+            const speed = Phaser.Math.Between(95, 145) + Math.min(95, this.score * 0.45);
+            const angle = Phaser.Math.Angle.Between(pos.x, pos.y, target.x, target.y);
+            const hazard = this.physics.add.sprite(pos.x, pos.y, 'orbit-hazard');
+            hazard.body.setAllowGravity(false);
+            hazard.body.setCircle(13, 5, 5);
+            hazard.setData('vx', Math.cos(angle) * speed);
+            hazard.setData('vy', Math.sin(angle) * speed);
+            hazard.setData('spin', Phaser.Math.FloatBetween(-3, 3));
+            this.hazards.add(hazard);
+        }
+
+        spawnSpark() {
+            const angle = Phaser.Math.FloatBetween(0, Math.PI * 2);
+            const spark = this.physics.add.sprite(
+                this.center.x + Math.cos(angle) * this.radius,
+                this.center.y + Math.sin(angle) * this.radius,
+                'orbit-spark'
+            );
+            spark.body.setAllowGravity(false);
+            spark.body.setCircle(8, 4, 4);
+            spark.setData('vx', 0);
+            spark.setData('vy', 0);
+            spark.setData('spin', 2);
+            this.sparks.add(spark);
+        }
+
+        edgePosition(side) {
+            const width = this.scale.width;
+            const height = this.scale.height;
+            if (side === 0) return { x: Phaser.Math.Between(0, width), y: -40 };
+            if (side === 1) return { x: width + 40, y: Phaser.Math.Between(0, height) };
+            if (side === 2) return { x: Phaser.Math.Between(0, width), y: height + 40 };
+            return { x: -40, y: Phaser.Math.Between(0, height) };
+        }
+
+        endRun() {
+            if (this.gameOver) return;
+            this.gameOver = true;
+            this.started = false;
+            this.cameras.main.shake(140, 0.004);
+            const finalScore = Math.floor(this.score);
+            this.best = saveBest('orbit', finalScore);
+            setOverlay('Orbit Lost', `Score ${finalScore}. Press Space or Start to retry.`);
+        }
+
+        updateScore() {
+            if (scoreElement) scoreElement.textContent = String(Math.floor(this.score));
+            if (bestElement) bestElement.textContent = String(this.best);
+        }
+    }
+
+    const sceneMap = {
+        runner: RunnerScene,
+        orbit: OrbitScene
+    };
+
+    const launchGame = gameKey => {
+        activeGame = gameKey;
+        destroyGame();
+        updateChrome(gameKey);
+        const meta = gameMeta[gameKey];
+        setOverlay(meta.title, gameKey === 'runner' ? 'Press Space or tap to launch.' : 'Press Space or tap to reverse orbit.');
+        game = new Phaser.Game({
+            type: Phaser.AUTO,
+            parent: mount,
+            width: 960,
+            height: 360,
+            transparent: true,
+            scale: {
+                mode: Phaser.Scale.FIT,
+                autoCenter: Phaser.Scale.CENTER_BOTH
+            },
+            physics: {
+                default: 'arcade',
+                arcade: {
+                    debug: false
+                }
+            },
+            scene: sceneMap[gameKey]
+        });
+    };
 
     const startHandler = () => sceneApi && sceneApi.start();
     const pauseHandler = () => sceneApi && sceneApi.pause();
+    const keyGuard = event => {
+        const blockedKeys = [' ', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'];
+        const tagName = event.target && event.target.tagName;
+        if (blockedKeys.includes(event.key) && tagName !== 'INPUT' && tagName !== 'TEXTAREA') {
+            event.preventDefault();
+        }
+    };
+    const choiceHandler = event => {
+        const nextGame = event.currentTarget.dataset.gameChoice;
+        if (nextGame && nextGame !== activeGame) {
+            launchGame(nextGame);
+        }
+    };
     startButton && startButton.addEventListener('click', startHandler);
     pauseButton && pauseButton.addEventListener('click', pauseHandler);
+    window.addEventListener('keydown', keyGuard, { passive: false });
+    pickerButtons.forEach(button => button.addEventListener('click', choiceHandler));
+    launchGame('runner');
 
     return () => {
         if (destroyed) return;
         destroyed = true;
         startButton && startButton.removeEventListener('click', startHandler);
         pauseButton && pauseButton.removeEventListener('click', pauseHandler);
-        if (game) {
-            game.destroy(true);
-        }
+        window.removeEventListener('keydown', keyGuard);
+        pickerButtons.forEach(button => button.removeEventListener('click', choiceHandler));
+        destroyGame();
     };
 }
 
