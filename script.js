@@ -61,6 +61,7 @@ const pageContents = {
                             <button type="button" data-game-choice="orbit">Orbit Drift</button>
                             <button type="button" data-game-choice="pulse">Pulse Gate</button>
                             <button type="button" data-game-choice="phase">Phase Shift</button>
+                            <button type="button" data-game-choice="echo">Echo Bloom</button>
                         </div>
                     </div>
                     <div class="game-stats">
@@ -124,6 +125,7 @@ const VOID_RUNNER_BEST_KEY = 'void-runner-best';
 const ORBIT_DRIFT_BEST_KEY = 'orbit-drift-best';
 const PULSE_GATE_BEST_KEY = 'pulse-gate-best';
 const PHASE_SHIFT_BEST_KEY = 'phase-shift-best';
+const ECHO_BLOOM_BEST_KEY = 'echo-bloom-best';
 let cleanupCurrentPage = null;
 
 function applyTheme(theme) {
@@ -379,6 +381,13 @@ function initVoidRunner() {
             bestKey: PHASE_SHIFT_BEST_KEY,
             primaryHelp: 'Space / W / up / tap: switch phase',
             secondaryHelp: 'Pass matching walls, avoid the wrong phase'
+        },
+        echo: {
+            title: 'Echo Bloom',
+            subtitle: 'Bloom between inner and outer rings to catch clean echoes.',
+            bestKey: ECHO_BLOOM_BEST_KEY,
+            primaryHelp: 'Space / W / up / tap: swap ring',
+            secondaryHelp: 'Collect blue echoes, dodge red noise'
         }
     };
 
@@ -1400,18 +1409,243 @@ function initVoidRunner() {
         }
     }
 
+    class EchoBloomScene extends Phaser.Scene {
+        constructor() {
+            super('echo');
+            this.started = false;
+            this.gameOver = false;
+            this.isPaused = false;
+            this.score = 0;
+            this.best = getBest('echo');
+            this.ringIndex = 0;
+            this.radii = [68, 126];
+            this.angle = -90;
+            this.speed = 105;
+            this.spawnTimer = 0;
+            this.echoes = null;
+            this.noise = null;
+            this.starLayers = [];
+        }
+
+        create() {
+            const width = this.scale.width;
+            const height = this.scale.height;
+            this.physics.world.gravity.y = 0;
+            this.cameras.main.setBackgroundColor('rgba(0,0,0,0)');
+            this.center = { x: width / 2, y: height / 2 };
+            this.createEchoTextures();
+            this.buildStarLayers(width, height);
+
+            const borderColor = toHex(getCssColor('--border-color', '#30363d'), '#30363d');
+            const accentColor = toHex(getCssColor('--accent-color', '#58a6ff'), '#58a6ff');
+            this.radii.forEach((radius, index) => {
+                const ring = this.add.circle(this.center.x, this.center.y, radius, borderColor, index === 0 ? 0.06 : 0.04);
+                ring.setStrokeStyle(2, index === 0 ? accentColor : borderColor, index === 0 ? 0.55 : 0.75);
+            });
+            this.core = this.add.circle(this.center.x, this.center.y, 22, accentColor, 0.10);
+            this.core.setStrokeStyle(2, accentColor, 0.72);
+            this.player = this.physics.add.sprite(this.center.x, this.center.y - this.radii[this.ringIndex], 'echo-player');
+            this.player.body.setAllowGravity(false);
+            this.player.body.setCircle(12, 6, 6);
+            this.echoes = this.physics.add.group();
+            this.noise = this.physics.add.group();
+            this.physics.add.overlap(this.player, this.echoes, (player, echo) => {
+                echo.destroy();
+                this.score += 18;
+                this.updateScore();
+            }, null, this);
+            this.physics.add.overlap(this.player, this.noise, () => this.endRun(), null, this);
+            this.input.on('pointerdown', () => this.swapOrStart());
+            sceneApi = {
+                start: () => this.startRun(),
+                pause: () => this.togglePause(),
+                action: () => this.swapOrStart()
+            };
+        }
+
+        createEchoTextures() {
+            const accentColor = toHex(getCssColor('--accent-color', '#58a6ff'), '#58a6ff');
+            const textColor = toHex(getCssColor('--text-color', '#c9d1d9'), '#c9d1d9');
+            const borderColor = toHex(getCssColor('--border-color', '#30363d'), '#30363d');
+
+            const playerGraphics = this.make.graphics({ x: 0, y: 0, add: false });
+            playerGraphics.fillStyle(accentColor, 1);
+            playerGraphics.fillCircle(18, 18, 13);
+            playerGraphics.fillStyle(textColor, 0.9);
+            playerGraphics.fillCircle(14, 13, 3);
+            playerGraphics.lineStyle(2, borderColor, 1);
+            playerGraphics.strokeCircle(18, 18, 13);
+            playerGraphics.generateTexture('echo-player', 36, 36);
+            playerGraphics.destroy();
+
+            const echoGraphics = this.make.graphics({ x: 0, y: 0, add: false });
+            echoGraphics.fillStyle(accentColor, 0.24);
+            echoGraphics.fillCircle(18, 18, 17);
+            echoGraphics.lineStyle(3, accentColor, 0.92);
+            echoGraphics.strokeCircle(18, 18, 12);
+            echoGraphics.fillStyle(textColor, 0.9);
+            echoGraphics.fillCircle(18, 18, 4);
+            echoGraphics.generateTexture('echo-good', 36, 36);
+            echoGraphics.destroy();
+
+            const noiseGraphics = this.make.graphics({ x: 0, y: 0, add: false });
+            noiseGraphics.fillStyle(0xff5f73, 0.78);
+            noiseGraphics.fillTriangle(18, 2, 34, 32, 2, 32);
+            noiseGraphics.fillStyle(0xffffff, 0.18);
+            noiseGraphics.fillCircle(18, 20, 4);
+            noiseGraphics.lineStyle(2, borderColor, 1);
+            noiseGraphics.strokeTriangle(18, 2, 34, 32, 2, 32);
+            noiseGraphics.generateTexture('echo-noise', 36, 36);
+            noiseGraphics.destroy();
+        }
+
+        buildStarLayers(width, height) {
+            const starColor = toHex(getCssColor('--star-color', '#ffffff'), '#ffffff');
+            for (let layer = 0; layer < 2; layer++) {
+                const key = `echo-stars-${layer}`;
+                const graphics = this.make.graphics({ x: 0, y: 0, add: false });
+                graphics.fillStyle(starColor, 0.28 + layer * 0.22);
+                for (let i = 0; i < 46 + layer * 34; i++) {
+                    graphics.fillCircle(
+                        Phaser.Math.Between(0, width),
+                        Phaser.Math.Between(20, height - 20),
+                        Phaser.Math.FloatBetween(0.7, 1.7 + layer * 0.5)
+                    );
+                }
+                graphics.generateTexture(key, width, height);
+                graphics.destroy();
+                const tile = this.add.tileSprite(0, 0, width, height, key);
+                tile.setOrigin(0, 0);
+                this.starLayers.push({ tile, speed: 0.05 + layer * 0.06 });
+            }
+        }
+
+        update(time, delta) {
+            const dt = delta / 1000;
+            this.starLayers.forEach(layer => {
+                layer.tile.tilePositionX += 105 * layer.speed * dt;
+            });
+            if (!this.started || this.gameOver || this.isPaused) return;
+
+            this.score += delta * 0.01;
+            this.speed = Math.min(220, 105 + this.score * 0.35);
+            this.angle += this.speed * dt;
+            this.updatePlayerPosition();
+            this.spawnTimer -= delta;
+            if (this.spawnTimer <= 0) {
+                this.spawnEchoSet();
+                this.spawnTimer = Phaser.Math.Between(760, 1120);
+            }
+            [...this.echoes.getChildren(), ...this.noise.getChildren()].forEach(item => {
+                item.rotation += item.getData('spin') * dt;
+                item.alpha = 0.78 + Math.sin(time / 150 + item.x) * 0.18;
+            });
+            this.updateScore();
+        }
+
+        updatePlayerPosition() {
+            const rad = Phaser.Math.DegToRad(this.angle);
+            const radius = this.radii[this.ringIndex];
+            this.player.setPosition(
+                this.center.x + Math.cos(rad) * radius,
+                this.center.y + Math.sin(rad) * radius
+            );
+            this.player.rotation = rad + Math.PI / 2;
+        }
+
+        swapOrStart() {
+            if (this.gameOver || !this.started) {
+                this.startRun();
+                return;
+            }
+            this.ringIndex = this.ringIndex === 0 ? 1 : 0;
+            this.tweens.add({
+                targets: this.player,
+                scaleX: 1.18,
+                scaleY: 1.18,
+                duration: 70,
+                yoyo: true,
+                ease: 'Sine.easeOut'
+            });
+            this.updatePlayerPosition();
+        }
+
+        startRun() {
+            this.started = true;
+            this.gameOver = false;
+            this.isPaused = false;
+            this.score = 0;
+            this.speed = 105;
+            this.spawnTimer = 520;
+            this.ringIndex = 0;
+            this.angle = -90;
+            this.echoes.clear(true, true);
+            this.noise.clear(true, true);
+            this.updatePlayerPosition();
+            setOverlay('', '', false);
+            if (pauseButton) pauseButton.textContent = 'Pause';
+            this.updateScore();
+        }
+
+        togglePause() {
+            if (!this.started || this.gameOver) return;
+            this.isPaused = !this.isPaused;
+            if (pauseButton) pauseButton.textContent = this.isPaused ? 'Resume' : 'Pause';
+            setOverlay('Paused', 'Press P or Resume to continue.', this.isPaused);
+        }
+
+        spawnEchoSet() {
+            const angle = Phaser.Math.FloatBetween(0, Math.PI * 2);
+            const goodRing = Phaser.Math.Between(0, 1);
+            const badRing = goodRing === 0 ? 1 : 0;
+            this.spawnEchoItem('echo-good', goodRing, angle, this.echoes, 10);
+            if (Math.random() < 0.82) {
+                this.spawnEchoItem('echo-noise', badRing, angle + Phaser.Math.FloatBetween(-0.18, 0.18), this.noise, 11);
+            }
+        }
+
+        spawnEchoItem(texture, ring, angle, group, radius) {
+            const item = this.physics.add.sprite(
+                this.center.x + Math.cos(angle) * this.radii[ring],
+                this.center.y + Math.sin(angle) * this.radii[ring],
+                texture
+            );
+            item.body.setAllowGravity(false);
+            item.body.setCircle(radius, 18 - radius, 18 - radius);
+            item.setData('spin', Phaser.Math.FloatBetween(-2.8, 2.8));
+            group.add(item);
+        }
+
+        endRun() {
+            if (this.gameOver) return;
+            this.gameOver = true;
+            this.started = false;
+            this.cameras.main.shake(140, 0.004);
+            const finalScore = Math.floor(this.score);
+            this.best = saveBest('echo', finalScore);
+            setOverlay('Echo Lost', `Score ${finalScore}. Press Space or Start to retry.`);
+        }
+
+        updateScore() {
+            if (scoreElement) scoreElement.textContent = String(Math.floor(this.score));
+            if (bestElement) bestElement.textContent = String(this.best);
+        }
+    }
+
     const sceneMap = {
         runner: RunnerScene,
         orbit: OrbitScene,
         pulse: PulseScene,
-        phase: PhaseScene
+        phase: PhaseScene,
+        echo: EchoBloomScene
     };
 
     const startPrompts = {
         runner: 'Press W, Space, up, or tap to launch.',
         orbit: 'Press Space or tap to reverse orbit.',
         pulse: 'Press WASD, arrows, Space, or tap to switch lanes.',
-        phase: 'Press Space, W, up, or tap to switch phase.'
+        phase: 'Press Space, W, up, or tap to switch phase.',
+        echo: 'Press Space, W, up, or tap to swap rings.'
     };
 
     const launchGame = gameKey => {
@@ -1461,6 +1695,8 @@ function initVoidRunner() {
         } else if (activeGame === 'pulse' && ['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'KeyW', 'KeyA', 'KeyS', 'KeyD'].includes(event.code)) {
             sceneApi && sceneApi.action && sceneApi.action(event.code);
         } else if (activeGame === 'phase' && ['Space', 'ArrowUp', 'KeyW'].includes(event.code)) {
+            sceneApi && sceneApi.action && sceneApi.action();
+        } else if (activeGame === 'echo' && ['Space', 'ArrowUp', 'KeyW'].includes(event.code)) {
             sceneApi && sceneApi.action && sceneApi.action();
         }
     };
