@@ -420,6 +420,7 @@ body {
 
 .game-picker {
     display: inline-flex;
+    flex-wrap: wrap;
     gap: 6px;
     margin-top: 14px;
     padding: 4px;

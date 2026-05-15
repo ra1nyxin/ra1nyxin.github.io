@@ -59,6 +59,7 @@ const pageContents = {
                         <div class="game-picker" role="tablist" aria-label="Game selection">
                             <button type="button" class="is-active" data-game-choice="runner">Void Runner</button>
                             <button type="button" data-game-choice="orbit">Orbit Drift</button>
+                            <button type="button" data-game-choice="pulse">Pulse Gate</button>
                         </div>
                     </div>
                     <div class="game-stats">
@@ -120,6 +121,7 @@ const pageContents = {
 const THEME_STORAGE_KEY = 'owo-theme';
 const VOID_RUNNER_BEST_KEY = 'void-runner-best';
 const ORBIT_DRIFT_BEST_KEY = 'orbit-drift-best';
+const PULSE_GATE_BEST_KEY = 'pulse-gate-best';
 let cleanupCurrentPage = null;
 
 function applyTheme(theme) {
@@ -352,8 +354,8 @@ function initVoidRunner() {
             title: 'Void Runner',
             subtitle: 'Drift through the quiet edge of space.',
             bestKey: VOID_RUNNER_BEST_KEY,
-            primaryHelp: 'Space / tap: jump',
-            secondaryHelp: 'Shift / down: slide, down in air: fast drop'
+            primaryHelp: 'W / Space / up: jump',
+            secondaryHelp: 'S / Shift / down: slide, down in air: fast drop'
         },
         orbit: {
             title: 'Orbit Drift',
@@ -361,6 +363,13 @@ function initVoidRunner() {
             bestKey: ORBIT_DRIFT_BEST_KEY,
             primaryHelp: 'Space / tap: reverse orbit',
             secondaryHelp: 'Avoid debris and collect blue sparks'
+        },
+        pulse: {
+            title: 'Pulse Gate',
+            subtitle: 'Switch lanes through a quiet field of signal gates.',
+            bestKey: PULSE_GATE_BEST_KEY,
+            primaryHelp: 'WASD / arrows / Space: switch lane',
+            secondaryHelp: 'Avoid red gates and collect blue pulses'
         }
     };
 
@@ -466,8 +475,10 @@ function initVoidRunner() {
 
             this.keys = this.input.keyboard.addKeys({
                 jump: Phaser.Input.Keyboard.KeyCodes.SPACE,
+                w: Phaser.Input.Keyboard.KeyCodes.W,
                 up: Phaser.Input.Keyboard.KeyCodes.UP,
                 slide: Phaser.Input.Keyboard.KeyCodes.SHIFT,
+                s: Phaser.Input.Keyboard.KeyCodes.S,
                 down: Phaser.Input.Keyboard.KeyCodes.DOWN,
                 pause: Phaser.Input.Keyboard.KeyCodes.P
             });
@@ -484,6 +495,8 @@ function initVoidRunner() {
             sceneApi = {
                 start: () => this.startRun(),
                 pause: () => this.togglePause(),
+                jump: () => this.jumpOrStart(),
+                drop: active => this.dropOrSlide(active),
                 destroy: () => {}
             };
         }
@@ -557,11 +570,15 @@ function initVoidRunner() {
                 this.togglePause();
             }
 
-            if (Phaser.Input.Keyboard.JustDown(this.keys.jump) || Phaser.Input.Keyboard.JustDown(this.keys.up)) {
+            if (
+                Phaser.Input.Keyboard.JustDown(this.keys.jump) ||
+                Phaser.Input.Keyboard.JustDown(this.keys.w) ||
+                Phaser.Input.Keyboard.JustDown(this.keys.up)
+            ) {
                 this.jumpOrStart();
             }
 
-            this.dropOrSlide(this.keys.slide.isDown || this.keys.down.isDown);
+            this.dropOrSlide(this.keys.slide.isDown || this.keys.s.isDown || this.keys.down.isDown);
 
             if (!this.started || this.gameOver || this.isPaused) return;
 
@@ -755,7 +772,8 @@ function initVoidRunner() {
 
             sceneApi = {
                 start: () => this.startRun(),
-                pause: () => this.togglePause()
+                pause: () => this.togglePause(),
+                action: () => this.reverseOrStart()
             };
         }
 
@@ -952,9 +970,230 @@ function initVoidRunner() {
         }
     }
 
+    class PulseScene extends Phaser.Scene {
+        constructor() {
+            super('pulse');
+            this.started = false;
+            this.gameOver = false;
+            this.isPaused = false;
+            this.score = 0;
+            this.best = getBest('pulse');
+            this.laneIndex = 1;
+            this.lanes = [];
+            this.speed = 260;
+            this.spawnTimer = 0;
+            this.gates = null;
+            this.pulses = null;
+            this.starLayers = [];
+        }
+
+        create() {
+            const width = this.scale.width;
+            const height = this.scale.height;
+            this.physics.world.gravity.y = 0;
+            this.cameras.main.setBackgroundColor('rgba(0,0,0,0)');
+            this.lanes = [
+                height * 0.28,
+                height * 0.42,
+                height * 0.56,
+                height * 0.70
+            ];
+            this.createPulseTextures();
+            this.buildStarLayers(width, height);
+            const borderColor = toHex(getCssColor('--border-color', '#30363d'), '#30363d');
+            this.lanes.forEach(y => {
+                this.add.rectangle(width / 2, y, width - 96, 1, borderColor, 0.45);
+            });
+
+            this.player = this.physics.add.sprite(110, this.lanes[this.laneIndex], 'pulse-player');
+            this.player.body.setAllowGravity(false);
+            this.player.body.setCircle(13, 5, 5);
+            this.gates = this.physics.add.group();
+            this.pulses = this.physics.add.group();
+            this.physics.add.overlap(this.player, this.gates, () => this.endRun(), null, this);
+            this.physics.add.overlap(this.player, this.pulses, (player, pulse) => {
+                pulse.destroy();
+                this.score += 14;
+                this.updateScore();
+            }, null, this);
+            this.input.on('pointerdown', pointer => {
+                this.switchLane(pointer.downY < this.player.y ? -1 : 1);
+            });
+            sceneApi = {
+                start: () => this.startRun(),
+                pause: () => this.togglePause(),
+                action: code => this.handleAction(code)
+            };
+        }
+
+        createPulseTextures() {
+            const accentColor = toHex(getCssColor('--accent-color', '#58a6ff'), '#58a6ff');
+            const textColor = toHex(getCssColor('--text-color', '#c9d1d9'), '#c9d1d9');
+            const borderColor = toHex(getCssColor('--border-color', '#30363d'), '#30363d');
+
+            const playerGraphics = this.make.graphics({ x: 0, y: 0, add: false });
+            playerGraphics.fillStyle(accentColor, 1);
+            playerGraphics.fillCircle(18, 18, 14);
+            playerGraphics.fillStyle(textColor, 0.95);
+            playerGraphics.fillCircle(14, 13, 3);
+            playerGraphics.lineStyle(2, borderColor, 1);
+            playerGraphics.strokeCircle(18, 18, 14);
+            playerGraphics.generateTexture('pulse-player', 36, 36);
+            playerGraphics.destroy();
+
+            const gateGraphics = this.make.graphics({ x: 0, y: 0, add: false });
+            gateGraphics.fillStyle(0xff5f73, 0.78);
+            gateGraphics.fillRoundedRect(4, 4, 26, 42, 8);
+            gateGraphics.lineStyle(2, borderColor, 1);
+            gateGraphics.strokeRoundedRect(4, 4, 26, 42, 8);
+            gateGraphics.generateTexture('pulse-gate', 34, 50);
+            gateGraphics.destroy();
+
+            const pulseGraphics = this.make.graphics({ x: 0, y: 0, add: false });
+            pulseGraphics.fillStyle(accentColor, 0.95);
+            pulseGraphics.fillCircle(12, 12, 8);
+            pulseGraphics.fillStyle(textColor, 0.95);
+            pulseGraphics.fillCircle(9, 8, 2);
+            pulseGraphics.generateTexture('pulse-collect', 24, 24);
+            pulseGraphics.destroy();
+        }
+
+        buildStarLayers(width, height) {
+            const starColor = toHex(getCssColor('--star-color', '#ffffff'), '#ffffff');
+            for (let layer = 0; layer < 2; layer++) {
+                const key = `pulse-stars-${layer}`;
+                const graphics = this.make.graphics({ x: 0, y: 0, add: false });
+                graphics.fillStyle(starColor, 0.28 + layer * 0.2);
+                for (let i = 0; i < 42 + layer * 28; i++) {
+                    graphics.fillCircle(
+                        Phaser.Math.Between(0, width),
+                        Phaser.Math.Between(20, height - 20),
+                        Phaser.Math.FloatBetween(0.7, 1.7 + layer * 0.5)
+                    );
+                }
+                graphics.generateTexture(key, width, height);
+                graphics.destroy();
+                const tile = this.add.tileSprite(0, 0, width, height, key);
+                tile.setOrigin(0, 0);
+                this.starLayers.push({ tile, speed: 0.07 + layer * 0.07 });
+            }
+        }
+
+        update(time, delta) {
+            const dt = delta / 1000;
+            this.starLayers.forEach(layer => {
+                layer.tile.tilePositionX += this.speed * layer.speed * dt;
+            });
+            if (!this.started || this.gameOver || this.isPaused) return;
+
+            this.score += delta * 0.011;
+            this.speed = Math.min(560, 260 + this.score * 1.8);
+            this.spawnTimer -= delta;
+            if (this.spawnTimer <= 0) {
+                this.spawnWave();
+                this.spawnTimer = Phaser.Math.Between(760, 1180);
+            }
+            [...this.gates.getChildren(), ...this.pulses.getChildren()].forEach(item => {
+                item.x -= this.speed * dt;
+                if (item.x < -60) item.destroy();
+            });
+            this.updateScore();
+        }
+
+        handleAction(code) {
+            if (this.gameOver || !this.started) {
+                this.startRun();
+                return;
+            }
+            if (['ArrowUp', 'KeyW', 'KeyA', 'ArrowLeft'].includes(code)) {
+                this.switchLane(-1);
+            } else if (['ArrowDown', 'KeyS', 'KeyD', 'ArrowRight', 'Space'].includes(code)) {
+                this.switchLane(1);
+            }
+        }
+
+        switchLane(direction) {
+            if (!this.started || this.gameOver || this.isPaused) {
+                this.startRun();
+                return;
+            }
+            this.laneIndex = Phaser.Math.Clamp(this.laneIndex + direction, 0, this.lanes.length - 1);
+            this.tweens.add({
+                targets: this.player,
+                y: this.lanes[this.laneIndex],
+                duration: 90,
+                ease: 'Sine.easeOut'
+            });
+        }
+
+        startRun() {
+            this.started = true;
+            this.gameOver = false;
+            this.isPaused = false;
+            this.score = 0;
+            this.speed = 260;
+            this.spawnTimer = 480;
+            this.laneIndex = 1;
+            this.player.setPosition(110, this.lanes[this.laneIndex]);
+            this.gates.clear(true, true);
+            this.pulses.clear(true, true);
+            setOverlay('', '', false);
+            if (pauseButton) pauseButton.textContent = 'Pause';
+            this.updateScore();
+        }
+
+        togglePause() {
+            if (!this.started || this.gameOver) return;
+            this.isPaused = !this.isPaused;
+            if (pauseButton) pauseButton.textContent = this.isPaused ? 'Resume' : 'Pause';
+            setOverlay('Paused', 'Press P or Resume to continue.', this.isPaused);
+        }
+
+        spawnWave() {
+            const safeLane = Phaser.Math.Between(0, this.lanes.length - 1);
+            this.lanes.forEach((y, index) => {
+                if (index === safeLane) return;
+                if (Math.random() < 0.66) {
+                    const gate = this.physics.add.sprite(this.scale.width + 40, y, 'pulse-gate');
+                    gate.body.setAllowGravity(false);
+                    gate.body.setSize(20, 34).setOffset(7, 8);
+                    this.gates.add(gate);
+                }
+            });
+            if (Math.random() < 0.72) {
+                const pulse = this.physics.add.sprite(this.scale.width + 92, this.lanes[safeLane], 'pulse-collect');
+                pulse.body.setAllowGravity(false);
+                pulse.body.setCircle(8, 4, 4);
+                this.pulses.add(pulse);
+            }
+        }
+
+        endRun() {
+            if (this.gameOver) return;
+            this.gameOver = true;
+            this.started = false;
+            this.cameras.main.shake(140, 0.004);
+            const finalScore = Math.floor(this.score);
+            this.best = saveBest('pulse', finalScore);
+            setOverlay('Gate Closed', `Score ${finalScore}. Press Space or Start to retry.`);
+        }
+
+        updateScore() {
+            if (scoreElement) scoreElement.textContent = String(Math.floor(this.score));
+            if (bestElement) bestElement.textContent = String(this.best);
+        }
+    }
+
     const sceneMap = {
         runner: RunnerScene,
-        orbit: OrbitScene
+        orbit: OrbitScene,
+        pulse: PulseScene
+    };
+
+    const startPrompts = {
+        runner: 'Press W, Space, up, or tap to launch.',
+        orbit: 'Press Space or tap to reverse orbit.',
+        pulse: 'Press WASD, arrows, Space, or tap to switch lanes.'
     };
 
     const launchGame = gameKey => {
@@ -962,7 +1201,7 @@ function initVoidRunner() {
         destroyGame();
         updateChrome(gameKey);
         const meta = gameMeta[gameKey];
-        setOverlay(meta.title, gameKey === 'runner' ? 'Press Space or tap to launch.' : 'Press Space or tap to reverse orbit.');
+        setOverlay(meta.title, startPrompts[gameKey]);
         game = new Phaser.Game({
             type: Phaser.AUTO,
             parent: mount,
@@ -986,10 +1225,28 @@ function initVoidRunner() {
     const startHandler = () => sceneApi && sceneApi.start();
     const pauseHandler = () => sceneApi && sceneApi.pause();
     const keyGuard = event => {
-        const blockedKeys = [' ', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'];
+        const blockedCodes = ['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'KeyW', 'KeyA', 'KeyS', 'KeyD', 'ShiftLeft', 'ShiftRight'];
         const tagName = event.target && event.target.tagName;
-        if (blockedKeys.includes(event.key) && tagName !== 'INPUT' && tagName !== 'TEXTAREA') {
+        if (blockedCodes.includes(event.code) && tagName !== 'INPUT' && tagName !== 'TEXTAREA') {
             event.preventDefault();
+        }
+    };
+    const keyActionDown = event => {
+        const tagName = event.target && event.target.tagName;
+        if (tagName === 'INPUT' || tagName === 'TEXTAREA' || event.repeat) return;
+        if (activeGame === 'runner' && ['Space', 'ArrowUp', 'KeyW'].includes(event.code)) {
+            sceneApi && sceneApi.jump && sceneApi.jump();
+        } else if (activeGame === 'runner' && ['ArrowDown', 'KeyS', 'ShiftLeft', 'ShiftRight'].includes(event.code)) {
+            sceneApi && sceneApi.drop && sceneApi.drop(true);
+        } else if (activeGame === 'orbit' && ['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'KeyW', 'KeyS'].includes(event.code)) {
+            sceneApi && sceneApi.action && sceneApi.action();
+        } else if (activeGame === 'pulse' && ['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'KeyW', 'KeyA', 'KeyS', 'KeyD'].includes(event.code)) {
+            sceneApi && sceneApi.action && sceneApi.action(event.code);
+        }
+    };
+    const keyActionUp = event => {
+        if (activeGame === 'runner' && ['ArrowDown', 'KeyS', 'ShiftLeft', 'ShiftRight'].includes(event.code)) {
+            sceneApi && sceneApi.drop && sceneApi.drop(false);
         }
     };
     const choiceHandler = event => {
@@ -1001,6 +1258,8 @@ function initVoidRunner() {
     startButton && startButton.addEventListener('click', startHandler);
     pauseButton && pauseButton.addEventListener('click', pauseHandler);
     window.addEventListener('keydown', keyGuard, { passive: false });
+    window.addEventListener('keydown', keyActionDown);
+    window.addEventListener('keyup', keyActionUp);
     pickerButtons.forEach(button => button.addEventListener('click', choiceHandler));
     launchGame('runner');
 
@@ -1010,6 +1269,8 @@ function initVoidRunner() {
         startButton && startButton.removeEventListener('click', startHandler);
         pauseButton && pauseButton.removeEventListener('click', pauseHandler);
         window.removeEventListener('keydown', keyGuard);
+        window.removeEventListener('keydown', keyActionDown);
+        window.removeEventListener('keyup', keyActionUp);
         pickerButtons.forEach(button => button.removeEventListener('click', choiceHandler));
         destroyGame();
     };
