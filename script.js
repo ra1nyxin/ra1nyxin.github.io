@@ -60,6 +60,7 @@ const pageContents = {
                             <button type="button" class="is-active" data-game-choice="runner">Void Runner</button>
                             <button type="button" data-game-choice="orbit">Orbit Drift</button>
                             <button type="button" data-game-choice="pulse">Pulse Gate</button>
+                            <button type="button" data-game-choice="phase">Phase Shift</button>
                         </div>
                     </div>
                     <div class="game-stats">
@@ -122,6 +123,7 @@ const THEME_STORAGE_KEY = 'owo-theme';
 const VOID_RUNNER_BEST_KEY = 'void-runner-best';
 const ORBIT_DRIFT_BEST_KEY = 'orbit-drift-best';
 const PULSE_GATE_BEST_KEY = 'pulse-gate-best';
+const PHASE_SHIFT_BEST_KEY = 'phase-shift-best';
 let cleanupCurrentPage = null;
 
 function applyTheme(theme) {
@@ -370,6 +372,13 @@ function initVoidRunner() {
             bestKey: PULSE_GATE_BEST_KEY,
             primaryHelp: 'WASD / arrows / Space: switch lane',
             secondaryHelp: 'Avoid red gates and collect blue pulses'
+        },
+        phase: {
+            title: 'Phase Shift',
+            subtitle: 'Match your phase to pass cleanly through signal walls.',
+            bestKey: PHASE_SHIFT_BEST_KEY,
+            primaryHelp: 'Space / W / up / tap: switch phase',
+            secondaryHelp: 'Pass matching walls, avoid the wrong phase'
         }
     };
 
@@ -1184,16 +1193,225 @@ function initVoidRunner() {
         }
     }
 
+    class PhaseScene extends Phaser.Scene {
+        constructor() {
+            super('phase');
+            this.started = false;
+            this.gameOver = false;
+            this.isPaused = false;
+            this.score = 0;
+            this.best = getBest('phase');
+            this.phase = 0;
+            this.speed = 280;
+            this.spawnTimer = 0;
+            this.walls = null;
+            this.starLayers = [];
+            this.phaseColors = [0x58a6ff, 0xff7ac8];
+        }
+
+        create() {
+            const width = this.scale.width;
+            const height = this.scale.height;
+            this.physics.world.gravity.y = 0;
+            this.cameras.main.setBackgroundColor('rgba(0,0,0,0)');
+            this.centerY = height / 2;
+            this.createPhaseTextures();
+            this.buildStarLayers(width, height);
+
+            const borderColor = toHex(getCssColor('--border-color', '#30363d'), '#30363d');
+            this.add.rectangle(width / 2, this.centerY - 58, width - 96, 1, borderColor, 0.35);
+            this.add.rectangle(width / 2, this.centerY + 58, width - 96, 1, borderColor, 0.35);
+            this.playerAura = this.add.circle(112, this.centerY, 26, this.phaseColors[this.phase], 0.16);
+            this.player = this.physics.add.sprite(112, this.centerY, 'phase-player-blue');
+            this.player.body.setAllowGravity(false);
+            this.player.body.setCircle(14, 10, 10);
+            this.walls = this.physics.add.group();
+            this.physics.add.overlap(this.player, this.walls, (player, wall) => this.handleWall(wall), null, this);
+            this.input.on('pointerdown', () => this.switchOrStart());
+
+            sceneApi = {
+                start: () => this.startRun(),
+                pause: () => this.togglePause(),
+                action: () => this.switchOrStart()
+            };
+        }
+
+        createPhaseTextures() {
+            this.makePhasePlayer('phase-player-blue', 0x58a6ff);
+            this.makePhasePlayer('phase-player-pink', 0xff7ac8);
+            this.makeWallTexture('phase-wall-blue', 0x58a6ff);
+            this.makeWallTexture('phase-wall-pink', 0xff7ac8);
+        }
+
+        makePhasePlayer(key, color) {
+            const textColor = toHex(getCssColor('--text-color', '#c9d1d9'), '#c9d1d9');
+            const borderColor = toHex(getCssColor('--border-color', '#30363d'), '#30363d');
+            const graphics = this.make.graphics({ x: 0, y: 0, add: false });
+            graphics.fillStyle(color, 1);
+            graphics.fillCircle(24, 24, 16);
+            graphics.fillStyle(textColor, 0.92);
+            graphics.fillCircle(19, 18, 3);
+            graphics.lineStyle(2, borderColor, 1);
+            graphics.strokeCircle(24, 24, 16);
+            graphics.generateTexture(key, 48, 48);
+            graphics.destroy();
+        }
+
+        makeWallTexture(key, color) {
+            const borderColor = toHex(getCssColor('--border-color', '#30363d'), '#30363d');
+            const graphics = this.make.graphics({ x: 0, y: 0, add: false });
+            graphics.fillStyle(color, 0.72);
+            graphics.fillRoundedRect(4, 4, 32, 132, 12);
+            graphics.fillStyle(0xffffff, 0.18);
+            graphics.fillRoundedRect(12, 14, 8, 112, 6);
+            graphics.lineStyle(2, borderColor, 1);
+            graphics.strokeRoundedRect(4, 4, 32, 132, 12);
+            graphics.generateTexture(key, 40, 140);
+            graphics.destroy();
+        }
+
+        buildStarLayers(width, height) {
+            const starColor = toHex(getCssColor('--star-color', '#ffffff'), '#ffffff');
+            for (let layer = 0; layer < 2; layer++) {
+                const key = `phase-stars-${layer}`;
+                const graphics = this.make.graphics({ x: 0, y: 0, add: false });
+                graphics.fillStyle(starColor, 0.30 + layer * 0.2);
+                for (let i = 0; i < 48 + layer * 32; i++) {
+                    graphics.fillCircle(
+                        Phaser.Math.Between(0, width),
+                        Phaser.Math.Between(20, height - 20),
+                        Phaser.Math.FloatBetween(0.7, 1.7 + layer * 0.5)
+                    );
+                }
+                graphics.generateTexture(key, width, height);
+                graphics.destroy();
+                const tile = this.add.tileSprite(0, 0, width, height, key);
+                tile.setOrigin(0, 0);
+                this.starLayers.push({ tile, speed: 0.06 + layer * 0.07 });
+            }
+        }
+
+        update(time, delta) {
+            const dt = delta / 1000;
+            this.starLayers.forEach(layer => {
+                layer.tile.tilePositionX += this.speed * layer.speed * dt;
+            });
+            if (!this.started || this.gameOver || this.isPaused) return;
+
+            this.score += delta * 0.012;
+            this.speed = Math.min(610, 280 + this.score * 1.7);
+            this.spawnTimer -= delta;
+            this.player.y = this.centerY + Math.sin(time / 260) * 10;
+            this.playerAura.setPosition(this.player.x, this.player.y);
+            if (this.spawnTimer <= 0) {
+                this.spawnWall();
+                this.spawnTimer = Phaser.Math.Between(720, 1140);
+            }
+            this.walls.getChildren().forEach(wall => {
+                wall.x -= this.speed * dt;
+                if (wall.x < -80) {
+                    wall.destroy();
+                    this.score += 8;
+                }
+            });
+            this.updateScore();
+        }
+
+        switchOrStart() {
+            if (this.gameOver || !this.started) {
+                this.startRun();
+                return;
+            }
+            this.phase = this.phase === 0 ? 1 : 0;
+            this.player.setTexture(this.phase === 0 ? 'phase-player-blue' : 'phase-player-pink');
+            this.playerAura.setFillStyle(this.phaseColors[this.phase], 0.18);
+            this.tweens.add({
+                targets: this.playerAura,
+                scaleX: 1.24,
+                scaleY: 1.24,
+                duration: 90,
+                yoyo: true,
+                ease: 'Sine.easeOut'
+            });
+        }
+
+        startRun() {
+            this.started = true;
+            this.gameOver = false;
+            this.isPaused = false;
+            this.score = 0;
+            this.speed = 280;
+            this.spawnTimer = 520;
+            this.phase = 0;
+            this.player.setTexture('phase-player-blue');
+            this.player.setPosition(112, this.centerY);
+            this.playerAura.setPosition(this.player.x, this.player.y);
+            this.playerAura.setFillStyle(this.phaseColors[this.phase], 0.18);
+            this.walls.clear(true, true);
+            setOverlay('', '', false);
+            if (pauseButton) pauseButton.textContent = 'Pause';
+            this.updateScore();
+        }
+
+        togglePause() {
+            if (!this.started || this.gameOver) return;
+            this.isPaused = !this.isPaused;
+            if (pauseButton) pauseButton.textContent = this.isPaused ? 'Resume' : 'Pause';
+            setOverlay('Paused', 'Press P or Resume to continue.', this.isPaused);
+        }
+
+        spawnWall() {
+            const phase = Phaser.Math.Between(0, 1);
+            const key = phase === 0 ? 'phase-wall-blue' : 'phase-wall-pink';
+            const wall = this.physics.add.sprite(this.scale.width + 42, this.centerY, key);
+            wall.body.setAllowGravity(false);
+            wall.body.setSize(26, 112).setOffset(7, 14);
+            wall.setData('phase', phase);
+            wall.setData('passed', false);
+            this.walls.add(wall);
+        }
+
+        handleWall(wall) {
+            if (wall.getData('phase') === this.phase) {
+                if (!wall.getData('passed')) {
+                    wall.setData('passed', true);
+                    wall.setAlpha(0.35);
+                    this.score += 22;
+                    this.updateScore();
+                }
+                return;
+            }
+            this.endRun();
+        }
+
+        endRun() {
+            if (this.gameOver) return;
+            this.gameOver = true;
+            this.started = false;
+            this.cameras.main.shake(140, 0.004);
+            const finalScore = Math.floor(this.score);
+            this.best = saveBest('phase', finalScore);
+            setOverlay('Phase Broken', `Score ${finalScore}. Press Space or Start to retry.`);
+        }
+
+        updateScore() {
+            if (scoreElement) scoreElement.textContent = String(Math.floor(this.score));
+            if (bestElement) bestElement.textContent = String(this.best);
+        }
+    }
+
     const sceneMap = {
         runner: RunnerScene,
         orbit: OrbitScene,
-        pulse: PulseScene
+        pulse: PulseScene,
+        phase: PhaseScene
     };
 
     const startPrompts = {
         runner: 'Press W, Space, up, or tap to launch.',
         orbit: 'Press Space or tap to reverse orbit.',
-        pulse: 'Press WASD, arrows, Space, or tap to switch lanes.'
+        pulse: 'Press WASD, arrows, Space, or tap to switch lanes.',
+        phase: 'Press Space, W, up, or tap to switch phase.'
     };
 
     const launchGame = gameKey => {
@@ -1242,6 +1460,8 @@ function initVoidRunner() {
             sceneApi && sceneApi.action && sceneApi.action();
         } else if (activeGame === 'pulse' && ['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'KeyW', 'KeyA', 'KeyS', 'KeyD'].includes(event.code)) {
             sceneApi && sceneApi.action && sceneApi.action(event.code);
+        } else if (activeGame === 'phase' && ['Space', 'ArrowUp', 'KeyW'].includes(event.code)) {
+            sceneApi && sceneApi.action && sceneApi.action();
         }
     };
     const keyActionUp = event => {
