@@ -148,7 +148,7 @@ let cleanupCurrentPage = null;
 let starfieldController = null;
 
 const defaultSiteSettings = {
-    starCount: 140,
+    starCount: 200,
     minRadius: 0.4,
     maxRadius: 1.2,
     minAlpha: 0.1,
