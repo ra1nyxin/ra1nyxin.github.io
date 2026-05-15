@@ -467,6 +467,11 @@ function renderGallery() {
 const DOCS_REPO_OWNER = 'ra1nyxin';
 const DOCS_REPO_NAME = 'ra1nyxin.github.io';
 const docFallbackFiles = [
+    'doc_01_detection_engineering.md',
+    'doc_02_supply_chain_security.md',
+    'doc_03_cloud_native_security_baseline.md',
+    'doc_04_vulnerability_governance.md',
+    'doc_05_ai_system_security.md',
     'doc_winexesec.md',
     'doc_to_msf_c_payload.md',
     'doc_to_msf_cpp_payload.md',
