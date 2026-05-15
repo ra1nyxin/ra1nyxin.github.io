@@ -371,7 +371,7 @@ function initVoidRunner() {
             this.speed = 320;
             this.spawnTimer = 0;
             this.spawnDelay = 1450;
-            this.parallax = [];
+            this.starLayers = [];
         }
 
         create() {
@@ -397,7 +397,7 @@ function initVoidRunner() {
             this.runner.body.setSize(34, 50).setOffset(15, 12);
             this.physics.add.collider(this.runner, this.ground);
 
-            this.obstacles = this.physics.add.group();
+            this.obstacles = this.physics.add.staticGroup();
             this.physics.add.overlap(this.runner, this.obstacles, () => this.endRun(), null, this);
 
             this.keys = this.input.keyboard.addKeys({
@@ -463,7 +463,8 @@ function initVoidRunner() {
         buildStarLayers(width, height) {
             const starColor = toHex(getCssColor('--star-color', '#ffffff'), '#ffffff');
             for (let layer = 0; layer < 3; layer++) {
-                const graphics = this.add.graphics();
+                const key = `void-stars-${layer}`;
+                const graphics = this.make.graphics({ x: 0, y: 0, add: false });
                 graphics.fillStyle(starColor, 0.35 + layer * 0.18);
                 const count = 36 + layer * 22;
                 for (let i = 0; i < count; i++) {
@@ -472,18 +473,20 @@ function initVoidRunner() {
                     const radius = Phaser.Math.FloatBetween(0.8, 1.8 + layer * 0.4);
                     graphics.fillCircle(x, y, radius);
                 }
-                this.parallax.push({ node: graphics, speed: 0.08 + layer * 0.08, width });
+                graphics.generateTexture(key, width, height);
+                graphics.destroy();
+
+                const tile = this.add.tileSprite(0, 0, width, height, key);
+                tile.setOrigin(0, 0);
+                this.starLayers.push({ tile, speed: 0.08 + layer * 0.08 });
             }
         }
 
         update(time, delta) {
             const dt = delta / 1000;
 
-            this.parallax.forEach(layer => {
-                layer.node.x -= this.speed * layer.speed * dt;
-                if (layer.node.x <= -layer.width) {
-                    layer.node.x = 0;
-                }
+            this.starLayers.forEach(layer => {
+                layer.tile.tilePositionX += this.speed * layer.speed * dt;
             });
 
             if (Phaser.Input.Keyboard.JustDown(this.keys.pause)) {
@@ -511,6 +514,7 @@ function initVoidRunner() {
             this.obstacles.children.iterate(obstacle => {
                 if (!obstacle) return;
                 obstacle.x -= this.speed * dt;
+                obstacle.refreshBody();
                 if (obstacle.x < -80) {
                     obstacle.destroy();
                 }
@@ -574,16 +578,14 @@ function initVoidRunner() {
             const floorY = this.scale.height - 72;
             const useGate = this.score > 120 && Math.random() > 0.62;
             const texture = useGate ? 'gate' : 'spike';
-            const obstacle = this.physics.add.sprite(this.scale.width + 40, useGate ? floorY - 22 : floorY, texture);
+            const obstacle = this.obstacles.create(this.scale.width + 40, useGate ? floorY - 22 : floorY, texture);
             obstacle.setOrigin(0.5, 1);
-            obstacle.body.setAllowGravity(false);
-            obstacle.body.setImmovable(true);
             if (useGate) {
                 obstacle.body.setSize(22, 72).setOffset(7, 10);
             } else {
                 obstacle.body.setSize(30, 42).setOffset(13, 16);
             }
-            this.obstacles.add(obstacle);
+            obstacle.refreshBody();
         }
 
         endRun() {
