@@ -392,9 +392,169 @@ body {
     margin: auto;
 }
 
+.game-shell {
+    background-color: var(--panel-bg);
+    border: 1px solid var(--soft-border-color);
+    border-radius: 14px;
+    padding: 24px;
+    box-shadow: 0 12px 30px var(--shadow-color);
+    backdrop-filter: blur(8px);
+}
+
+.game-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: 18px;
+}
+
+.game-header h1 {
+    margin: 0 0 8px;
+}
+
+.game-header p {
+    margin: 0;
+    color: var(--muted-color);
+}
+
+.game-stats {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
+.game-stats span {
+    min-width: 96px;
+    padding: 8px 10px;
+    background-color: var(--button-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    color: var(--muted-color);
+    font-size: 13px;
+    text-align: center;
+}
+
+.game-stats strong {
+    color: var(--text-color);
+    margin-left: 6px;
+}
+
+.game-stage-wrap {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 8 / 3;
+    min-height: 260px;
+    overflow: hidden;
+    background:
+        linear-gradient(180deg, rgba(88, 166, 255, 0.12), transparent 45%),
+        var(--input-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+}
+
+:root[data-theme="light"] .game-stage-wrap {
+    background:
+        linear-gradient(180deg, rgba(9, 105, 218, 0.12), transparent 48%),
+        var(--input-bg);
+}
+
+.game-stage {
+    width: 100%;
+    height: 100%;
+}
+
+.game-stage canvas {
+    display: block;
+}
+
+.game-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: rgba(0, 0, 0, 0.28);
+    color: var(--text-color);
+    text-align: center;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+}
+
+:root[data-theme="light"] .game-overlay {
+    background: rgba(255, 255, 255, 0.48);
+}
+
+.game-overlay.is-hidden {
+    opacity: 0;
+}
+
+.game-overlay strong {
+    color: var(--accent-color);
+    font-size: 28px;
+}
+
+.game-overlay span {
+    color: var(--muted-color);
+}
+
+.game-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 16px;
+}
+
+.game-controls button {
+    background-color: var(--button-bg);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 8px 14px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.game-controls button:hover {
+    background-color: var(--button-hover-bg);
+    color: var(--accent-color);
+}
+
+.game-controls span {
+    color: var(--muted-color);
+    font-size: 13px;
+}
+
 @media (max-width: 768px) {
     .gallery-item {
         width: calc(33.33% - 10px);
+    }
+
+    .game-shell {
+        padding: 16px;
+    }
+
+    .game-header {
+        flex-direction: column;
+        gap: 14px;
+    }
+
+    .game-stats {
+        width: 100%;
+        justify-content: stretch;
+    }
+
+    .game-stats span {
+        flex: 1;
+    }
+
+    .game-stage-wrap {
+        aspect-ratio: 4 / 3;
+        min-height: 240px;
     }
 }
 
