@@ -1425,6 +1425,7 @@ function initVoidRunner() {
             this.echoes = null;
             this.noise = null;
             this.starLayers = [];
+            this.lastSpawnAngle = null;
         }
 
         create() {
@@ -1537,8 +1538,14 @@ function initVoidRunner() {
                 this.spawnTimer = Phaser.Math.Between(760, 1120);
             }
             [...this.echoes.getChildren(), ...this.noise.getChildren()].forEach(item => {
+                const age = time - item.getData('bornAt');
+                const ttl = item.getData('ttl');
                 item.rotation += item.getData('spin') * dt;
-                item.alpha = 0.78 + Math.sin(time / 150 + item.x) * 0.18;
+                item.alpha = Phaser.Math.Clamp(1 - Math.max(0, age - ttl * 0.62) / (ttl * 0.38), 0, 1);
+                item.setScale(1 + Math.sin(time / 170 + item.x) * 0.045);
+                if (age >= ttl) {
+                    item.destroy();
+                }
             });
             this.updateScore();
         }
@@ -1579,6 +1586,7 @@ function initVoidRunner() {
             this.spawnTimer = 520;
             this.ringIndex = 0;
             this.angle = -90;
+            this.lastSpawnAngle = null;
             this.echoes.clear(true, true);
             this.noise.clear(true, true);
             this.updatePlayerPosition();
@@ -1595,16 +1603,26 @@ function initVoidRunner() {
         }
 
         spawnEchoSet() {
-            const angle = Phaser.Math.FloatBetween(0, Math.PI * 2);
+            let angle = Phaser.Math.FloatBetween(0, Math.PI * 2);
+            if (this.lastSpawnAngle !== null) {
+                let attempts = 0;
+                while (Math.abs(Phaser.Math.Angle.Wrap(angle - this.lastSpawnAngle)) < 0.9 && attempts < 8) {
+                    angle = Phaser.Math.FloatBetween(0, Math.PI * 2);
+                    attempts++;
+                }
+            }
+            this.lastSpawnAngle = angle;
             const goodRing = Phaser.Math.Between(0, 1);
             const badRing = goodRing === 0 ? 1 : 0;
-            this.spawnEchoItem('echo-good', goodRing, angle, this.echoes, 10);
+            const ttl = Phaser.Math.Between(2300, 3100);
+            this.spawnEchoItem('echo-good', goodRing, angle, this.echoes, 10, ttl);
             if (Math.random() < 0.82) {
-                this.spawnEchoItem('echo-noise', badRing, angle + Phaser.Math.FloatBetween(-0.18, 0.18), this.noise, 11);
+                const noiseAngle = angle + Phaser.Math.FloatBetween(0.65, 1.15) * (Math.random() < 0.5 ? -1 : 1);
+                this.spawnEchoItem('echo-noise', badRing, noiseAngle, this.noise, 11, ttl * 0.88);
             }
         }
 
-        spawnEchoItem(texture, ring, angle, group, radius) {
+        spawnEchoItem(texture, ring, angle, group, radius, ttl) {
             const item = this.physics.add.sprite(
                 this.center.x + Math.cos(angle) * this.radii[ring],
                 this.center.y + Math.sin(angle) * this.radii[ring],
@@ -1613,6 +1631,8 @@ function initVoidRunner() {
             item.body.setAllowGravity(false);
             item.body.setCircle(radius, 18 - radius, 18 - radius);
             item.setData('spin', Phaser.Math.FloatBetween(-2.8, 2.8));
+            item.setData('bornAt', this.time.now);
+            item.setData('ttl', ttl);
             group.add(item);
         }
 
