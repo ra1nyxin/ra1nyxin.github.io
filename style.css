@@ -556,6 +556,94 @@ body {
     font-size: 13px;
 }
 
+.settings-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.settings-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    border-bottom: 1px solid var(--soft-border-color);
+    padding-bottom: 12px;
+}
+
+.settings-header h2 {
+    border-bottom: 0;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.settings-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.settings-actions button {
+    background-color: var(--button-bg);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 8px 14px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.settings-actions button:hover {
+    background-color: var(--button-hover-bg);
+    color: var(--accent-color);
+}
+
+.settings-grid {
+    display: grid;
+    gap: 16px;
+}
+
+.setting-control {
+    display: grid;
+    grid-template-columns: minmax(120px, 180px) 1fr;
+    gap: 16px;
+    align-items: center;
+}
+
+.setting-control span {
+    color: var(--text-color);
+    font-weight: 600;
+}
+
+.setting-inputs {
+    display: grid;
+    grid-template-columns: 1fr 120px;
+    gap: 12px;
+    align-items: center;
+}
+
+.setting-inputs input[type="range"] {
+    width: 100%;
+    accent-color: var(--accent-color);
+}
+
+.setting-inputs input[type="number"] {
+    width: 100%;
+    box-sizing: border-box;
+    background-color: var(--input-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    color: var(--text-color);
+    padding: 8px 10px;
+    outline: none;
+}
+
+.settings-status {
+    min-height: 20px;
+    margin: 0;
+    color: var(--muted-color);
+}
+
 @media (max-width: 768px) {
     .gallery-item {
         width: calc(33.33% - 10px);
@@ -582,6 +670,16 @@ body {
     .game-stage-wrap {
         aspect-ratio: 4 / 3;
         min-height: 240px;
+    }
+
+    .settings-header,
+    .setting-control,
+    .setting-inputs {
+        grid-template-columns: 1fr;
+    }
+
+    .settings-header {
+        align-items: flex-start;
     }
 }
 

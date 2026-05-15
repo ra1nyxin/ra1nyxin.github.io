@@ -111,6 +111,23 @@ const pageContents = {
             </section>
         </div>
     `,
+    settings: `
+        <div class="container">
+            <h1>设置</h1>
+            <p>调整本地显示效果，保存后会记录在当前浏览器。</p>
+            <section class="card settings-panel">
+                <div class="settings-header">
+                    <h2>背景星空</h2>
+                    <div class="settings-actions">
+                        <button type="button" id="settings-save">保存</button>
+                        <button type="button" id="settings-reset">重置</button>
+                    </div>
+                </div>
+                <div class="settings-grid" id="settings-grid"></div>
+                <p class="settings-status" id="settings-status" aria-live="polite"></p>
+            </section>
+        </div>
+    `,
     manual: `
         <div class="container">
             <h1>操作手册</h1>
@@ -121,12 +138,36 @@ const pageContents = {
 };
 
 const THEME_STORAGE_KEY = 'owo-theme';
+const SITE_SETTINGS_STORAGE_KEY = 'owo-site-settings';
 const VOID_RUNNER_BEST_KEY = 'void-runner-best';
 const ORBIT_DRIFT_BEST_KEY = 'orbit-drift-best';
 const PULSE_GATE_BEST_KEY = 'pulse-gate-best';
 const PHASE_SHIFT_BEST_KEY = 'phase-shift-best';
 const ECHO_BLOOM_BEST_KEY = 'echo-bloom-best';
 let cleanupCurrentPage = null;
+let starfieldController = null;
+
+const defaultSiteSettings = {
+    starCount: 140,
+    minRadius: 0.4,
+    maxRadius: 1.2,
+    minAlpha: 0.1,
+    twinkleMinSpeed: 0.005,
+    twinkleMaxSpeed: 0.02,
+    movementSpeed: 0,
+    backgroundAlpha: 1
+};
+
+const settingsControls = [
+    { key: 'starCount', label: '星星数量', min: 0, max: 600, step: 1 },
+    { key: 'minRadius', label: '最小半径', min: 0, max: 4, step: 0.1 },
+    { key: 'maxRadius', label: '最大半径', min: 0, max: 8, step: 0.1 },
+    { key: 'minAlpha', label: '最低透明度', min: 0, max: 1, step: 0.01 },
+    { key: 'twinkleMinSpeed', label: '最小闪烁速度', min: 0, max: 0.08, step: 0.001 },
+    { key: 'twinkleMaxSpeed', label: '最大闪烁速度', min: 0, max: 0.12, step: 0.001 },
+    { key: 'movementSpeed', label: '星空漂移速度', min: -80, max: 80, step: 1 },
+    { key: 'backgroundAlpha', label: '背景不透明度', min: 0, max: 1, step: 0.01 }
+];
 
 function applyTheme(theme) {
     const nextTheme = theme === 'light' ? 'light' : 'dark';
@@ -161,6 +202,152 @@ function cleanupPage() {
         cleanupCurrentPage();
         cleanupCurrentPage = null;
     }
+}
+
+function loadSiteSettings() {
+    try {
+        const savedSettings = JSON.parse(localStorage.getItem(SITE_SETTINGS_STORAGE_KEY) || '{}');
+        return { ...defaultSiteSettings, ...savedSettings };
+    } catch (error) {
+        console.error('Failed to load site settings:', error);
+        return { ...defaultSiteSettings };
+    }
+}
+
+function saveSiteSettings(settings) {
+    localStorage.setItem(SITE_SETTINGS_STORAGE_KEY, JSON.stringify(settings));
+}
+
+function applySiteSettings(settings) {
+    if (starfieldController) {
+        starfieldController.applySettings(settings);
+    }
+}
+
+function normalizeStarSettings(settings) {
+    const nextSettings = { ...defaultSiteSettings, ...settings };
+    nextSettings.starCount = Math.max(0, Math.floor(Number(nextSettings.starCount) || 0));
+    nextSettings.minRadius = Number(nextSettings.minRadius) || 0;
+    nextSettings.maxRadius = Number(nextSettings.maxRadius) || 0;
+    nextSettings.minAlpha = Number(nextSettings.minAlpha) || 0;
+    nextSettings.twinkleMinSpeed = Number(nextSettings.twinkleMinSpeed) || 0;
+    nextSettings.twinkleMaxSpeed = Number(nextSettings.twinkleMaxSpeed) || 0;
+    nextSettings.movementSpeed = Number(nextSettings.movementSpeed) || 0;
+    nextSettings.backgroundAlpha = Number(nextSettings.backgroundAlpha);
+    if (Number.isNaN(nextSettings.backgroundAlpha)) {
+        nextSettings.backgroundAlpha = defaultSiteSettings.backgroundAlpha;
+    }
+    if (nextSettings.maxRadius < nextSettings.minRadius) {
+        [nextSettings.minRadius, nextSettings.maxRadius] = [nextSettings.maxRadius, nextSettings.minRadius];
+    }
+    if (nextSettings.twinkleMaxSpeed < nextSettings.twinkleMinSpeed) {
+        [nextSettings.twinkleMinSpeed, nextSettings.twinkleMaxSpeed] = [nextSettings.twinkleMaxSpeed, nextSettings.twinkleMinSpeed];
+    }
+    return nextSettings;
+}
+
+function initSettingsPage() {
+    const grid = document.getElementById('settings-grid');
+    const saveButton = document.getElementById('settings-save');
+    const resetButton = document.getElementById('settings-reset');
+    const status = document.getElementById('settings-status');
+    if (!grid || !saveButton || !resetButton) return null;
+
+    let currentSettings = loadSiteSettings();
+
+    const showStatus = message => {
+        if (!status) return;
+        status.textContent = message;
+    };
+
+    const readForm = () => {
+        const nextSettings = {};
+        settingsControls.forEach(control => {
+            const input = grid.querySelector(`[data-setting-number="${control.key}"]`);
+            nextSettings[control.key] = input ? Number(input.value) : defaultSiteSettings[control.key];
+        });
+        return normalizeStarSettings(nextSettings);
+    };
+
+    const syncControls = settings => {
+        settingsControls.forEach(control => {
+            const range = grid.querySelector(`[data-setting-range="${control.key}"]`);
+            const input = grid.querySelector(`[data-setting-number="${control.key}"]`);
+            const value = settings[control.key];
+            if (range) {
+                range.value = String(Math.max(Number(range.min), Math.min(Number(range.max), value)));
+            }
+            if (input) {
+                input.value = String(value);
+            }
+        });
+    };
+
+    grid.innerHTML = settingsControls.map(control => `
+        <label class="setting-control">
+            <span>${control.label}</span>
+            <div class="setting-inputs">
+                <input type="range" min="${control.min}" max="${control.max}" step="${control.step}" data-setting-range="${control.key}">
+                <input type="number" step="${control.step}" data-setting-number="${control.key}">
+            </div>
+        </label>
+    `).join('');
+
+    const handleRangeInput = event => {
+        const key = event.target.dataset.settingRange;
+        const input = grid.querySelector(`[data-setting-number="${key}"]`);
+        if (input) input.value = event.target.value;
+        currentSettings = readForm();
+        applySiteSettings(currentSettings);
+        showStatus('预览中，点击保存后生效记录。');
+    };
+
+    const handleNumberInput = event => {
+        const key = event.target.dataset.settingNumber;
+        const range = grid.querySelector(`[data-setting-range="${key}"]`);
+        const value = Number(event.target.value);
+        if (range && !Number.isNaN(value)) {
+            range.value = String(Math.max(Number(range.min), Math.min(Number(range.max), value)));
+        }
+        currentSettings = readForm();
+        applySiteSettings(currentSettings);
+        showStatus('预览中，点击保存后生效记录。');
+    };
+
+    grid.querySelectorAll('[data-setting-range]').forEach(input => {
+        input.addEventListener('input', handleRangeInput);
+    });
+    grid.querySelectorAll('[data-setting-number]').forEach(input => {
+        input.addEventListener('input', handleNumberInput);
+    });
+
+    const handleSave = () => {
+        currentSettings = readForm();
+        saveSiteSettings(currentSettings);
+        applySiteSettings(currentSettings);
+        syncControls(currentSettings);
+        showStatus('已保存。');
+    };
+
+    const handleReset = () => {
+        currentSettings = { ...defaultSiteSettings };
+        saveSiteSettings(currentSettings);
+        syncControls(currentSettings);
+        applySiteSettings(currentSettings);
+        showStatus('已重置为默认设置。');
+    };
+
+    saveButton.addEventListener('click', handleSave);
+    resetButton.addEventListener('click', handleReset);
+
+    currentSettings = normalizeStarSettings(currentSettings);
+    syncControls(currentSettings);
+    applySiteSettings(currentSettings);
+
+    return () => {
+        saveButton.removeEventListener('click', handleSave);
+        resetButton.removeEventListener('click', handleReset);
+    };
 }
 
 async function loadMarkdownContent(filePath, targetElementId) {
@@ -312,6 +499,8 @@ function loadContent(page) {
             loadDocsPage();
         } else if (page === 'manual') {
             loadMarkdownContent('operationmanual.txt', 'manual-content');
+        } else if (page === 'settings') {
+            cleanupCurrentPage = initSettingsPage();
         } else if (page === 'test') {
             const videoElement = document.getElementById('nggyu-video');
             if (videoElement) {
@@ -1846,9 +2035,7 @@ function initStarfield() {
 
     const ctx = canvas.getContext('2d');
     let stars = [];
-    const starCount = 140;
-    const minRadius = 0.4;
-    const maxRadius = 1.2;
+    let settings = normalizeStarSettings(loadSiteSettings());
 
     function resizeCanvas() {
         canvas.width = window.innerWidth;
@@ -1858,29 +2045,36 @@ function initStarfield() {
 
     function createStars() {
         stars = [];
-        for (let i = 0; i < starCount; i++) {
+        for (let i = 0; i < settings.starCount; i++) {
             stars.push({
                 x: Math.random() * canvas.width,
                 y: Math.random() * canvas.height,
-                radius: minRadius + Math.random() * (maxRadius - minRadius),
+                radius: settings.minRadius + Math.random() * (settings.maxRadius - settings.minRadius),
                 alpha: Math.random(),
-                twinkleSpeed: 0.005 + Math.random() * 0.015
+                twinkleSpeed: settings.twinkleMinSpeed + Math.random() * (settings.twinkleMaxSpeed - settings.twinkleMinSpeed)
             });
         }
     }
 
     function drawStars() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.globalAlpha = Math.max(0, Math.min(1, settings.backgroundAlpha));
+        ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--starfield-bg').trim() || '#05060a';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
         ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--star-color').trim() || '#ffffff';
 
         stars.forEach(star => {
+            star.x += settings.movementSpeed * 0.016;
+            if (star.x > canvas.width + star.radius) star.x = -star.radius;
+            if (star.x < -star.radius) star.x = canvas.width + star.radius;
+
             ctx.globalAlpha = star.alpha;
             ctx.beginPath();
             ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
             ctx.fill();
 
             star.alpha += star.twinkleSpeed;
-            if (star.alpha >= 1 || star.alpha <= 0.1) {
+            if (star.alpha >= 1 || star.alpha <= settings.minAlpha) {
                 star.twinkleSpeed = -star.twinkleSpeed;
             }
         });
@@ -1892,4 +2086,21 @@ function initStarfield() {
     window.addEventListener('resize', resizeCanvas);
     resizeCanvas();
     drawStars();
+
+    starfieldController = {
+        applySettings(nextSettings) {
+            const normalizedSettings = normalizeStarSettings(nextSettings);
+            const shouldRecreateStars =
+                normalizedSettings.starCount !== settings.starCount ||
+                normalizedSettings.minRadius !== settings.minRadius ||
+                normalizedSettings.maxRadius !== settings.maxRadius ||
+                normalizedSettings.twinkleMinSpeed !== settings.twinkleMinSpeed ||
+                normalizedSettings.twinkleMaxSpeed !== settings.twinkleMaxSpeed;
+
+            settings = normalizedSettings;
+            if (shouldRecreateStars) {
+                createStars();
+            }
+        }
+    };
 }
