@@ -84,6 +84,36 @@ const pageContents = {
     `
 };
 
+const THEME_STORAGE_KEY = 'owo-theme';
+
+function applyTheme(theme) {
+    const nextTheme = theme === 'light' ? 'light' : 'dark';
+    document.documentElement.dataset.theme = nextTheme;
+
+    const toggleButton = document.getElementById('theme-toggle');
+    if (toggleButton) {
+        const isLight = nextTheme === 'light';
+        const label = isLight ? '切换到深色模式' : '切换到浅色模式';
+        toggleButton.setAttribute('aria-label', label);
+        toggleButton.setAttribute('title', label);
+    }
+}
+
+function initThemeToggle() {
+    const savedTheme = localStorage.getItem(THEME_STORAGE_KEY);
+    applyTheme(savedTheme);
+
+    const toggleButton = document.getElementById('theme-toggle');
+    if (!toggleButton) return;
+
+    toggleButton.addEventListener('click', () => {
+        const currentTheme = document.documentElement.dataset.theme || 'dark';
+        const nextTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        localStorage.setItem(THEME_STORAGE_KEY, nextTheme);
+        applyTheme(nextTheme);
+    });
+}
+
 async function loadMarkdownContent(filePath, targetElementId) {
     try {
         const response = await fetch(filePath);
@@ -247,6 +277,7 @@ function loadContent(page) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+    initThemeToggle();
     loadContent('home');
     initStarfield();
 });
@@ -364,7 +395,7 @@ function initStarfield() {
 
     function drawStars() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.fillStyle = '#ffffff';
+        ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--star-color').trim() || '#ffffff';
 
         stars.forEach(star => {
             ctx.globalAlpha = star.alpha;
