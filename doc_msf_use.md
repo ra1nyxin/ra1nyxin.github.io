@@ -68,7 +68,7 @@ run -j
 
 ```
 
-* `ExitOnSession false`：允许接收多个 Session，而不是捕获一个后就退出监听。
+* `ExitOnSession false`：允许接收多个 Session，捕获一个后不会退出监听。
 
 ---
 
