@@ -798,6 +798,88 @@ body {
     color: var(--text-color) !important;
 }
 
+.floating-music-player.aplayer {
+    margin: 0 !important;
+    border: 1px solid var(--soft-border-color) !important;
+    border-radius: var(--card-radius) !important;
+    background: rgba(var(--panel-rgb), 0.96) !important;
+    color: var(--text-color) !important;
+    box-shadow: 0 12px 30px var(--shadow-color) !important;
+    backdrop-filter: blur(var(--panel-blur));
+    overflow: hidden;
+}
+
+.floating-music-player.aplayer .aplayer-body,
+.floating-music-player.aplayer .aplayer-info,
+.floating-music-player.aplayer .aplayer-list,
+.floating-music-player.aplayer .aplayer-list ol,
+.floating-music-player.aplayer .aplayer-list ol li {
+    background: rgba(var(--panel-rgb), 0.96) !important;
+}
+
+.floating-music-player.aplayer .aplayer-pic {
+    background-color: hsl(var(--accent-hue), 90%, 62%) !important;
+}
+
+.floating-music-player.aplayer .aplayer-info,
+.floating-music-player.aplayer .aplayer-list ol li {
+    border-color: var(--soft-border-color) !important;
+}
+
+.floating-music-player.aplayer .aplayer-title,
+.floating-music-player.aplayer .aplayer-list ol li,
+.floating-music-player.aplayer .aplayer-list ol li .aplayer-list-title {
+    color: var(--text-color) !important;
+}
+
+.floating-music-player.aplayer .aplayer-list ol li .aplayer-list-index,
+.floating-music-player.aplayer .aplayer-author,
+.floating-music-player.aplayer .aplayer-list ol li .aplayer-list-author,
+.floating-music-player.aplayer .aplayer-time,
+.floating-music-player.aplayer .aplayer-time .aplayer-time-inner {
+    color: var(--muted-color) !important;
+}
+
+.floating-music-player.aplayer .aplayer-list ol li:hover,
+.floating-music-player.aplayer .aplayer-list ol li.aplayer-list-light {
+    background: var(--button-hover-bg) !important;
+}
+
+.floating-music-player.aplayer .aplayer-info .aplayer-controller .aplayer-bar-wrap .aplayer-bar {
+    background: var(--border-color) !important;
+}
+
+.floating-music-player.aplayer .aplayer-info .aplayer-controller .aplayer-bar-wrap .aplayer-bar .aplayer-loaded {
+    background: var(--muted-color) !important;
+    opacity: 0.45;
+}
+
+.floating-music-player.aplayer .aplayer-info .aplayer-controller .aplayer-bar-wrap .aplayer-bar .aplayer-played,
+.floating-music-player.aplayer .aplayer-info .aplayer-controller .aplayer-bar-wrap .aplayer-bar .aplayer-played .aplayer-thumb,
+.floating-music-player.aplayer .aplayer-volume {
+    background: var(--accent-color) !important;
+}
+
+.floating-music-player.aplayer .aplayer-info .aplayer-controller .aplayer-time .aplayer-icon path,
+.floating-music-player.aplayer .aplayer-icon path {
+    fill: var(--muted-color) !important;
+}
+
+.floating-music-player.aplayer .aplayer-info .aplayer-controller .aplayer-time .aplayer-icon:hover path,
+.floating-music-player.aplayer .aplayer-icon:hover path {
+    fill: var(--accent-color) !important;
+}
+
+.floating-music-player.aplayer .aplayer-volume-bar,
+.floating-music-player.aplayer .aplayer-volume-bar-wrap,
+.floating-music-player.aplayer .aplayer-notice {
+    background: var(--button-bg) !important;
+}
+
+.floating-music-player.aplayer .aplayer-notice {
+    color: var(--text-color) !important;
+}
+
 @media (max-width: 768px) {
     .gallery-item {
         width: calc(33.33% - 10px);
