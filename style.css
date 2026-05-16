@@ -697,8 +697,8 @@ body {
     margin: 0;
     border: 1px solid var(--soft-border-color);
     border-radius: var(--card-radius);
-    background-color: var(--panel-bg);
-    color: var(--text-color);
+    background: rgba(var(--panel-rgb), 0.96) !important;
+    color: var(--text-color) !important;
     box-shadow: 0 12px 30px var(--shadow-color);
     backdrop-filter: blur(var(--panel-blur));
     overflow: hidden;
@@ -707,8 +707,9 @@ body {
 .floating-music-player .aplayer .aplayer-body,
 .floating-music-player .aplayer .aplayer-info,
 .floating-music-player .aplayer .aplayer-list,
-.floating-music-player .aplayer .aplayer-list ol {
-    background-color: rgba(var(--panel-rgb), 0.96);
+.floating-music-player .aplayer .aplayer-list ol,
+.floating-music-player .aplayer .aplayer-list ol li {
+    background: rgba(var(--panel-rgb), 0.96) !important;
 }
 
 .floating-music-player .aplayer .aplayer-pic {
@@ -731,57 +732,70 @@ body {
 .floating-music-player .aplayer .aplayer-title,
 .floating-music-player .aplayer .aplayer-list ol li,
 .floating-music-player .aplayer .aplayer-list ol li .aplayer-list-title {
-    color: var(--text-color);
+    color: var(--text-color) !important;
 }
 
 .floating-music-player .aplayer .aplayer-list ol li .aplayer-list-index,
 .floating-music-player .aplayer .aplayer-author,
 .floating-music-player .aplayer .aplayer-list ol li .aplayer-list-author,
 .floating-music-player .aplayer .aplayer-time,
+.floating-music-player .aplayer .aplayer-time .aplayer-time-inner,
 .floating-music-player .aplayer .aplayer-list-light .aplayer-list-cur {
-    color: var(--muted-color);
+    color: var(--muted-color) !important;
 }
 
 .floating-music-player .aplayer .aplayer-list ol li:hover,
 .floating-music-player .aplayer .aplayer-list ol li.aplayer-list-light {
-    background-color: var(--button-hover-bg);
+    background: var(--button-hover-bg) !important;
 }
 
 .floating-music-player .aplayer .aplayer-icon {
-    color: var(--text-color);
+    color: var(--text-color) !important;
 }
 
 .floating-music-player .aplayer .aplayer-icon:hover {
-    color: var(--accent-color);
+    color: var(--accent-color) !important;
 }
 
 .floating-music-player .aplayer .aplayer-info .aplayer-controller .aplayer-bar-wrap .aplayer-bar {
-    background-color: var(--border-color);
+    background: var(--border-color) !important;
 }
 
 .floating-music-player .aplayer .aplayer-info .aplayer-controller .aplayer-bar-wrap .aplayer-bar .aplayer-loaded {
-    background-color: var(--muted-color);
+    background: var(--muted-color) !important;
     opacity: 0.45;
+}
+
+.floating-music-player .aplayer .aplayer-info .aplayer-controller .aplayer-bar-wrap .aplayer-bar .aplayer-played {
+    background: var(--accent-color) !important;
+}
+
+.floating-music-player .aplayer .aplayer-info .aplayer-controller .aplayer-bar-wrap .aplayer-bar .aplayer-played .aplayer-thumb {
+    background: var(--accent-color) !important;
 }
 
 .floating-music-player .aplayer .aplayer-info .aplayer-controller .aplayer-time .aplayer-icon path,
 .floating-music-player .aplayer .aplayer-icon path {
-    fill: var(--muted-color);
+    fill: var(--muted-color) !important;
 }
 
 .floating-music-player .aplayer .aplayer-info .aplayer-controller .aplayer-time .aplayer-icon:hover path,
 .floating-music-player .aplayer .aplayer-icon:hover path {
-    fill: var(--accent-color);
+    fill: var(--accent-color) !important;
 }
 
 .floating-music-player .aplayer .aplayer-volume-bar,
 .floating-music-player .aplayer .aplayer-volume-bar-wrap {
-    background-color: var(--button-bg);
+    background: var(--button-bg) !important;
+}
+
+.floating-music-player .aplayer .aplayer-volume {
+    background: var(--accent-color) !important;
 }
 
 .floating-music-player .aplayer .aplayer-notice {
-    background-color: var(--button-bg);
-    color: var(--text-color);
+    background: var(--button-bg) !important;
+    color: var(--text-color) !important;
 }
 
 @media (max-width: 768px) {
