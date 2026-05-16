@@ -2197,7 +2197,7 @@ function initMusicPlayer() {
         loop: 'all',
         order: 'list',
         preload: 'metadata',
-        volume: 0.45,
+        volume: 0.3,
         mutex: true,
         listFolded: true,
         audio
