@@ -704,6 +704,21 @@ body {
     overflow: hidden;
 }
 
+.floating-music-player .aplayer .aplayer-body,
+.floating-music-player .aplayer .aplayer-info,
+.floating-music-player .aplayer .aplayer-list,
+.floating-music-player .aplayer .aplayer-list ol {
+    background-color: rgba(var(--panel-rgb), 0.96);
+}
+
+.floating-music-player .aplayer .aplayer-pic {
+    background-color: hsl(var(--accent-hue), 90%, 62%) !important;
+}
+
+.floating-music-player .aplayer .aplayer-info {
+    border-bottom-color: var(--soft-border-color);
+}
+
 .floating-music-player .aplayer.aplayer-withlist .aplayer-list {
     border-top-color: var(--soft-border-color);
 }
@@ -719,6 +734,7 @@ body {
     color: var(--text-color);
 }
 
+.floating-music-player .aplayer .aplayer-list ol li .aplayer-list-index,
 .floating-music-player .aplayer .aplayer-author,
 .floating-music-player .aplayer .aplayer-list ol li .aplayer-list-author,
 .floating-music-player .aplayer .aplayer-time,
@@ -737,6 +753,35 @@ body {
 
 .floating-music-player .aplayer .aplayer-icon:hover {
     color: var(--accent-color);
+}
+
+.floating-music-player .aplayer .aplayer-info .aplayer-controller .aplayer-bar-wrap .aplayer-bar {
+    background-color: var(--border-color);
+}
+
+.floating-music-player .aplayer .aplayer-info .aplayer-controller .aplayer-bar-wrap .aplayer-bar .aplayer-loaded {
+    background-color: var(--muted-color);
+    opacity: 0.45;
+}
+
+.floating-music-player .aplayer .aplayer-info .aplayer-controller .aplayer-time .aplayer-icon path,
+.floating-music-player .aplayer .aplayer-icon path {
+    fill: var(--muted-color);
+}
+
+.floating-music-player .aplayer .aplayer-info .aplayer-controller .aplayer-time .aplayer-icon:hover path,
+.floating-music-player .aplayer .aplayer-icon:hover path {
+    fill: var(--accent-color);
+}
+
+.floating-music-player .aplayer .aplayer-volume-bar,
+.floating-music-player .aplayer .aplayer-volume-bar-wrap {
+    background-color: var(--button-bg);
+}
+
+.floating-music-player .aplayer .aplayer-notice {
+    background-color: var(--button-bg);
+    color: var(--text-color);
 }
 
 @media (max-width: 768px) {
