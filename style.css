@@ -685,6 +685,60 @@ body {
     color: var(--muted-color);
 }
 
+.floating-music-player {
+    position: fixed;
+    right: 18px;
+    bottom: 18px;
+    z-index: 20;
+    width: min(360px, calc(100vw - 36px));
+}
+
+.floating-music-player .aplayer {
+    margin: 0;
+    border: 1px solid var(--soft-border-color);
+    border-radius: var(--card-radius);
+    background-color: var(--panel-bg);
+    color: var(--text-color);
+    box-shadow: 0 12px 30px var(--shadow-color);
+    backdrop-filter: blur(var(--panel-blur));
+    overflow: hidden;
+}
+
+.floating-music-player .aplayer.aplayer-withlist .aplayer-list {
+    border-top-color: var(--soft-border-color);
+}
+
+.floating-music-player .aplayer .aplayer-info,
+.floating-music-player .aplayer .aplayer-list ol li {
+    border-color: var(--soft-border-color);
+}
+
+.floating-music-player .aplayer .aplayer-title,
+.floating-music-player .aplayer .aplayer-list ol li,
+.floating-music-player .aplayer .aplayer-list ol li .aplayer-list-title {
+    color: var(--text-color);
+}
+
+.floating-music-player .aplayer .aplayer-author,
+.floating-music-player .aplayer .aplayer-list ol li .aplayer-list-author,
+.floating-music-player .aplayer .aplayer-time,
+.floating-music-player .aplayer .aplayer-list-light .aplayer-list-cur {
+    color: var(--muted-color);
+}
+
+.floating-music-player .aplayer .aplayer-list ol li:hover,
+.floating-music-player .aplayer .aplayer-list ol li.aplayer-list-light {
+    background-color: var(--button-hover-bg);
+}
+
+.floating-music-player .aplayer .aplayer-icon {
+    color: var(--text-color);
+}
+
+.floating-music-player .aplayer .aplayer-icon:hover {
+    color: var(--accent-color);
+}
+
 @media (max-width: 768px) {
     .gallery-item {
         width: calc(33.33% - 10px);
@@ -721,6 +775,16 @@ body {
 
     .settings-header {
         align-items: flex-start;
+    }
+
+    .floating-music-player {
+        right: 10px;
+        bottom: 10px;
+        width: min(320px, calc(100vw - 20px));
+    }
+
+    .floating-music-player .aplayer .aplayer-info {
+        padding-right: 10px;
     }
 }
 

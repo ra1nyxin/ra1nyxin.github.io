@@ -190,6 +190,17 @@ const PHASE_SHIFT_BEST_KEY = 'phase-shift-best';
 const ECHO_BLOOM_BEST_KEY = 'echo-bloom-best';
 let cleanupCurrentPage = null;
 let starfieldController = null;
+let musicPlayer = null;
+
+const musicTracks = [
+    { name: 'K歌之王', artist: '小雨的歌单', url: 'music/K歌之王.mp3' },
+    { name: '单车', artist: '小雨的歌单', url: 'music/单车.mp3' },
+    { name: '孤独患者', artist: '小雨的歌单', url: 'music/孤独患者.mp3' },
+    { name: '富士山下', artist: '小雨的歌单', url: 'music/富士山下.mp3' },
+    { name: '最佳损友', artist: '小雨的歌单', url: 'music/最佳损友.mp3' },
+    { name: '沙龙', artist: '小雨的歌单', url: 'music/沙龙.mp3' },
+    { name: '葡萄成熟时', artist: '小雨的歌单', url: 'music/葡萄成熟时.mp3' }
+];
 
 const defaultSiteSettings = {
     starCount: 200,
@@ -2152,11 +2163,46 @@ document.addEventListener('DOMContentLoaded', () => {
     applySiteSettings(loadSiteSettings());
     loadContent(getInitialPage(), { updateUrl: false });
     initStarfield();
+    initMusicPlayer();
 });
 
 window.addEventListener('popstate', () => {
     loadContent(getInitialPage(), { updateUrl: false });
 });
+
+function shuffleTracks(tracks) {
+    const shuffledTracks = [...tracks];
+    for (let i = shuffledTracks.length - 1; i > 0; i--) {
+        const randomIndex = Math.floor(Math.random() * (i + 1));
+        [shuffledTracks[i], shuffledTracks[randomIndex]] = [shuffledTracks[randomIndex], shuffledTracks[i]];
+    }
+    return shuffledTracks;
+}
+
+function initMusicPlayer() {
+    const playerElement = document.getElementById('floating-music-player');
+    if (!playerElement || typeof APlayer === 'undefined' || musicPlayer) return;
+
+    const audio = shuffleTracks(musicTracks).map(track => ({
+        ...track,
+        type: 'auto'
+    }));
+
+    musicPlayer = new APlayer({
+        container: playerElement,
+        fixed: false,
+        mini: false,
+        autoplay: true,
+        theme: '#58a6ff',
+        loop: 'all',
+        order: 'list',
+        preload: 'metadata',
+        volume: 0.45,
+        mutex: true,
+        listFolded: true,
+        audio
+    });
+}
 
 function copyCode(button) {
     // Find the code element relative to the button's parent (the .code-block div)
