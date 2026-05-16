@@ -1,53 +1,78 @@
 /* 全局样式 */
 :root {
+    --accent-hue: 212;
+    --content-max-width: 1280px;
+    --site-font-size: 16px;
+    --content-padding-y: 32px;
+    --card-padding: 24px;
+    --card-radius: 14px;
+    --control-radius: 6px;
+    --card-gap: 24px;
+    --panel-opacity: 0.45;
+    --navbar-opacity: 0.55;
+    --panel-blur: 8px;
+    --navbar-blur: 10px;
+    --shadow-strength: 1;
+    --transition-speed: 0.2s;
+    --panel-rgb: 22, 27, 34;
+    --navbar-rgb: 22, 27, 34;
+    --star-hue: 0;
+    --star-saturation: 0%;
+    --star-lightness: 100%;
+    --starfield-hue: 230;
+    --starfield-saturation: 36%;
+    --starfield-lightness: 3%;
     --page-bg: #0d1117;
     --text-color: #c9d1d9;
     --muted-color: #8b949e;
-    --accent-color: #58a6ff;
+    --accent-color: hsl(var(--accent-hue), 100%, 67%);
     --border-color: #30363d;
     --soft-border-color: rgba(33, 38, 45, 0.4);
-    --panel-bg: rgba(22, 27, 34, 0.45);
-    --navbar-bg: rgba(22, 27, 34, 0.55);
+    --panel-bg: rgba(var(--panel-rgb), var(--panel-opacity));
+    --navbar-bg: rgba(var(--navbar-rgb), var(--navbar-opacity));
     --navbar-border: rgba(33, 38, 45, 0.6);
     --input-bg: #0d1117;
     --button-bg: #21262d;
     --button-hover-bg: #30363d;
     --table-alt-bg: #161b22;
     --table-hover-bg: #1f242b;
-    --shadow-color: rgba(0, 0, 0, 0.3);
-    --navbar-shadow: rgba(0, 0, 0, 0.25);
-    --starfield-bg: #05060a;
-    --star-color: #ffffff;
+    --shadow-color: rgba(0, 0, 0, calc(0.3 * var(--shadow-strength)));
+    --navbar-shadow: rgba(0, 0, 0, calc(0.25 * var(--shadow-strength)));
+    --starfield-bg: hsl(var(--starfield-hue), var(--starfield-saturation), var(--starfield-lightness));
+    --star-color: hsl(var(--star-hue), var(--star-saturation), var(--star-lightness));
 }
 
 :root[data-theme="light"] {
+    --panel-rgb: 255, 255, 255;
+    --navbar-rgb: 246, 248, 250;
     --page-bg: #f6f8fa;
     --text-color: #24292f;
     --muted-color: #57606a;
-    --accent-color: #0969da;
+    --accent-color: hsl(var(--accent-hue), 92%, 45%);
     --border-color: #d0d7de;
     --soft-border-color: rgba(208, 215, 222, 0.8);
-    --panel-bg: rgba(255, 255, 255, 0.78);
-    --navbar-bg: rgba(246, 248, 250, 0.72);
+    --panel-bg: rgba(var(--panel-rgb), var(--panel-opacity));
+    --navbar-bg: rgba(var(--navbar-rgb), var(--navbar-opacity));
     --navbar-border: rgba(208, 215, 222, 0.8);
     --input-bg: #ffffff;
     --button-bg: #f6f8fa;
     --button-hover-bg: #eef2f6;
     --table-alt-bg: #f6f8fa;
     --table-hover-bg: #eef2f6;
-    --shadow-color: rgba(31, 35, 40, 0.12);
-    --navbar-shadow: rgba(31, 35, 40, 0.12);
-    --starfield-bg: #f6f8fa;
-    --star-color: #6e7781;
+    --shadow-color: rgba(31, 35, 40, calc(0.12 * var(--shadow-strength)));
+    --navbar-shadow: rgba(31, 35, 40, calc(0.12 * var(--shadow-strength)));
+    --starfield-bg: hsl(var(--starfield-hue), var(--starfield-saturation), var(--starfield-lightness));
+    --star-color: hsl(var(--star-hue), var(--star-saturation), var(--star-lightness));
 }
 
 body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
     margin: 0;
+    font-size: var(--site-font-size);
     background-color: var(--page-bg); /* GitHub深色背景 */
     color: var(--text-color); /* GitHub深色文本颜色 */
     line-height: 1.5;
-    transition: background-color 0.2s ease, color 0.2s ease;
+    transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease;
 }
 
 #starfield {
@@ -58,11 +83,11 @@ body {
     height: 100vh;
     z-index: -1;
     background-color: var(--starfield-bg);
-    transition: background-color 0.2s ease;
+    transition: background-color var(--transition-speed) ease;
 }
 
 .container {
-    max-width: 1280px;
+    max-width: var(--content-max-width);
     margin: 0 auto;
     padding: 0 16px;
 }
@@ -70,7 +95,7 @@ body {
 /* 顶部导航栏 */
 .navbar {
     background-color: var(--navbar-bg); /* 更高透明度 */
-    backdrop-filter: blur(10px);
+    backdrop-filter: blur(var(--navbar-blur));
     padding: 16px 0;
     border-bottom: 1px solid var(--navbar-border);
     box-shadow: 0 15px 35px var(--navbar-shadow);
@@ -119,7 +144,7 @@ body {
 .navbar-search input {
     background-color: var(--input-bg);
     border: 1px solid var(--border-color);
-    border-radius: 6px; /* 全圆角 */
+    border-radius: var(--control-radius); /* 全圆角 */
     padding: 8px 12px;
     color: var(--text-color);
     width: 250px; /* 恢复宽度 */
@@ -153,9 +178,9 @@ body {
     background-color: var(--button-bg);
     color: var(--text-color);
     border: 1px solid var(--border-color);
-    border-radius: 6px;
+    border-radius: var(--control-radius);
     cursor: pointer;
-    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+    transition: background-color var(--transition-speed) ease, border-color var(--transition-speed) ease, color var(--transition-speed) ease;
 }
 
 .theme-toggle:hover {
@@ -187,7 +212,7 @@ body {
 
 /* 主要内容区域 */
 .content {
-    padding: 32px 0;
+    padding: var(--content-padding-y) 0;
 }
 
 .content h1 {
@@ -198,11 +223,11 @@ body {
 .card {
     background-color: var(--panel-bg);
     border: 1px solid var(--soft-border-color);
-    border-radius: 14px;
-    padding: 24px;
-    margin-bottom: 24px;
+    border-radius: var(--card-radius);
+    padding: var(--card-padding);
+    margin-bottom: var(--card-gap);
     box-shadow: 0 12px 30px var(--shadow-color);
-    backdrop-filter: blur(8px);
+    backdrop-filter: blur(var(--panel-blur));
 }
 
 .card h2 {
@@ -238,7 +263,7 @@ body {
     position: relative;
     background-color: var(--input-bg);
     border: 1px solid var(--border-color);
-    border-radius: 6px;
+    border-radius: var(--control-radius);
     margin-bottom: 16px;
     padding: 12px;
     overflow-x: auto;
@@ -262,11 +287,11 @@ body {
     background-color: var(--button-bg);
     color: var(--text-color);
     border: 1px solid var(--border-color);
-    border-radius: 6px;
+    border-radius: var(--control-radius);
     padding: 4px 8px;
     cursor: pointer;
     font-size: 12px;
-    transition: background-color 0.2s ease;
+    transition: background-color var(--transition-speed) ease;
 }
 
 .code-block .copy-button:hover {
@@ -369,7 +394,7 @@ body {
     margin-bottom: 10px; /* Gutter for Masonry */
     background-color: var(--table-alt-bg);
     border: 1px solid var(--soft-border-color);
-    border-radius: 6px;
+    border-radius: var(--control-radius);
     padding: 10px;
     display: flex;
     flex-direction: column;
@@ -395,10 +420,10 @@ body {
 .game-shell {
     background-color: var(--panel-bg);
     border: 1px solid var(--soft-border-color);
-    border-radius: 14px;
-    padding: 24px;
+    border-radius: var(--card-radius);
+    padding: var(--card-padding);
     box-shadow: 0 12px 30px var(--shadow-color);
-    backdrop-filter: blur(8px);
+    backdrop-filter: blur(var(--panel-blur));
 }
 
 .game-header {
@@ -415,6 +440,7 @@ body {
 
 .game-header p {
     margin: 0;
+    font-size: var(--site-font-size);
     color: var(--muted-color);
 }
 
@@ -433,7 +459,7 @@ body {
     background-color: transparent;
     color: var(--muted-color);
     border: 0;
-    border-radius: 6px;
+    border-radius: var(--control-radius);
     padding: 7px 11px;
     cursor: pointer;
     font-weight: 700;
@@ -457,7 +483,7 @@ body {
     padding: 8px 10px;
     background-color: var(--button-bg);
     border: 1px solid var(--border-color);
-    border-radius: 6px;
+    border-radius: var(--control-radius);
     color: var(--muted-color);
     font-size: 13px;
     text-align: center;
@@ -508,7 +534,7 @@ body {
     color: var(--text-color);
     text-align: center;
     pointer-events: none;
-    transition: opacity 0.2s ease;
+    transition: opacity var(--transition-speed) ease;
 }
 
 :root[data-theme="light"] .game-overlay {
@@ -540,7 +566,7 @@ body {
     background-color: var(--button-bg);
     color: var(--text-color);
     border: 1px solid var(--border-color);
-    border-radius: 6px;
+    border-radius: var(--control-radius);
     padding: 8px 14px;
     cursor: pointer;
     font-weight: 600;
@@ -587,7 +613,7 @@ body {
     background-color: var(--button-bg);
     color: var(--text-color);
     border: 1px solid var(--border-color);
-    border-radius: 6px;
+    border-radius: var(--control-radius);
     padding: 8px 14px;
     cursor: pointer;
     font-weight: 600;
@@ -600,7 +626,22 @@ body {
 
 .settings-grid {
     display: grid;
-    gap: 16px;
+    gap: var(--card-gap);
+}
+
+.settings-group {
+    display: grid;
+    gap: 14px;
+    padding: 16px;
+    border: 1px solid var(--soft-border-color);
+    border-radius: var(--card-radius);
+    background-color: rgba(var(--panel-rgb), calc(var(--panel-opacity) * 0.55));
+}
+
+.settings-group h3 {
+    margin: 0;
+    color: var(--accent-color);
+    font-size: 15px;
 }
 
 .setting-control {
@@ -632,7 +673,7 @@ body {
     box-sizing: border-box;
     background-color: var(--input-bg);
     border: 1px solid var(--border-color);
-    border-radius: 6px;
+    border-radius: var(--control-radius);
     color: var(--text-color);
     padding: 8px 10px;
     outline: none;
@@ -689,7 +730,7 @@ body {
     margin: 16px 0;
     background-color: var(--input-bg);
     border: 1px solid var(--border-color);
-    border-radius: 6px;
+    border-radius: var(--control-radius);
     overflow: hidden;
 }
 

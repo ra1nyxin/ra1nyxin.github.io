@@ -114,10 +114,10 @@ const pageContents = {
     settings: `
         <div class="container">
             <h1>设置</h1>
-            <p>调整本地显示效果，保存后会记录在当前浏览器。</p>
+            <p>调整星空、布局、透明度和动效，保存后会记录在当前浏览器。</p>
             <section class="card settings-panel">
                 <div class="settings-header">
-                    <h2>背景星空</h2>
+                    <h2>自定义外观</h2>
                     <div class="settings-actions">
                         <button type="button" id="settings-save">保存</button>
                         <button type="button" id="settings-reset">重置</button>
@@ -155,19 +155,76 @@ const defaultSiteSettings = {
     twinkleMinSpeed: 0.005,
     twinkleMaxSpeed: 0.02,
     movementSpeed: 0,
-    backgroundAlpha: 1
+    backgroundAlpha: 1,
+    starHue: 0,
+    starSaturation: 0,
+    starLightness: 100,
+    backgroundHue: 230,
+    backgroundSaturation: 36,
+    backgroundLightness: 3,
+    accentHue: 212,
+    contentWidth: 1280,
+    baseFontSize: 16,
+    contentPaddingY: 32,
+    cardPadding: 24,
+    cardRadius: 14,
+    controlRadius: 6,
+    cardGap: 24,
+    panelOpacity: 0.45,
+    navbarOpacity: 0.55,
+    panelBlur: 8,
+    navbarBlur: 10,
+    shadowStrength: 1,
+    motionScale: 1
 };
 
-const settingsControls = [
-    { key: 'starCount', label: '星星数量', min: 0, max: 600, step: 1 },
-    { key: 'minRadius', label: '最小半径', min: 0, max: 4, step: 0.1 },
-    { key: 'maxRadius', label: '最大半径', min: 0, max: 8, step: 0.1 },
-    { key: 'minAlpha', label: '最低透明度', min: 0, max: 1, step: 0.01 },
-    { key: 'twinkleMinSpeed', label: '最小闪烁速度', min: 0, max: 0.08, step: 0.001 },
-    { key: 'twinkleMaxSpeed', label: '最大闪烁速度', min: 0, max: 0.12, step: 0.001 },
-    { key: 'movementSpeed', label: '星空漂移速度', min: -80, max: 80, step: 1 },
-    { key: 'backgroundAlpha', label: '背景不透明度', min: 0, max: 1, step: 0.01 }
+const settingsGroups = [
+    {
+        title: '星空背景',
+        controls: [
+            { key: 'starCount', label: '星星数量', min: 0, max: 600, step: 1 },
+            { key: 'minRadius', label: '最小半径', min: 0, max: 4, step: 0.1 },
+            { key: 'maxRadius', label: '最大半径', min: 0, max: 8, step: 0.1 },
+            { key: 'minAlpha', label: '最低透明度', min: 0, max: 1, step: 0.01 },
+            { key: 'twinkleMinSpeed', label: '最小闪烁速度', min: 0, max: 0.08, step: 0.001 },
+            { key: 'twinkleMaxSpeed', label: '最大闪烁速度', min: 0, max: 0.12, step: 0.001 },
+            { key: 'movementSpeed', label: '星空漂移速度', min: -80, max: 80, step: 1 },
+            { key: 'backgroundAlpha', label: '背景不透明度', min: 0, max: 1, step: 0.01 },
+            { key: 'starHue', label: '星星色相', min: 0, max: 360, step: 1 },
+            { key: 'starSaturation', label: '星星饱和度', min: 0, max: 100, step: 1 },
+            { key: 'starLightness', label: '星星亮度', min: 0, max: 100, step: 1 },
+            { key: 'backgroundHue', label: '背景色相', min: 0, max: 360, step: 1 },
+            { key: 'backgroundSaturation', label: '背景饱和度', min: 0, max: 100, step: 1 },
+            { key: 'backgroundLightness', label: '背景亮度', min: 0, max: 30, step: 1 }
+        ]
+    },
+    {
+        title: '界面外观',
+        controls: [
+            { key: 'accentHue', label: '主色调色相', min: 0, max: 360, step: 1 },
+            { key: 'contentWidth', label: '内容最大宽度', min: 860, max: 1600, step: 10 },
+            { key: 'baseFontSize', label: '基础字号', min: 12, max: 22, step: 1 },
+            { key: 'contentPaddingY', label: '页面上下留白', min: 12, max: 72, step: 2 },
+            { key: 'cardPadding', label: '卡片内边距', min: 10, max: 48, step: 1 },
+            { key: 'cardRadius', label: '卡片圆角', min: 0, max: 28, step: 1 },
+            { key: 'controlRadius', label: '控件圆角', min: 0, max: 18, step: 1 },
+            { key: 'cardGap', label: '卡片间距', min: 8, max: 48, step: 1 }
+        ]
+    },
+    {
+        title: '透明与动效',
+        controls: [
+            { key: 'panelOpacity', label: '卡片透明度', min: 0, max: 1, step: 0.01 },
+            { key: 'navbarOpacity', label: '顶栏透明度', min: 0, max: 1, step: 0.01 },
+            { key: 'panelBlur', label: '卡片模糊强度', min: 0, max: 24, step: 1 },
+            { key: 'navbarBlur', label: '顶栏模糊强度', min: 0, max: 24, step: 1 },
+            { key: 'shadowStrength', label: '阴影强度', min: 0, max: 2, step: 0.05 },
+            { key: 'motionScale', label: '动效速度倍率', min: 0, max: 2, step: 0.05 }
+        ]
+    }
 ];
+
+const settingsControls = settingsGroups.flatMap(group => group.controls);
 
 function applyTheme(theme) {
     const nextTheme = theme === 'light' ? 'light' : 'dark';
@@ -219,24 +276,43 @@ function saveSiteSettings(settings) {
 }
 
 function applySiteSettings(settings) {
+    const normalizedSettings = normalizeStarSettings(settings);
+    const rootStyle = document.documentElement.style;
+    rootStyle.setProperty('--accent-hue', String(normalizedSettings.accentHue));
+    rootStyle.setProperty('--content-max-width', `${normalizedSettings.contentWidth}px`);
+    rootStyle.setProperty('--site-font-size', `${normalizedSettings.baseFontSize}px`);
+    rootStyle.setProperty('--content-padding-y', `${normalizedSettings.contentPaddingY}px`);
+    rootStyle.setProperty('--card-padding', `${normalizedSettings.cardPadding}px`);
+    rootStyle.setProperty('--card-radius', `${normalizedSettings.cardRadius}px`);
+    rootStyle.setProperty('--control-radius', `${normalizedSettings.controlRadius}px`);
+    rootStyle.setProperty('--card-gap', `${normalizedSettings.cardGap}px`);
+    rootStyle.setProperty('--panel-opacity', String(normalizedSettings.panelOpacity));
+    rootStyle.setProperty('--navbar-opacity', String(normalizedSettings.navbarOpacity));
+    rootStyle.setProperty('--panel-blur', `${normalizedSettings.panelBlur}px`);
+    rootStyle.setProperty('--navbar-blur', `${normalizedSettings.navbarBlur}px`);
+    rootStyle.setProperty('--shadow-strength', String(normalizedSettings.shadowStrength));
+    rootStyle.setProperty('--transition-speed', `${0.2 * normalizedSettings.motionScale}s`);
+    rootStyle.setProperty('--star-hue', String(normalizedSettings.starHue));
+    rootStyle.setProperty('--star-saturation', `${normalizedSettings.starSaturation}%`);
+    rootStyle.setProperty('--star-lightness', `${normalizedSettings.starLightness}%`);
+    rootStyle.setProperty('--starfield-hue', String(normalizedSettings.backgroundHue));
+    rootStyle.setProperty('--starfield-saturation', `${normalizedSettings.backgroundSaturation}%`);
+    rootStyle.setProperty('--starfield-lightness', `${normalizedSettings.backgroundLightness}%`);
+
     if (starfieldController) {
-        starfieldController.applySettings(settings);
+        starfieldController.applySettings(normalizedSettings);
     }
 }
 
 function normalizeStarSettings(settings) {
     const nextSettings = { ...defaultSiteSettings, ...settings };
-    nextSettings.starCount = Math.max(0, Math.floor(Number(nextSettings.starCount) || 0));
-    nextSettings.minRadius = Number(nextSettings.minRadius) || 0;
-    nextSettings.maxRadius = Number(nextSettings.maxRadius) || 0;
-    nextSettings.minAlpha = Number(nextSettings.minAlpha) || 0;
-    nextSettings.twinkleMinSpeed = Number(nextSettings.twinkleMinSpeed) || 0;
-    nextSettings.twinkleMaxSpeed = Number(nextSettings.twinkleMaxSpeed) || 0;
-    nextSettings.movementSpeed = Number(nextSettings.movementSpeed) || 0;
-    nextSettings.backgroundAlpha = Number(nextSettings.backgroundAlpha);
-    if (Number.isNaN(nextSettings.backgroundAlpha)) {
-        nextSettings.backgroundAlpha = defaultSiteSettings.backgroundAlpha;
-    }
+
+    Object.keys(defaultSiteSettings).forEach(key => {
+        const numericValue = Number(nextSettings[key]);
+        nextSettings[key] = Number.isNaN(numericValue) ? defaultSiteSettings[key] : numericValue;
+    });
+
+    nextSettings.starCount = Math.max(0, Math.floor(nextSettings.starCount));
     if (nextSettings.maxRadius < nextSettings.minRadius) {
         [nextSettings.minRadius, nextSettings.maxRadius] = [nextSettings.maxRadius, nextSettings.minRadius];
     }
@@ -283,14 +359,19 @@ function initSettingsPage() {
         });
     };
 
-    grid.innerHTML = settingsControls.map(control => `
-        <label class="setting-control">
-            <span>${control.label}</span>
-            <div class="setting-inputs">
-                <input type="range" min="${control.min}" max="${control.max}" step="${control.step}" data-setting-range="${control.key}">
-                <input type="number" step="${control.step}" data-setting-number="${control.key}">
-            </div>
-        </label>
+    grid.innerHTML = settingsGroups.map(group => `
+        <div class="settings-group">
+            <h3>${group.title}</h3>
+            ${group.controls.map(control => `
+                <label class="setting-control">
+                    <span>${control.label}</span>
+                    <div class="setting-inputs">
+                        <input type="range" min="${control.min}" max="${control.max}" step="${control.step}" data-setting-range="${control.key}">
+                        <input type="number" step="${control.step}" data-setting-number="${control.key}">
+                    </div>
+                </label>
+            `).join('')}
+        </div>
     `).join('');
 
     const handleRangeInput = event => {
@@ -1943,6 +2024,7 @@ function initVoidRunner() {
 
 document.addEventListener('DOMContentLoaded', () => {
     initThemeToggle();
+    applySiteSettings(loadSiteSettings());
     loadContent('home');
     initStarfield();
 });
