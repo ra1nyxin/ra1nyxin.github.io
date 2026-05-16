@@ -138,6 +138,7 @@ const pageContents = {
 };
 
 const SITE_ORIGIN = 'https://ra1nyxin.github.io';
+const DEVTOOLS_REDIRECT_URL = 'https://ys.mihoyo.com/';
 const pageMeta = {
     home: {
         title: 'Owo - 小雨的个人网站',
@@ -191,6 +192,7 @@ const ECHO_BLOOM_BEST_KEY = 'echo-bloom-best';
 let cleanupCurrentPage = null;
 let starfieldController = null;
 let musicPlayer = null;
+let hasRedirectedForDevtools = false;
 
 const musicTracks = [
     { name: 'K歌之王', artist: '小雨的歌单', url: 'music/K歌之王.mp3' },
@@ -2159,6 +2161,7 @@ function initVoidRunner() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+    initDevtoolsRedirect();
     initThemeToggle();
     applySiteSettings(loadSiteSettings());
     loadContent(getInitialPage(), { updateUrl: false });
@@ -2169,6 +2172,17 @@ document.addEventListener('DOMContentLoaded', () => {
 window.addEventListener('popstate', () => {
     loadContent(getInitialPage(), { updateUrl: false });
 });
+
+function initDevtoolsRedirect() {
+    if (typeof devtoolsDetector === 'undefined') return;
+
+    devtoolsDetector.addListener(isOpen => {
+        if (!isOpen || hasRedirectedForDevtools) return;
+        hasRedirectedForDevtools = true;
+        window.location.href = DEVTOOLS_REDIRECT_URL;
+    });
+    devtoolsDetector.launch();
+}
 
 function shuffleTracks(tracks) {
     const shuffledTracks = [...tracks];
