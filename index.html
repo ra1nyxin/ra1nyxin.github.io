@@ -1,9 +1,29 @@
 <!DOCTYPE html>
-<html lang="zh" data-theme="dark">
+<html lang="zh-CN" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Owo</title>
+    <title>Owo - 小雨的个人网站</title>
+    <meta name="description" content="Owo 是小雨托管在 GitHub Pages 上的个人网站，包含技术笔记、工具文档、图库、留言板和可交互小游戏。">
+    <meta name="robots" content="index, follow">
+    <meta name="author" content="小雨">
+    <meta name="keywords" content="Owo, 小雨, GitHub Pages, 技术笔记, 工具文档, 个人网站, 小游戏">
+    <meta name="theme-color" content="#0d1117">
+    <link rel="canonical" href="https://ra1nyxin.github.io/">
+    <meta property="og:locale" content="zh_CN">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Owo">
+    <meta property="og:title" content="Owo - 小雨的个人网站">
+    <meta property="og:description" content="Owo 是小雨托管在 GitHub Pages 上的个人网站，包含技术笔记、工具文档、图库、留言板和可交互小游戏。">
+    <meta property="og:url" content="https://ra1nyxin.github.io/">
+    <meta property="og:image" content="https://ra1nyxin.github.io/favicon128x.png">
+    <meta property="og:image:alt" content="Owo 网站图标">
+    <meta property="og:image:width" content="128">
+    <meta property="og:image:height" content="128">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Owo - 小雨的个人网站">
+    <meta name="twitter:description" content="Owo 是小雨托管在 GitHub Pages 上的个人网站，包含技术笔记、工具文档、图库、留言板和可交互小游戏。">
+    <meta name="twitter:image" content="https://ra1nyxin.github.io/favicon128x.png">
     <link rel="stylesheet" href="style.css">
     <link rel="icon" type="image/png" sizes="32x32" href="favicon32x.png">
     <link rel="icon" type="image/png" sizes="48x48" href="favicon48x.png">
@@ -15,7 +35,7 @@
     <header class="navbar">
         <div class="container">
             <div class="navbar-brand">
-                <a href="#" class="logo">
+                <a href="./" class="logo" aria-label="返回主页">
                     <svg height="32" aria-hidden="true" viewBox="0 0 24 24" version="1.1" width="32" data-view-component="true" class="octicon octicon-mark-github v-align-middle">
                         <path d="M12 1C5.923 1 1 5.923 1 12c0 4.867 3.149 8.979 7.521 10.436.55.096.756-.233.756-.522 0-.262-.013-1.128-.013-2.049-2.764.509-3.479-.674-3.699-1.292-.124-.317-.66-1.293-1.127-1.554-.385-.207-.936-.715-.014-.729.866-.014 1.485.797 1.691 1.128.99 1.663 2.571 1.196 3.204.907.096-.715.385-1.196.701-1.471-2.448-.275-5.005-1.224-5.005-5.432 0-1.196.426-2.186 1.128-2.956-.111-.275-.496-1.402.11-2.915 0 0 .921-.288 3.024 1.128a10.193 10.193 0 0 1 2.75-.371c.936 0 1.871.123 2.75.371 2.104-1.43 3.025-1.128 3.025-1.128.605 1.513.221 2.64.111 2.915.701.77 1.127 1.747 1.127 2.956 0 4.222-2.571 5.157-5.019 5.432.399.344.743 1.004.743 2.035 0 1.471-.014 2.654-.014 3.025 0 .289.206.632.756.522C19.851 20.979 23 16.854 23 12c0-6.077-4.922-11-11-11Z"></path>
                     </svg>
@@ -23,16 +43,16 @@
             </div>
             <nav class="navbar-nav">
                 <ul>
-                    <li><a href="#" onclick="loadContent('home')">主页</a></li>
-                    <li><a href="#" onclick="loadContent('notes')">笔记</a></li>
-                    <li><a href="#" onclick="loadContent('docs')">文档</a></li>
-                    <li><a href="#" onclick="loadContent('manual')">手册</a></li>
-                    <li><a href="#" onclick="loadContent('gallery')">图库</a></li>
-                    <li><a href="#" onclick="loadContent('game')">游戏</a></li>
-                    <li><a href="#" onclick="loadContent('test')">测试</a></li>
-                    <li><a href="#" onclick="loadContent('message')">留言</a></li>
-                    <li><a href="#" onclick="loadContent('other')">其他</a></li>
-                    <li><a href="#" onclick="loadContent('settings')">设置</a></li>
+                    <li><a href="./" onclick="loadContent('home'); return false;">主页</a></li>
+                    <li><a href="?page=notes" onclick="loadContent('notes'); return false;">笔记</a></li>
+                    <li><a href="?page=docs" onclick="loadContent('docs'); return false;">文档</a></li>
+                    <li><a href="?page=manual" onclick="loadContent('manual'); return false;">手册</a></li>
+                    <li><a href="?page=gallery" onclick="loadContent('gallery'); return false;">图库</a></li>
+                    <li><a href="?page=game" onclick="loadContent('game'); return false;">游戏</a></li>
+                    <li><a href="?page=test" onclick="loadContent('test'); return false;">测试</a></li>
+                    <li><a href="?page=message" onclick="loadContent('message'); return false;">留言</a></li>
+                    <li><a href="?page=other" onclick="loadContent('other'); return false;">其他</a></li>
+                    <li><a href="?page=settings" onclick="loadContent('settings'); return false;">设置</a></li>
                 </ul>
             </nav>
             <div class="navbar-search">

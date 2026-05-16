@@ -137,6 +137,50 @@ const pageContents = {
     `
 };
 
+const SITE_ORIGIN = 'https://ra1nyxin.github.io';
+const pageMeta = {
+    home: {
+        title: 'Owo - 小雨的个人网站',
+        description: 'Owo 是小雨托管在 GitHub Pages 上的个人网站，包含技术笔记、工具文档、图库、留言板和可交互小游戏。'
+    },
+    notes: {
+        title: '笔记 - Owo',
+        description: '小雨整理的常用开发和终端笔记，覆盖 Git、PowerShell、npm、GCC、.NET、代理配置和日常命令速查。'
+    },
+    docs: {
+        title: '文档 - Owo',
+        description: 'Owo 文档页集中展示工具用法类 Markdown 文档，适合快速查阅命令、配置流程和实用操作记录。'
+    },
+    manual: {
+        title: '操作手册 - Owo',
+        description: 'Owo 操作手册页面收录环境配置、虚拟机、远程访问和基础运维流程等可复用操作说明。'
+    },
+    gallery: {
+        title: '图库 - Owo',
+        description: 'Owo 图库页面展示项目图片和站点素材，以瀑布流布局浏览 GitHub Pages 静态图片资源。'
+    },
+    game: {
+        title: '游戏 - Owo',
+        description: 'Owo 游戏页提供 Void Runner、Orbit Drift、Pulse Gate、Phase Shift 和 Echo Bloom 等网页休闲小游戏。'
+    },
+    test: {
+        title: '测试页面 - Owo',
+        description: 'Owo 测试页面用于验证视频播放、交互组件和静态资源加载效果，方便维护站点功能。'
+    },
+    message: {
+        title: '留言板 - Owo',
+        description: 'Owo 留言板通过 GitHub 贡献方式展示访客留言，并加载贡献者头像和 Markdown 留言内容。'
+    },
+    other: {
+        title: '其他 - Owo',
+        description: 'Owo 其他页面用于放置暂未归类的站点内容、补充信息和后续扩展入口。'
+    },
+    settings: {
+        title: '设置 - Owo',
+        description: 'Owo 设置页支持用户自定义星空背景、界面宽度、字号、透明度、模糊强度、圆角和动效速度。'
+    }
+};
+
 const THEME_STORAGE_KEY = 'owo-theme';
 const SITE_SETTINGS_STORAGE_KEY = 'owo-site-settings';
 const VOID_RUNNER_BEST_KEY = 'void-runner-best';
@@ -492,6 +536,68 @@ function githubSearch() {
     }
 }
 
+function getPageUrl(page) {
+    return page === 'home' ? `${SITE_ORIGIN}/` : `${SITE_ORIGIN}/?page=${encodeURIComponent(page)}`;
+}
+
+function ensureHeadTag(selector, createTag) {
+    let element = document.head.querySelector(selector);
+    if (!element) {
+        element = createTag();
+        document.head.appendChild(element);
+    }
+    return element;
+}
+
+function setMetaContent(selector, createTag, value) {
+    const element = ensureHeadTag(selector, createTag);
+    element.setAttribute('content', value);
+}
+
+function setPageMetadata(page) {
+    const meta = pageMeta[page] || pageMeta.home;
+    const url = getPageUrl(pageMeta[page] ? page : 'home');
+
+    document.title = meta.title;
+    setMetaContent('meta[name="description"]', () => {
+        const tag = document.createElement('meta');
+        tag.setAttribute('name', 'description');
+        return tag;
+    }, meta.description);
+    setMetaContent('meta[property="og:title"]', () => {
+        const tag = document.createElement('meta');
+        tag.setAttribute('property', 'og:title');
+        return tag;
+    }, meta.title);
+    setMetaContent('meta[property="og:description"]', () => {
+        const tag = document.createElement('meta');
+        tag.setAttribute('property', 'og:description');
+        return tag;
+    }, meta.description);
+    setMetaContent('meta[property="og:url"]', () => {
+        const tag = document.createElement('meta');
+        tag.setAttribute('property', 'og:url');
+        return tag;
+    }, url);
+    setMetaContent('meta[name="twitter:title"]', () => {
+        const tag = document.createElement('meta');
+        tag.setAttribute('name', 'twitter:title');
+        return tag;
+    }, meta.title);
+    setMetaContent('meta[name="twitter:description"]', () => {
+        const tag = document.createElement('meta');
+        tag.setAttribute('name', 'twitter:description');
+        return tag;
+    }, meta.description);
+
+    const canonical = ensureHeadTag('link[rel="canonical"]', () => {
+        const tag = document.createElement('link');
+        tag.setAttribute('rel', 'canonical');
+        return tag;
+    });
+    canonical.setAttribute('href', url);
+}
+
 function renderGallery() {
     const galleryGrid = document.querySelector('.gallery-grid');
     if (galleryGrid) {
@@ -557,10 +663,28 @@ const docFallbackFiles = [
     'doc_msf_config.md'
 ];
 
-function loadContent(page) {
+function getInitialPage() {
+    const params = new URLSearchParams(window.location.search);
+    const requestedPage = params.get('page') || 'home';
+    return pageContents[requestedPage] ? requestedPage : 'home';
+}
+
+function setPageUrl(page) {
+    const nextPath = page === 'home' ? `${window.location.pathname}` : `${window.location.pathname}?page=${encodeURIComponent(page)}`;
+    const currentPath = `${window.location.pathname}${window.location.search}`;
+    if (nextPath !== currentPath) {
+        history.pushState({ page }, '', nextPath);
+    }
+}
+
+function loadContent(page, options = {}) {
     cleanupPage();
     const mainContent = document.querySelector('main.content');
     if (pageContents[page]) {
+        setPageMetadata(page);
+        if (options.updateUrl !== false) {
+            setPageUrl(page);
+        }
         mainContent.innerHTML = pageContents[page];
         if (page === 'notes') {
             loadMarkdownContent('notes_git_commands.md', 'git-commands-tutorial');
@@ -594,6 +718,7 @@ function loadContent(page) {
             }
         }
     } else {
+        setPageMetadata('home');
         mainContent.innerHTML = `<div class="container"><h1>页面未找到</h1><p>您请求的页面不存在</p></div>`;
     }
 }
@@ -2025,8 +2150,12 @@ function initVoidRunner() {
 document.addEventListener('DOMContentLoaded', () => {
     initThemeToggle();
     applySiteSettings(loadSiteSettings());
-    loadContent('home');
+    loadContent(getInitialPage(), { updateUrl: false });
     initStarfield();
+});
+
+window.addEventListener('popstate', () => {
+    loadContent(getInitialPage(), { updateUrl: false });
 });
 
 function copyCode(button) {
