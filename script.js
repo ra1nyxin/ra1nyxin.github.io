@@ -1,17 +1,50 @@
 const pageContents = {
     home: `
-        <div class="container">
-            <h1>Welcome to Owo</h1>
-            <p>这里是小雨的一个位于GitHub托管的小网站，欢迎喵！</p>
-            <section class="card">
-                <h2>关于</h2>
-                <p>一个平平无奇的小网站喵喵喵</p>
+        <div class="container about-home">
+            <section class="about-quiet-hero" aria-labelledby="about-home-title">
+                <div class="about-hero-copy">
+                    <p class="about-kicker">Owo / profile</p>
+                    <h1 id="about-home-title">一些留在网络里的痕迹</h1>
+                    <p>这里不是一份简历，也不打算把身份写成醒目的标签。它更像一份慢慢整理出来的侧写：关于文字、边界、长期协作、工程直觉，以及一个人如何在网络里维持自己的节奏。</p>
+                    <p>如果只需要快速了解，可以先看下面几条线索；如果愿意读完整一点，后面的档案会展开更多细节。</p>
+                </div>
+                <div class="about-signal-panel" aria-label="profile signals">
+                    <span>长期在线</span>
+                    <span>文字优先</span>
+                    <span>边界清晰</span>
+                    <span>结构判断</span>
+                </div>
             </section>
-            <section class="card">
-                <h2>占位符</h2>
-                <ul>
-                    <li>主页还没想到写什么好捏 qwq</li>
-                </ul>
+            <section class="about-signal-grid" aria-label="profile overview">
+                <div>
+                    <span>01</span>
+                    <strong>网络生活</strong>
+                    <p>多数连接发生在屏幕、文档、仓库、社区和游戏里。</p>
+                </div>
+                <div>
+                    <span>02</span>
+                    <strong>复现路径</strong>
+                    <p>更关注复现、影响、修复路径和长期可验证的工程动作。</p>
+                </div>
+                <div>
+                    <span>03</span>
+                    <strong>边界意识</strong>
+                    <p>信息不会被当成孤立碎片，亲近也不等于索取现实细节。</p>
+                </div>
+                <div>
+                    <span>04</span>
+                    <strong>长期协作</strong>
+                    <p>通过文字、代码、issue、报告和项目维护建立稳定关系。</p>
+                </div>
+            </section>
+            <section class="about-profile-shell" aria-label="about profile">
+                <aside class="about-profile-nav">
+                    <p>Profile</p>
+                    <nav id="about-profile-toc" aria-label="AboutMe sections"></nav>
+                </aside>
+                <article id="about-profile-content" class="about-profile-content">
+                    <p class="about-loading">正在读取 AboutMe.md</p>
+                </article>
             </section>
         </div>
     `,
@@ -142,7 +175,7 @@ const DEVTOOLS_REDIRECT_URL = 'https://ys.mihoyo.com/';
 const pageMeta = {
     home: {
         title: 'Owo - 小雨的个人网站',
-        description: 'Owo 是小雨托管在 GitHub Pages 上的个人网站，包含技术笔记、工具文档、图库、留言板和可交互小游戏。'
+        description: 'Owo 是小雨托管在 GitHub Pages 上的个人网站，主页收录一份关于文字、边界、网络生活和长期协作的个人档案。'
     },
     notes: {
         title: '笔记 - Owo',
@@ -542,6 +575,51 @@ async function loadMarkdownContent(filePath, targetElementId) {
     }
 }
 
+function slugifyHeading(text, index) {
+    const slug = text
+        .trim()
+        .toLowerCase()
+        .replace(/[^\p{L}\p{N}]+/gu, '-')
+        .replace(/^-+|-+$/g, '');
+    return slug || `section-${index + 1}`;
+}
+
+async function loadAboutProfile() {
+    const contentElement = document.getElementById('about-profile-content');
+    const tocElement = document.getElementById('about-profile-toc');
+    if (!contentElement || !tocElement) return;
+
+    try {
+        const response = await fetch('AboutMe.md');
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const markdown = await response.text();
+        contentElement.innerHTML = marked.parse(markdown);
+
+        const headings = Array.from(contentElement.querySelectorAll('h2'));
+        tocElement.innerHTML = '';
+        headings.forEach((heading, index) => {
+            const id = `about-${slugifyHeading(heading.textContent, index)}`;
+            heading.id = id;
+
+            const link = document.createElement('a');
+            link.href = `#${id}`;
+            link.textContent = heading.textContent;
+            tocElement.appendChild(link);
+        });
+
+        if (!headings.length) {
+            tocElement.innerHTML = '<span>暂无章节</span>';
+        }
+    } catch (error) {
+        console.error('Error loading about profile:', error);
+        contentElement.innerHTML = `<p class="about-error">AboutMe.md 读取失败：${error.message}</p>`;
+        tocElement.innerHTML = '<span>读取失败</span>';
+    }
+}
+
 function githubSearch() {
     const query = document.getElementById('github-search-input').value;
     if (query) {
@@ -699,7 +777,9 @@ function loadContent(page, options = {}) {
             setPageUrl(page);
         }
         mainContent.innerHTML = pageContents[page];
-        if (page === 'notes') {
+        if (page === 'home') {
+            loadAboutProfile();
+        } else if (page === 'notes') {
             loadMarkdownContent('notes_git_commands.md', 'git-commands-tutorial');
             loadMarkdownContent('notes_terminal_commands.md', 'terminal-commands-tutorial');
             loadMarkdownContent('notes_proxy_settings.md', 'proxy-settings-tutorial');

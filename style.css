@@ -247,6 +247,181 @@ body {
     margin-bottom: 8px;
 }
 
+.about-home {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+}
+
+.about-quiet-hero {
+    min-height: 360px;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 280px;
+    gap: 40px;
+    align-items: center;
+    padding: 56px 0 28px;
+    border-bottom: 1px solid var(--soft-border-color);
+}
+
+.about-hero-copy {
+    max-width: 760px;
+}
+
+.about-kicker {
+    margin: 0 0 16px;
+    color: var(--muted-color);
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+    font-size: 12px;
+    text-transform: uppercase;
+}
+
+.about-quiet-hero h1 {
+    margin: 0 0 22px;
+    color: var(--text-color);
+    font-size: 44px;
+    line-height: 1.16;
+    font-weight: 650;
+}
+
+.about-quiet-hero p {
+    max-width: 700px;
+    margin: 0 0 14px;
+    color: var(--muted-color);
+    font-size: 17px;
+    line-height: 1.85;
+}
+
+.about-signal-panel {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+}
+
+.about-signal-panel span,
+.about-signal-grid div {
+    background-color: var(--panel-bg);
+    border: 1px solid var(--soft-border-color);
+    border-radius: var(--control-radius);
+    backdrop-filter: blur(var(--panel-blur));
+}
+
+.about-signal-panel span {
+    min-height: 82px;
+    display: flex;
+    align-items: flex-end;
+    padding: 14px;
+    color: var(--text-color);
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+.about-signal-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.about-signal-grid div {
+    padding: 18px;
+}
+
+.about-signal-grid span {
+    display: block;
+    margin-bottom: 18px;
+    color: var(--muted-color);
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+    font-size: 12px;
+}
+
+.about-signal-grid strong {
+    display: block;
+    margin-bottom: 10px;
+    color: var(--text-color);
+    font-size: 15px;
+}
+
+.about-signal-grid p {
+    margin: 0;
+    color: var(--muted-color);
+    font-size: 14px;
+    line-height: 1.7;
+}
+
+.about-profile-shell {
+    display: grid;
+    grid-template-columns: 220px minmax(0, 860px);
+    gap: 44px;
+    align-items: start;
+    padding-top: 18px;
+}
+
+.about-profile-nav {
+    position: sticky;
+    top: 26px;
+    padding: 16px 0;
+}
+
+.about-profile-nav p {
+    margin: 0 0 14px;
+    color: var(--muted-color);
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+    font-size: 12px;
+    text-transform: uppercase;
+}
+
+.about-profile-nav nav {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.about-profile-nav a,
+.about-profile-nav span {
+    display: block;
+    padding: 7px 0;
+    color: var(--muted-color);
+    text-decoration: none;
+    font-size: 13px;
+    line-height: 1.35;
+}
+
+.about-profile-nav a:hover {
+    color: var(--accent-color);
+}
+
+.about-profile-content {
+    max-width: 860px;
+    color: var(--text-color);
+}
+
+.about-profile-content > p:first-child {
+    margin-top: 0;
+}
+
+.about-profile-content p {
+    margin: 0 0 18px;
+    color: var(--text-color);
+    line-height: 1.95;
+}
+
+.about-profile-content h2 {
+    margin: 46px 0 18px;
+    padding-top: 12px;
+    color: var(--text-color);
+    font-size: 24px;
+    font-weight: 650;
+    border-top: 1px solid var(--soft-border-color);
+}
+
+.about-profile-content h2:first-of-type {
+    margin-top: 34px;
+}
+
+.about-loading,
+.about-error {
+    color: var(--muted-color);
+}
+
 .docs-grid {
     display: flex;
     flex-direction: column;
@@ -332,6 +507,47 @@ body {
 
     .navbar-search input {
         width: 100%;
+    }
+
+    .about-quiet-hero {
+        min-height: auto;
+        grid-template-columns: 1fr;
+        gap: 24px;
+        padding: 34px 0 24px;
+    }
+
+    .about-quiet-hero h1 {
+        font-size: 32px;
+    }
+
+    .about-quiet-hero p {
+        font-size: 15px;
+        line-height: 1.8;
+    }
+
+    .about-signal-panel,
+    .about-signal-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .about-profile-shell {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .about-profile-nav {
+        position: static;
+        padding: 8px 0 0;
+    }
+
+    .about-profile-nav nav {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        column-gap: 12px;
+    }
+
+    .about-profile-content h2 {
+        font-size: 22px;
     }
 }
 
