@@ -5,7 +5,7 @@ const pageContents = {
                 <div class="about-hero-copy">
                     <p class="about-kicker">Owo / profile</p>
                     <h1 id="about-home-title">一些留在网络里的痕迹</h1>
-                    <p>这里不是一份简历，也不打算把身份写成醒目的标签。它更像一份慢慢整理出来的侧写：关于文字、边界、长期协作、工程直觉，以及一个人如何在网络里维持自己的节奏。</p>
+                    <p>关于小雨，关于文字、边界、长期协作、工程直觉，以及一个人如何在网络里维持自己的节奏。</p>
                     <p>如果只需要快速了解，可以先看下面几条线索；如果愿意读完整一点，后面的档案会展开更多细节。</p>
                 </div>
                 <div class="about-signal-panel" aria-label="profile signals">
