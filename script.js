@@ -2407,8 +2407,8 @@ function initStarfield() {
     const lightChart = {
         background: '#f4f7fb',
         star: 'rgba(72, 91, 118, 0.58)',
-        line: 'rgba(72, 91, 118, 0.12)',
-        maxLineDistance: 118,
+        line: 'rgba(72, 91, 118, 0.22)',
+        maxLineDistance: 142,
         maxLinkedStars: 260
     };
 
@@ -2468,7 +2468,7 @@ function initStarfield() {
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
         const linkedStars = stars.slice(0, lightChart.maxLinkedStars);
-        ctx.lineWidth = 0.7;
+        ctx.lineWidth = 0.85;
         linkedStars.forEach((star, index) => {
             for (let nextIndex = index + 1; nextIndex < linkedStars.length; nextIndex++) {
                 const nextStar = linkedStars[nextIndex];
@@ -2477,7 +2477,7 @@ function initStarfield() {
                 const distance = Math.hypot(distanceX, distanceY);
                 if (distance > lightChart.maxLineDistance) continue;
 
-                const opacity = (1 - distance / lightChart.maxLineDistance) * 0.65;
+                const opacity = (1 - distance / lightChart.maxLineDistance) * 0.9;
                 ctx.globalAlpha = opacity;
                 ctx.strokeStyle = lightChart.line;
                 ctx.beginPath();

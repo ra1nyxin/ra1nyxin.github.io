@@ -259,7 +259,6 @@ body {
     grid-template-columns: minmax(0, 1fr) 280px;
     gap: 40px;
     align-items: center;
-    padding: 56px 0 28px;
     border-bottom: 1px solid var(--soft-border-color);
 }
 
