@@ -2404,6 +2404,13 @@ function initStarfield() {
     const ctx = canvas.getContext('2d');
     let stars = [];
     let settings = normalizeStarSettings(loadSiteSettings());
+    const lightChart = {
+        background: '#f4f7fb',
+        star: 'rgba(72, 91, 118, 0.58)',
+        line: 'rgba(72, 91, 118, 0.12)',
+        maxLineDistance: 118,
+        maxLinkedStars: 260
+    };
 
     function resizeCanvas() {
         canvas.width = window.innerWidth;
@@ -2424,7 +2431,14 @@ function initStarfield() {
         }
     }
 
-    function drawStars() {
+    function updateStarTwinkle(star) {
+        star.alpha += star.twinkleSpeed;
+        if (star.alpha >= 1 || star.alpha <= settings.minAlpha) {
+            star.twinkleSpeed = -star.twinkleSpeed;
+        }
+    }
+
+    function drawDarkStarfield() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.globalAlpha = Math.max(0, Math.min(1, settings.backgroundAlpha));
         ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--starfield-bg').trim() || '#05060a';
@@ -2441,13 +2455,61 @@ function initStarfield() {
             ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
             ctx.fill();
 
-            star.alpha += star.twinkleSpeed;
-            if (star.alpha >= 1 || star.alpha <= settings.minAlpha) {
-                star.twinkleSpeed = -star.twinkleSpeed;
-            }
+            updateStarTwinkle(star);
         });
 
         ctx.globalAlpha = 1;
+    }
+
+    function drawLightChart() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.globalAlpha = 1;
+        ctx.fillStyle = lightChart.background;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        const linkedStars = stars.slice(0, lightChart.maxLinkedStars);
+        ctx.lineWidth = 0.7;
+        linkedStars.forEach((star, index) => {
+            for (let nextIndex = index + 1; nextIndex < linkedStars.length; nextIndex++) {
+                const nextStar = linkedStars[nextIndex];
+                const distanceX = star.x - nextStar.x;
+                const distanceY = star.y - nextStar.y;
+                const distance = Math.hypot(distanceX, distanceY);
+                if (distance > lightChart.maxLineDistance) continue;
+
+                const opacity = (1 - distance / lightChart.maxLineDistance) * 0.65;
+                ctx.globalAlpha = opacity;
+                ctx.strokeStyle = lightChart.line;
+                ctx.beginPath();
+                ctx.moveTo(star.x, star.y);
+                ctx.lineTo(nextStar.x, nextStar.y);
+                ctx.stroke();
+            }
+        });
+
+        ctx.fillStyle = lightChart.star;
+        stars.forEach(star => {
+            star.x += settings.movementSpeed * 0.006;
+            if (star.x > canvas.width + star.radius) star.x = -star.radius;
+            if (star.x < -star.radius) star.x = canvas.width + star.radius;
+
+            ctx.globalAlpha = Math.max(settings.minAlpha, star.alpha) * 0.42;
+            ctx.beginPath();
+            ctx.arc(star.x, star.y, Math.max(0.55, star.radius * 0.82), 0, Math.PI * 2);
+            ctx.fill();
+
+            updateStarTwinkle(star);
+        });
+
+        ctx.globalAlpha = 1;
+    }
+
+    function drawStars() {
+        if (document.documentElement.dataset.theme === 'light') {
+            drawLightChart();
+        } else {
+            drawDarkStarfield();
+        }
         requestAnimationFrame(drawStars);
     }
 

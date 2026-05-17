@@ -61,7 +61,7 @@
     --table-hover-bg: #eef2f6;
     --shadow-color: rgba(31, 35, 40, calc(0.12 * var(--shadow-strength)));
     --navbar-shadow: rgba(31, 35, 40, calc(0.12 * var(--shadow-strength)));
-    --starfield-bg: hsl(var(--starfield-hue), var(--starfield-saturation), var(--starfield-lightness));
+    --starfield-bg: #f4f7fb;
     --star-color: hsl(var(--star-hue), var(--star-saturation), var(--star-lightness));
 }
 
