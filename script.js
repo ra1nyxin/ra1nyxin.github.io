@@ -2166,7 +2166,7 @@ document.addEventListener('DOMContentLoaded', () => {
     applySiteSettings(loadSiteSettings());
     loadContent(getInitialPage(), { updateUrl: false });
     initStarfield();
-    initMusicPlayer();
+    scheduleMusicPlayerInit();
 });
 
 window.addEventListener('popstate', () => {
@@ -2193,6 +2193,24 @@ function shuffleTracks(tracks) {
     return shuffledTracks;
 }
 
+function scheduleMusicPlayerInit() {
+    const runInit = () => {
+        const start = () => initMusicPlayer();
+        if ('requestIdleCallback' in window) {
+            window.requestIdleCallback(start, { timeout: 1600 });
+            return;
+        }
+        window.setTimeout(start, 600);
+    };
+
+    if (document.readyState === 'complete') {
+        runInit();
+        return;
+    }
+
+    window.addEventListener('load', runInit, { once: true });
+}
+
 function initMusicPlayer() {
     const playerElement = document.getElementById('floating-music-player');
     if (!playerElement || typeof APlayer === 'undefined' || musicPlayer) return;
@@ -2210,7 +2228,7 @@ function initMusicPlayer() {
         theme: '#58a6ff',
         loop: 'all',
         order: 'list',
-        preload: 'metadata',
+        preload: 'none',
         volume: 0.3,
         mutex: true,
         listFolded: true,
