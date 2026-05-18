@@ -7,11 +7,8 @@ const pageContents = {
                     <h1 id="about-home-title">一些留在网络里的痕迹</h1>
                     <p>关于小雨..</p>
                 </div>
-                <div class="about-signal-panel" aria-label="profile signals">
-                    <span>长期在线</span>
-                    <span>文字优先</span>
-                    <span>边界清晰</span>
-                    <span>结构判断</span>
+                <div class="about-particle-orb" aria-hidden="true">
+                    <css-doodle click-to-update use="var(--particle-orb-rule)"></css-doodle>
                 </div>
             </section>
             <section class="about-signal-grid" aria-label="profile overview" data-aos="fade-up" data-aos-delay="80">
