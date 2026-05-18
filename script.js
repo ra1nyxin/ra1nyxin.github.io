@@ -11,27 +11,22 @@ const pageContents = {
                     <css-doodle click-to-update experimental>
                         :doodle {
                             @grid: 220x1;
-                            width: 260px;
-                            height: 260px;
+                            width: 380px;
+                            height: 380px;
                             font-size: 2vmin;
                         }
                         :container {
                             transform-style: preserve-3d;
                             animation: orb-spin 24s linear infinite;
                         }
-                        --phi: @calc(4 * π / @size * @i);
-                        --theta: @calc(10 * π / @size * @i);
-                        --r: 9.5em;
                         @place-cell: center;
                         @size: @r(.24em, .66em);
                         color: var(--orb-primary);
                         opacity: @r(.42, .96);
                         transform:
-                            translate3d(
-                                calc(var(--r) * @sin(var(--theta)) * @cos(var(--phi))),
-                                calc(var(--r) * @sin(var(--theta)) * @sin(var(--phi))),
-                                calc(var(--r) * @cos(var(--theta)))
-                            )
+                            rotateZ(calc(@i * 137.5deg))
+                            rotateY(calc(@i * 47deg))
+                            translateX(@r(2.4em, 11.6em))
                             rotateY(calc(@i * 1deg));
                         transform-style: preserve-3d;
                         will-change: transform;
