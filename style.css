@@ -299,68 +299,7 @@ body {
 }
 
 .about-particle-orb {
-    --particle-orb-rule: (
-        :doodle {
-            @grid: 220x1;
-            width: 260px;
-            height: 260px;
-            font-size: 2vmin;
-        }
-        :container {
-            transform-style: preserve-3d;
-            animation: orb-spin 24s linear infinite;
-        }
-        --phi: @calc(4 * π / @size * @i);
-        --theta: @calc(10 * π / @size * @i);
-        --r: 9.5em;
-        --c: @p(
-            hsl(var(--accent-hue), 100%, 68%),
-            rgba(201, 209, 217, 0.88),
-            rgba(139, 148, 158, 0.72)
-        );
-        @place-cell: center;
-        @size: @r(.24em, .66em);
-        color: var(--c);
-        transform:
-            translate3d(
-                calc(var(--r) * @sin(var(--theta)) * @cos(var(--phi))),
-                calc(var(--r) * @sin(var(--theta)) * @sin(var(--phi))),
-                calc(var(--r) * @cos(var(--theta)))
-            )
-            rotateY(calc(@i * 1deg));
-        transform-style: preserve-3d;
-        will-change: transform;
-        :after {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 0;
-            border-radius: 50%;
-            @size: 100%;
-            background: currentColor;
-            box-shadow: @m4(
-                0 calc(@lr * @n) 0 calc(-.04em - @n * .04em)
-                currentColor
-            );
-            animation: orb-spin @r(.7s, 1.7s) linear infinite;
-            animation-delay: -@r(700ms);
-            will-change: transform;
-        }
-        :before {
-            content: '';
-            position: absolute;
-            left: 50%;
-            top: 0;
-            width: 1px;
-            height: @r(1em, 5.8em);
-            border-left: 1px @p(solid, dashed, dotted) currentColor;
-            opacity: .34;
-            transform: rotateY(calc(@i * 1deg));
-        }
-        @keyframes orb-spin {
-            to { transform: rotateY(1turn); }
-        }
-    );
+    --orb-primary: hsl(var(--accent-hue), 100%, 70%);
     width: 280px;
     height: 280px;
     display: grid;
@@ -370,74 +309,14 @@ body {
 }
 
 :root[data-theme="light"] .about-particle-orb {
-    --particle-orb-rule: (
-        :doodle {
-            @grid: 220x1;
-            width: 260px;
-            height: 260px;
-            font-size: 2vmin;
-        }
-        :container {
-            transform-style: preserve-3d;
-            animation: orb-spin 24s linear infinite;
-        }
-        --phi: @calc(4 * π / @size * @i);
-        --theta: @calc(10 * π / @size * @i);
-        --r: 9.5em;
-        --c: @p(
-            hsl(var(--accent-hue), 85%, 45%),
-            rgba(72, 91, 118, 0.7),
-            rgba(146, 138, 151, 0.58)
-        );
-        @place-cell: center;
-        @size: @r(.24em, .66em);
-        color: var(--c);
-        transform:
-            translate3d(
-                calc(var(--r) * @sin(var(--theta)) * @cos(var(--phi))),
-                calc(var(--r) * @sin(var(--theta)) * @sin(var(--phi))),
-                calc(var(--r) * @cos(var(--theta)))
-            )
-            rotateY(calc(@i * 1deg));
-        transform-style: preserve-3d;
-        will-change: transform;
-        :after {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 0;
-            border-radius: 50%;
-            @size: 100%;
-            background: currentColor;
-            box-shadow: @m4(
-                0 calc(@lr * @n) 0 calc(-.04em - @n * .04em)
-                currentColor
-            );
-            animation: orb-spin @r(.7s, 1.7s) linear infinite;
-            animation-delay: -@r(700ms);
-            will-change: transform;
-        }
-        :before {
-            content: '';
-            position: absolute;
-            left: 50%;
-            top: 0;
-            width: 1px;
-            height: @r(1em, 5.8em);
-            border-left: 1px @p(solid, dashed, dotted) currentColor;
-            opacity: .3;
-            transform: rotateY(calc(@i * 1deg));
-        }
-        @keyframes orb-spin {
-            to { transform: rotateY(1turn); }
-        }
-    );
+    --orb-primary: hsl(var(--accent-hue), 88%, 44%);
 }
 
 .about-particle-orb css-doodle {
     display: block;
     width: 260px;
     height: 260px;
+    background: transparent;
 }
 
 .about-signal-grid {

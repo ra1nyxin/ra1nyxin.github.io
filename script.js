@@ -8,7 +8,64 @@ const pageContents = {
                     <p>关于小雨..</p>
                 </div>
                 <div class="about-particle-orb" aria-hidden="true">
-                    <css-doodle click-to-update use="var(--particle-orb-rule)"></css-doodle>
+                    <css-doodle click-to-update experimental>
+                        :doodle {
+                            @grid: 220x1;
+                            width: 260px;
+                            height: 260px;
+                            font-size: 2vmin;
+                        }
+                        :container {
+                            transform-style: preserve-3d;
+                            animation: orb-spin 24s linear infinite;
+                        }
+                        --phi: @calc(4 * π / @size * @i);
+                        --theta: @calc(10 * π / @size * @i);
+                        --r: 9.5em;
+                        @place-cell: center;
+                        @size: @r(.24em, .66em);
+                        color: var(--orb-primary);
+                        opacity: @r(.42, .96);
+                        transform:
+                            translate3d(
+                                calc(var(--r) * @sin(var(--theta)) * @cos(var(--phi))),
+                                calc(var(--r) * @sin(var(--theta)) * @sin(var(--phi))),
+                                calc(var(--r) * @cos(var(--theta)))
+                            )
+                            rotateY(calc(@i * 1deg));
+                        transform-style: preserve-3d;
+                        will-change: transform;
+                        :after {
+                            content: '';
+                            position: absolute;
+                            left: 0;
+                            top: 0;
+                            border-radius: 50%;
+                            @size: 100%;
+                            background: currentColor;
+                            box-shadow: @m4(
+                                0 calc(@lr * @n) 0 calc(-.04em - @n * .04em)
+                                currentColor
+                            );
+                            animation: orb-spin @r(.7s, 1.7s) linear infinite;
+                            animation-delay: -@r(700ms);
+                            will-change: transform;
+                        }
+                        :before {
+                            content: '';
+                            position: absolute;
+                            left: 50%;
+                            top: 0;
+                            width: 1px;
+                            height: @r(1em, 5.8em);
+                            border-left: 1px @p(solid, dashed, dotted) currentColor;
+                            opacity: .34;
+                            transform: rotateY(calc(@i * 1deg));
+                        }
+                        @keyframes orb-spin {
+                            to { transform: rotateY(1turn); }
+                        }
+                    </css-doodle>
                 </div>
             </section>
             <section class="about-signal-grid" aria-label="profile overview" data-aos="fade-up" data-aos-delay="80">
