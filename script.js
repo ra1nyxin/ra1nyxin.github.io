@@ -1,7 +1,7 @@
 const pageContents = {
     home: `
         <div class="container about-home">
-            <section class="about-quiet-hero" aria-labelledby="about-home-title">
+            <section class="about-quiet-hero" aria-labelledby="about-home-title" data-aos="fade-up">
                 <div class="about-hero-copy">
                     <p class="about-kicker">Owo / profile</p>
                     <h1 id="about-home-title">一些留在网络里的痕迹</h1>
@@ -14,7 +14,7 @@ const pageContents = {
                     <span>结构判断</span>
                 </div>
             </section>
-            <section class="about-signal-grid" aria-label="profile overview">
+            <section class="about-signal-grid" aria-label="profile overview" data-aos="fade-up" data-aos-delay="80">
                 <div>
                     <span>01</span>
                     <strong>网络生活</strong>
@@ -36,7 +36,7 @@ const pageContents = {
                     <p>通过文字、代码、issue、报告和项目维护建立稳定关系。</p>
                 </div>
             </section>
-            <section class="about-profile-shell" aria-label="about profile">
+            <section class="about-profile-shell" aria-label="about profile" data-aos="fade-up" data-aos-delay="120">
                 <aside class="about-profile-nav">
                     <p>Profile</p>
                     <nav id="about-profile-toc" aria-label="AboutMe sections"></nav>
@@ -564,6 +564,7 @@ async function loadMarkdownContent(filePath, targetElementId) {
                 copyButton.onclick = () => copyCode(copyButton);
                 wrapperDiv.appendChild(copyButton);
             });
+            refreshScrollAnimations();
         }
     } catch (error) {
         console.error('Error loading markdown content:', error);
@@ -612,11 +613,40 @@ async function loadAboutProfile() {
         if (!headings.length) {
             tocElement.innerHTML = '<span>暂无章节</span>';
         }
+        refreshScrollAnimations();
     } catch (error) {
         console.error('Error loading about profile:', error);
         contentElement.innerHTML = `<p class="about-error">AboutMe.md 读取失败：${error.message}</p>`;
         tocElement.innerHTML = '<span>读取失败</span>';
+        refreshScrollAnimations();
     }
+}
+
+function initScrollAnimations() {
+    if (typeof AOS === 'undefined') return;
+
+    AOS.init({
+        duration: 520,
+        easing: 'ease-out-cubic',
+        offset: 80,
+        once: true,
+        mirror: false
+    });
+}
+
+function refreshScrollAnimations() {
+    if (typeof AOS === 'undefined') return;
+    applyDefaultScrollAnimations();
+    AOS.refreshHard();
+}
+
+function applyDefaultScrollAnimations(scope = document) {
+    if (typeof AOS === 'undefined') return;
+
+    scope.querySelectorAll('.card:not([data-aos]), .gallery-item:not([data-aos]), .game-shell:not([data-aos]), .settings-panel:not([data-aos])').forEach((element, index) => {
+        element.setAttribute('data-aos', 'fade-up');
+        element.setAttribute('data-aos-delay', String(Math.min(index * 35, 140)));
+    });
 }
 
 function githubSearch() {
@@ -697,6 +727,7 @@ function renderGallery() {
             galleryImages.forEach(image => {
                 const galleryItem = document.createElement('div');
                 galleryItem.classList.add('gallery-item');
+                galleryItem.setAttribute('data-aos', 'fade-up');
 
                 const img = document.createElement('img');
                 img.src = image.path;
@@ -738,6 +769,7 @@ function renderGallery() {
         } else {
             galleryGrid.innerHTML = '<p>No images found in gallery. Please add images to the `img/` directory and push to GitHub to generate `gallery_data.js`.</p>';
         }
+        refreshScrollAnimations();
     }
 }
 
@@ -776,6 +808,7 @@ function loadContent(page, options = {}) {
             setPageUrl(page);
         }
         mainContent.innerHTML = pageContents[page];
+        applyDefaultScrollAnimations(mainContent);
         if (page === 'home') {
             loadAboutProfile();
         } else if (page === 'notes') {
@@ -2242,6 +2275,7 @@ function initVoidRunner() {
 document.addEventListener('DOMContentLoaded', () => {
     initDevtoolsRedirect();
     initThemeToggle();
+    initScrollAnimations();
     applySiteSettings(loadSiteSettings());
     loadContent(getInitialPage(), { updateUrl: false });
     initStarfield();
@@ -2349,9 +2383,11 @@ async function loadDocsPage() {
     }
 
     docsContainer.innerHTML = '';
-    docFiles.forEach(fileName => {
+    docFiles.forEach((fileName, index) => {
         const section = document.createElement('section');
         section.classList.add('card', 'doc-card');
+        section.setAttribute('data-aos', 'fade-up');
+        section.setAttribute('data-aos-delay', String(Math.min(index * 35, 140)));
 
         const title = document.createElement('h2');
         title.textContent = formatDocTitle(fileName);
