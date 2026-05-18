@@ -10,14 +10,14 @@ const pageContents = {
                 <div class="about-particle-orb" aria-hidden="true">
                     <css-doodle click-to-update experimental>
                         :doodle {
-                            @grid: 220x1;
+                            @grid: 150x1;
                             width: 380px;
                             height: 380px;
                             font-size: 2vmin;
                         }
                         :container {
                             transform-style: preserve-3d;
-                            animation: orb-spin 24s linear infinite;
+                            animation: orb-spin 40s linear infinite;
                         }
                         @place-cell: center;
                         @size: @r(.24em, .66em);
@@ -38,13 +38,10 @@ const pageContents = {
                             border-radius: 50%;
                             @size: 100%;
                             background: currentColor;
-                            box-shadow: @m4(
+                            box-shadow: @m2(
                                 0 calc(@lr * @n) 0 calc(-.04em - @n * .04em)
                                 currentColor
                             );
-                            animation: orb-spin @r(.7s, 1.7s) linear infinite;
-                            animation-delay: -@r(700ms);
-                            will-change: transform;
                         }
                         :before {
                             content: '';
