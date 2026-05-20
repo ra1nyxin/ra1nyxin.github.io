@@ -54,6 +54,6 @@ uname -a
 find / -writable -type d 2>/dev/null
 ```
 
-## 小记录
+## 备注
 
 LinEnum 输出适合当线索清单。真正要验证时，重点看 sudo、SUID、计划任务、服务配置、可写目录和凭据文件。

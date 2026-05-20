@@ -54,6 +54,6 @@ floss -n 6 sample.exe
 floss -j sample.exe > floss.json
 ```
 
-## 小记录
+## 备注
 
 capa 和 FLOSS 适合快速判断样本大概做什么。先看能力和字符串，再决定是否进入动态分析或反汇编。

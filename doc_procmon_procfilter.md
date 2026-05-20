@@ -54,6 +54,6 @@ procfilter.exe -i
 procfilter.exe -u
 ```
 
-## 小记录
+## 备注
 
 Procmon 适合短时间抓行为，ProcFilter 更适合规则化拦截和记录。抓 Procmon 时控制时间窗口，日志会非常大。

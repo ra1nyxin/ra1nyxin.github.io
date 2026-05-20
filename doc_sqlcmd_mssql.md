@@ -56,6 +56,6 @@ sqlcmd -S 192.168.1.10 -U USER -P 'PASSWORD' -Q "select @@servername, @@version"
 sqlcmd -S 192.168.1.10 -U USER -P 'PASSWORD' -Q "select is_srvrolemember('sysadmin')"
 ```
 
-## 小记录
+## 备注
 
 sqlcmd 适合先确认登录态、数据库版本和当前权限，再决定是否继续查表、查链接服务器或导数据。命令稳定，适合写进脚本和文档。

@@ -156,6 +156,6 @@ write memory
 bash
 ```
 
-## 小记录
+## 备注
 
 EOS 常见排查入口是接口、MLAG、VLAN、MAC、路由和 BGP。数据中心里遇到东西向流量异常时，MLAG 和 VXLAN 状态也要一起看。

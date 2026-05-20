@@ -88,6 +88,6 @@ gitleaks detect --log-opts "HEAD~20..HEAD"
 gitleaks detect --log-opts "origin/main"
 ```
 
-## 小记录
+## 备注
 
 Gitleaks 扫到结果后要先判断是否仍然有效，再决定撤销、轮换、吊销或保留例外。历史提交里的密钥即使后来删除，也要按已经暴露处理。

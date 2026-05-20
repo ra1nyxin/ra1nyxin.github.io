@@ -96,6 +96,6 @@ git worktree add -b fix-docs ../repo-fix-docs main
 git worktree add -b experiment ../repo-experiment HEAD
 ```
 
-## 小记录
+## 备注
 
 worktree 的好处是每个目录都有自己的工作区，但共用同一个仓库对象库。切分任务时很舒服，不过要记得一个分支通常只能被一个 worktree 检出。

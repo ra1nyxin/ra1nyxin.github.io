@@ -48,6 +48,6 @@ exiftool -csv -r evidence/ > metadata.csv
 exiftool -all= file.jpg
 ```
 
-## 小记录
+## 备注
 
 ExifTool 适合做附件初筛。比赛里图片和文档经常藏时间、软件、路径、用户名或 GPS，先看元数据不会浪费太多时间。

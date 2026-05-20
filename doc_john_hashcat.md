@@ -106,6 +106,6 @@ hashcat -m 1000 -a 3 hashes.txt '?l?l?l?l?d?d'
 hashcat -m 1000 -a 0 hashes.txt rockyou.txt -r rules/best64.rule
 ```
 
-## 小记录
+## 备注
 
 离线破解前先确认 hash 类型。John 上手快，Hashcat 更适合 GPU 和规则组合。结果要记录 hash 来源、格式、字典、规则和耗时，后面复盘会清楚很多。

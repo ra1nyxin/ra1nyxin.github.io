@@ -134,6 +134,6 @@ PFX 转 PEM。
 openssl pkcs12 -in cert.pfx -out cert.pem -nodes
 ```
 
-## 小记录
+## 备注
 
 TLS 排查时要同时看域名、SNI、证书链、过期时间和中间证书。很多线上证书问题表面上像证书错了，实际会落到负载均衡、反向代理或中间证书没有发完整。

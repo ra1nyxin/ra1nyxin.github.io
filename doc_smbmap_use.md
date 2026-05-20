@@ -62,6 +62,6 @@ smbmap -H 192.168.1.10 -u USER -p 'PASSWORD' --hash-type ntlm
 smbmap -H 192.168.1.10 -u USER -p 'PASSWORD' -R SHARE
 ```
 
-## 小记录
+## 备注
 
 smbmap 很适合先摸清共享权限，再决定是直接读文件、找脚本，还是继续做更细的 SMB 枚举。结果里最值得记的是可写共享和能下载到的配置文件。

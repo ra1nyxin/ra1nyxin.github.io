@@ -142,6 +142,6 @@ commit confirmed 5
 rollback 1
 ```
 
-## 小记录
+## 备注
 
 Junos 变更前后都看 `show | compare`，远程改管理地址或路由时优先用 `commit confirmed`。如果连接断了，设备会自动回滚，现场会安全很多。

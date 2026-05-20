@@ -100,6 +100,6 @@ strace -e trace=network ./app
 strace -c ./app
 ```
 
-## 小记录
+## 备注
 
 strace 输出很多，先用 `-e trace=file` 或 `-e trace=network` 收窄范围会清楚很多。排查线上进程时注意输出文件大小，长时间跟踪最好加采样时间或尽快停止。

@@ -68,6 +68,6 @@ ls -lah ~/.impacket/
 ntlmrelayx.py -h
 ```
 
-## 小记录
+## 备注
 
 ntlmrelayx 的关键是目标类型和可中继条件。先确认目标服务允许什么，再决定是执行命令、开 SOCKS，还是做后续验证。

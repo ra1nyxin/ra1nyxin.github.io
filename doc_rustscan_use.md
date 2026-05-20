@@ -48,6 +48,6 @@ rustscan -a 192.168.1.10 --ulimit 5000 -- -sV
 rustscan -a 192.168.1.10 -- -sV -oN rustscan-nmap.txt
 ```
 
-## 小记录
+## 备注
 
 RustScan 的定位是快速找端口。比赛里先用它跑一遍，再用 Nmap 精扫开放端口，会比直接全量服务识别快很多。

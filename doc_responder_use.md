@@ -68,6 +68,6 @@ ls -lah /usr/share/responder/logs
 cat /etc/responder/Responder.conf
 ```
 
-## 小记录
+## 备注
 
 Responder 适合放在内网里观察名字解析和认证回退。跑之前先确认实验范围，跑完后把日志和哈希文件单独归档，后面跟其他枚举结果一起整理会更清楚。

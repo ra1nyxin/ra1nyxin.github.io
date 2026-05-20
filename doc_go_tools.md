@@ -120,6 +120,6 @@ go mod why github.com/example/pkg
 go clean -modcache
 ```
 
-## 小记录
+## 备注
 
 Go 项目排查依赖时先看 `go.mod` 和 `go.sum`，再用 `go list -m all` 确认最终版本。CI 里一般跑 `go test ./...`、`go vet ./...` 和 `go mod tidy` 检查。

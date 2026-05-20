@@ -102,6 +102,6 @@ find ./samples -type f -name "*.exe" -print0 | xargs -0 yara rules.yar
 yara -r rules.yar ./samples > yara-result.txt
 ```
 
-## 小记录
+## 备注
 
 YARA 规则要尽量写得可解释。字符串、偏移、文件类型、大小、组合条件都要服务于同一个判断，规则名和 tag 也要能看出用途。后面维护规则时，清晰比炫技重要。

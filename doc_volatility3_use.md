@@ -74,6 +74,6 @@ vol -f memory.raw windows.dumpfiles --virtaddr 0x12345678
 vol -f memory.raw windows.registry.hivelist
 ```
 
-## 小记录
+## 备注
 
 Volatility3 排查时先看系统信息、进程树、命令行和网络连接。找到可疑 PID 后再看 DLL、句柄、文件和内存转储。

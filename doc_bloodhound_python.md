@@ -62,6 +62,6 @@ bloodhound-python -d example.local -u USER -p 'PASSWORD' -ns 192.168.1.10 -c All
 bloodhound-python -d example.local -u USER -p 'PASSWORD' -ns 192.168.1.10 -c All --dns-tcp
 ```
 
-## 小记录
+## 备注
 
 BloodHound 数据采集依赖 DNS、LDAP、SMB 和域控可达性。采集失败时先确认域名解析和时间同步，再看账号权限和目标端口。

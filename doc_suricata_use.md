@@ -62,6 +62,6 @@ suricata-update
 suricata-update list-sources
 ```
 
-## 小记录
+## 备注
 
 Suricata 适合快速把流量里的高风险行为提出来。告警结果要结合原始 pcap、Zeek 日志和时间线一起看，避免只凭签名下判断。

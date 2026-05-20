@@ -144,6 +144,6 @@ git diff --name-status HEAD~1..HEAD
 git grep -n "working-directory\\|path\\|permissions\\|branches" .github/workflows
 ```
 
-## 小记录
+## 备注
 
 Actions 排错要保留失败 run 的 ID、失败 job 名称和第一段报错。很多问题看起来像 action 本身异常，最后会落到仓库路径、权限、分支条件或生成文件没有进入提交。

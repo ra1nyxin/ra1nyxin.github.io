@@ -42,6 +42,6 @@ psort.py -o json -w timeline.json timeline.plaso
 psort.py -o l2tcsv -w filtered.csv "date > '2026-05-01' AND date < '2026-05-02'" timeline.plaso
 ```
 
-## 小记录
+## 备注
 
 Plaso 适合把大量零散证据变成统一时间线。比赛里先生成完整时间线，再按攻击时间段、用户名、路径和进程名过滤。

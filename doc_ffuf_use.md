@@ -116,6 +116,6 @@ ffuf -u https://example.com/FUZZ -w wordlist.txt -of json -o ffuf.json
 ffuf -u https://example.com/FUZZ -w wordlist.txt -of html -o ffuf.html
 ```
 
-## 小记录
+## 备注
 
 ffuf 的关键是先找到正常 404 或空响应的特征，再用 `-fs`、`-fw`、`-fl` 把噪声压下去。没有过滤的结果经常很热闹，但真正可用的信息会被埋住。

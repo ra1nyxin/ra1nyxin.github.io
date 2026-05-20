@@ -42,6 +42,6 @@ trufflehog filesystem .
 trufflehog filesystem ./src --json
 ```
 
-## 小记录
+## 备注
 
 TruffleHog 适合发现密钥线索，结果要确认是否仍有效。比赛里如果拿到源码或备份目录，先扫一遍密钥会很省时间。

@@ -138,6 +138,6 @@ kubectl port-forward svc/SERVICE_NAME 8080:80 -n NAMESPACE
 kubectl run debug-shell --rm -it --image=busybox:1.36 -- sh
 ```
 
-## 小记录
+## 备注
 
 Kubernetes 排错先看事件，再看 Pod 状态、日志和探针。镜像拉不下来、配置挂载失败、探针失败、资源不足是最常见的几类入口。

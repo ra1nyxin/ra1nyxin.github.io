@@ -102,6 +102,6 @@ rsync -av --delete ./data/ ./backup/data/
 rsync -av --include "*/" --include "*.md" --exclude "*" ./docs/ ./backup/docs/
 ```
 
-## 小记录
+## 备注
 
 rsync 里源路径末尾的 `/` 很关键。`./dist/` 表示同步目录里的内容，`./dist` 表示把 dist 这个目录一起放过去。带 `--delete` 的命令先跑 `--dry-run`，能少很多误删风险。

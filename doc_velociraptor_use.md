@@ -48,6 +48,6 @@ velociraptor artifacts collect Windows.KapeFiles.Targets --output collection.zip
 velociraptor artifacts list
 ```
 
-## 小记录
+## 备注
 
 Velociraptor 适合多主机采集和查询。比赛里先准备常用 artifacts，再按主机、用户、进程、文件路径进行快速收敛。

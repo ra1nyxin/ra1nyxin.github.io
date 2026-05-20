@@ -132,6 +132,6 @@ rpcclient -U '' -N 192.168.1.10 -c 'queryuser 0x1f4'
 rpcclient -U '' -N 192.168.1.10 -c 'enumalsgroups builtin'
 ```
 
-## 小记录
+## 备注
 
 smbclient 用来看共享和文件权限，rpcclient 用来看域、用户、组和策略信息。匿名访问如果能列到东西，先把输出保存下来，后面整理用户名和共享路径会用到。

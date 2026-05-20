@@ -100,6 +100,6 @@ find . -type f -name "*.tmp" -mtime +7 -delete
 find . -type d -empty -delete
 ```
 
-## 小记录
+## 备注
 
 涉及删除时先不加 `-delete`，确认输出范围没问题再执行。文件名可能带空格时，用 `-print0` 和 `xargs -0`，能避免很多奇怪问题。

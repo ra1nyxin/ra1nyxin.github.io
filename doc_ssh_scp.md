@@ -126,6 +126,6 @@ ssh -o PubkeyAuthentication=no user@example.com
 ssh -o HostKeyAlgorithms=+ssh-rsa -o PubkeyAcceptedAlgorithms=+ssh-rsa user@example.com
 ```
 
-## 小记录
+## 备注
 
 SSH 问题通常看三处：本地私钥权限、远端 `authorized_keys`、服务端 `sshd_config`。端口转发时要把本地地址、远端地址和监听方向分清楚，命令写错方向会很像网络不通。

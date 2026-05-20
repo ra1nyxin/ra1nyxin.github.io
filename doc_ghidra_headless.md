@@ -36,6 +36,6 @@ analyzeHeadless /tmp/ghidra-project ProjectName -process sample.exe -postScript 
 analyzeHeadless /tmp/ghidra-project ProjectName -process sample.exe -scriptPath scripts -postScript script.py
 ```
 
-## 小记录
+## 备注
 
 Headless 适合批量样本初筛。单个样本深入看时，还是 GUI 更舒服；批量提取函数、字符串和导入时 headless 很省时间。

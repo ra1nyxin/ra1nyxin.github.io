@@ -92,6 +92,6 @@ sc query
 schtasks /query /fo LIST /v
 ```
 
-## 小记录
+## 备注
 
 Windows 原生命令适合快速建立现场感。先记录用户、组、系统版本、网络和服务，再决定要不要上 PowerView、PEAS 或 Sysinternals。

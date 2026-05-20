@@ -56,6 +56,6 @@ kerbrute bruteuser --dc 192.168.1.10 -d example.local passwords.txt USER
 kerbrute bruteforce --dc 192.168.1.10 -d example.local userpass.txt
 ```
 
-## 小记录
+## 备注
 
 Kerbrute 的结果适合和 LDAP、SMB 枚举结果互相印证。密码喷洒要关注锁定策略，先查密码策略，再决定节奏和次数。

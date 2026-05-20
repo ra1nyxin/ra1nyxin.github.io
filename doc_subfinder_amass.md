@@ -54,6 +54,6 @@ amass enum -d example.com
 amass db -show -d example.com
 ```
 
-## 小记录
+## 备注
 
 子域名发现结果要去重、解析、探活，再进入后续 Web 指纹和漏洞验证。比赛里先做被动发现更稳，再根据规则决定是否做主动枚举。

@@ -126,6 +126,6 @@ npm audit fix
 npm ls --omit=dev
 ```
 
-## 小记录
+## 备注
 
 CI 里优先用 `npm ci`，本地开发用 `npm install` 更灵活。依赖异常时先看 Node 版本、lock 文件和包管理器是否一致。

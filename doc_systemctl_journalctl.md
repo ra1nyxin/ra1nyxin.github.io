@@ -138,6 +138,6 @@ journalctl --disk-usage
 sudo journalctl --vacuum-time=7d
 ```
 
-## 小记录
+## 备注
 
 服务排错时先看 `systemctl status` 的退出码和最近日志，再用 `journalctl -u` 展开。改 unit 文件后记得 `daemon-reload`，否则 systemd 还会用旧配置。

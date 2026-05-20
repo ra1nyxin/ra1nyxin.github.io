@@ -94,6 +94,6 @@ enum4linux-ng -O 192.168.1.10
 enum4linux-ng -R 192.168.1.10
 ```
 
-## 小记录
+## 备注
 
 enum4linux-ng 适合做 SMB 第一轮摸底。结果里重点看匿名访问、共享名、用户枚举、密码策略和域信息。后续通常会接 `smbclient`、`rpcclient` 或 NetExec 做更细的确认。

@@ -48,6 +48,6 @@ clamscan -r evidence/ --move quarantine/
 clamscan -d custom.ndb sample.bin
 ```
 
-## 小记录
+## 备注
 
 ClamAV 适合基础扫面，不适合替代人工分析。比赛里可以先跑一轮找明显样本，再用 capa、FLOSS、strings 和沙箱结果交叉验证。

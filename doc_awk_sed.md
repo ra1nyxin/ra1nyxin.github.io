@@ -100,6 +100,6 @@ sed '/^#/d' config.conf
 sed '/server_name/a return 301 https://example.com$request_uri;' nginx.conf
 ```
 
-## 小记录
+## 备注
 
 awk 更适合按列处理，sed 更适合按行替换。命令会改文件时先去掉 `-i` 预览输出，确认没问题再原地替换。

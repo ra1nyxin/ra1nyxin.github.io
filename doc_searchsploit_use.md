@@ -82,6 +82,6 @@ searchsploit -p linux/local
 searchsploit --nmap scan.xml
 ```
 
-## 小记录
+## 备注
 
 SearchSploit 搜到结果后先读代码和说明，确认目标版本、前置条件、认证要求和影响范围。很多条目只是思路或 PoC，真正使用前要在隔离环境里看清楚行为。

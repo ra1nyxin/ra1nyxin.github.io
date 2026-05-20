@@ -134,6 +134,6 @@ tshark -r capture.pcapng -q -z conv,ip
 tshark -r capture.pcapng -q -z io,stat,1
 ```
 
-## 小记录
+## 备注
 
 远程服务器上先用 tshark 抓短样本，再把 pcap 拉回本机用 Wireshark 细看，通常效率最高。过滤表达式写复杂时，先在 Wireshark 顶部过滤栏里试通，再复制到 tshark 命令里。

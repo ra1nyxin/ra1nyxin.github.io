@@ -74,6 +74,6 @@ docker network inspect bridge
 docker port CONTAINER_ID
 ```
 
-## 小记录
+## 备注
 
 容器排查要看镜像来源、启动命令、挂载目录、环境变量和网络。不要只看容器内部，宿主机上的 Docker 配置和卷目录同样重要。

@@ -56,6 +56,6 @@ cat snort-out/alert
 grep "\\[\\*\\*\\]" snort-out/alert | sort | uniq -c | sort -nr
 ```
 
-## 小记录
+## 备注
 
 Snort 适合验证规则写法和快速跑旧规则集。比赛里如果已经有 pcap，先离线跑一遍，再根据告警时间点回到 Wireshark 或 Zeek 日志里看上下文。

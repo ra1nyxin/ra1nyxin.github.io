@@ -56,6 +56,6 @@ adfind -b dc=example,dc=local -f "(objectcategory=person)" -csv > users.csv
 adfind -h
 ```
 
-## 小记录
+## 备注
 
 ADFind 比较适合快速验证某个 LDAP 过滤器。查到结果后再用 PowerView、ldapdomaindump 或 BloodHound 补关系，会更容易整理。

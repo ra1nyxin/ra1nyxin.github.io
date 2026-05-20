@@ -96,6 +96,6 @@ wpscan --url http://192.168.1.10 -o wpscan.txt
 wpscan --url http://192.168.1.10 -f json -o wpscan.json
 ```
 
-## 小记录
+## 备注
 
 WPScan 的插件和主题枚举很实用。结果要结合页面源码、插件目录和后台可见信息确认，版本号隐藏或被缓存时，工具输出可能会偏保守。

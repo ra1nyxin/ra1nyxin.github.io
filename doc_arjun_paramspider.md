@@ -48,6 +48,6 @@ paramspider -d example.com -o params
 cat params/example.com.txt | sort -u > param-urls.txt
 ```
 
-## 小记录
+## 备注
 
 参数发现适合接在 URL 收集后面。先整理历史 URL，再用 Arjun 补充当前接口参数，后续测试会更有目标。

@@ -42,6 +42,6 @@ Get-MachineAccount -MachineAccount TEST01
 Set-MachineAccountAttribute -MachineAccount TEST01 -Attribute dnsHostName -Value test.example.local
 ```
 
-## 小记录
+## 备注
 
 机器账号相关操作通常和委派、AD CS 或一些特定 ACL 测试放在一起看。做完以后要把改动记下来，后面排查域里异常对象会更清楚。

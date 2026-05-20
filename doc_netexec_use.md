@@ -114,6 +114,6 @@ nxc smb -M MODULE_NAME --options
 nxc smb 192.168.1.10 -u USER -p 'PASSWORD' -M MODULE_NAME
 ```
 
-## 小记录
+## 备注
 
 NetExec 的结果适合做横向视角整理：哪些主机开了 SMB，哪些凭据能登录，哪些机器有 WinRM，哪些共享能读。批量扫网段前要控制线程和范围，避免把实验环境服务打得太吵。

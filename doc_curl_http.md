@@ -158,6 +158,6 @@ curl -s -o /dev/null -w "code=%{http_code} time=%{time_total}\n" https://example
 curl -s https://api.github.com/repos/ra1nyxin/ra1nyxin.github.io | jq ".stargazers_count"
 ```
 
-## 小记录
+## 备注
 
 curl 很适合做第一轮接口确认。复杂登录态、前端签名、WebSocket、浏览器指纹这些场景，直接上浏览器 DevTools 或专门代理工具会更省时间。

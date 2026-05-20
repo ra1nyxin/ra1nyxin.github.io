@@ -48,6 +48,6 @@ apktool b apk-out -o rebuilt.apk
 cat apk-out/AndroidManifest.xml
 ```
 
-## 小记录
+## 备注
 
 APK 分析先看 Manifest、网络配置、硬编码字符串和接口地址。jadx 看 Java/Kotlin 逻辑，apktool 看资源和 smali 更方便。

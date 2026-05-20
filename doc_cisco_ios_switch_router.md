@@ -168,6 +168,6 @@ no shutdown
 write memory
 ```
 
-## 小记录
+## 备注
 
 Cisco 设备排障时先看接口简表、日志和邻居关系。交换问题看 VLAN、trunk、MAC、STP，路由问题看路由表、ARP 和下一跳。

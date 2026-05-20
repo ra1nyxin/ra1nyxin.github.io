@@ -140,6 +140,6 @@ jq -r ".items[]? | .name" data.json
 jq -r ".owner?.login // \"unknown\"" repo.json
 ```
 
-## 小记录
+## 备注
 
 jq 的写法很像一条数据流。先把原始 JSON 格式化看清楚，再一层层加筛选和输出格式，通常比一开始就写复杂表达式更稳。

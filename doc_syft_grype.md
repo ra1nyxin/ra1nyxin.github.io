@@ -98,6 +98,6 @@ syft nginx:latest -o cyclonedx-json=sbom.cdx.json
 grype sbom:sbom.cdx.json --fail-on high
 ```
 
-## 小记录
+## 备注
 
 Syft 适合把组件清单固化下来，Grype 适合跟着漏洞库反复评估同一份清单。发布流程里保留 SBOM 文件，后面回溯某个漏洞影响范围会轻松很多。

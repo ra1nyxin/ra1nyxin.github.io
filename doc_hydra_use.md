@@ -100,6 +100,6 @@ hydra -L users.txt -P passwords.txt -V ssh://192.168.1.10
 hydra -L users.txt -P passwords.txt -o hydra-result.txt ssh://192.168.1.10
 ```
 
-## 小记录
+## 备注
 
 Hydra 最关键的是确认失败提示、服务协议和速率。Web 表单要先抓一次真实请求，确认字段名、路径和失败文本，再把它改成 Hydra 的格式。

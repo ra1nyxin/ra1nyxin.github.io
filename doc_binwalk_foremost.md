@@ -48,6 +48,6 @@ foremost -t jpg,png,pdf -i dump.bin -o foremost-out
 foremost -v -i dump.bin -o foremost-out
 ```
 
-## 小记录
+## 备注
 
 Binwalk 适合看文件里藏了什么结构，Foremost 适合按文件头恢复内容。比赛里遇到奇怪附件，先 `file`、`binwalk`、`strings` 三件套看一遍。

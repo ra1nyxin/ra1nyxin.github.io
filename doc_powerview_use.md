@@ -74,6 +74,6 @@ Get-DomainGPO
 Get-DomainObjectAcl -Identity "CN=Domain Admins,CN=Users,DC=example,DC=local"
 ```
 
-## 小记录
+## 备注
 
 PowerView 的结果适合配合 BloodHound 一起看。先从用户、组、计算机和 ACL 入手，再查本机管理员和 GPO，很多提权路径会更明显。

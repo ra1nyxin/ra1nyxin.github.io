@@ -48,6 +48,6 @@ sudo chkrootkit | tee chkrootkit.txt
 chkrootkit -h
 ```
 
-## 小记录
+## 备注
 
 这类工具容易出现误报。比赛里可以作为初筛，命中后要回到进程、文件、启动项、内核模块和网络连接做人工复核。

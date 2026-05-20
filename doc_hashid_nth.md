@@ -48,6 +48,6 @@ nth -f hashes.txt
 nth -f hashes.txt -j
 ```
 
-## 小记录
+## 备注
 
 哈希识别工具给的是候选类型。真正开跑前，要结合来源、长度、字符集和上下文确认一次，比如 Windows hash、Web 应用 hash、数据库 dump 的格式差异都很明显。

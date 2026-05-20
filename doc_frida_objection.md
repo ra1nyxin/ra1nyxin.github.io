@@ -54,6 +54,6 @@ android sslpinning disable
 android file ls /
 ```
 
-## 小记录
+## 备注
 
 移动动态分析前先确认设备、包名、进程和调试环境。Frida 适合写脚本，Objection 适合快速交互式探索。

@@ -56,6 +56,6 @@ ls sigma/rules/windows
 rg "powershell" sigma/rules/windows
 ```
 
-## 小记录
+## 备注
 
 Sigma 适合做检测逻辑沉淀，Chainsaw 适合快速把 EVTX 跑出命中结果。比赛里先用规则扫一轮，再按时间线和主机名回看细节。

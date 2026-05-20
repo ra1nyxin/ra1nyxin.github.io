@@ -108,6 +108,6 @@ sqlite3 app.db "vacuum;"
 sqlite3 app.db "pragma page_count; pragma page_size;"
 ```
 
-## 小记录
+## 备注
 
 SQLite 文件很好复制，但复制前要确认应用是否还在写入。重要数据先做一份备份，再执行导入、删除、vacuum 这类操作。

@@ -150,6 +150,6 @@ diagnose vpn ike gateway list
 get vpn ssl monitor
 ```
 
-## 小记录
+## 备注
 
 FortiGate 排查流量时先看路由、策略、NAT、会话，再抓包确认流量走向。debug 命令用完及时关闭，避免终端输出刷屏。

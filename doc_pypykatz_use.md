@@ -42,6 +42,6 @@ sha256sum lsass.dmp
 7z a lsass-dump.7z lsass.dmp pypykatz.txt
 ```
 
-## 小记录
+## 备注
 
 pypykatz 适合做离线分析，输出里要重点看账号名、域名、认证材料类型和会话来源。原始 dump 文件要单独保留，后面复查会用到。

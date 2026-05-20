@@ -126,6 +126,6 @@ python -m pip install --no-cache-dir requests
 python -m pip install -e .
 ```
 
-## 小记录
+## 备注
 
 Python 环境问题大多和解释器路径有关。先确认 `sys.executable`，再看包是否装在同一个环境里，排查速度会快很多。项目根目录放 `.venv` 比使用全局环境清楚。

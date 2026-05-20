@@ -60,6 +60,6 @@ ie
 iij
 ```
 
-## 小记录
+## 备注
 
 radare2 和 Rizin 适合快速看结构。比赛里先看 strings、imports、functions 和 main，再决定是否上 Ghidra 或动态调试。

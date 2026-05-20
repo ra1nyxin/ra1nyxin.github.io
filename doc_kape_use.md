@@ -50,6 +50,6 @@ kape.exe --msource C:\KAPEOut --mdest C:\KAPEModules --module !EZParser
 kape.exe --tsource C: --tdest C:\KAPEOut --target !BasicCollection --msource C:\KAPEOut --mdest C:\KAPEModules --module !EZParser
 ```
 
-## 小记录
+## 备注
 
 KAPE 适合比赛里快速收集标准证据。采集前确认输出盘空间，采集后保留目录结构，后面做时间线和日志分析会更方便。

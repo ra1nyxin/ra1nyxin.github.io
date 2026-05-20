@@ -138,6 +138,6 @@ show firewall
 show conntrack table
 ```
 
-## 小记录
+## 备注
 
 VyOS 改配置时先 `compare`，确认后 `commit`，最后再 `save`。只 commit 没 save 的配置重启后会丢，这点很容易忘。

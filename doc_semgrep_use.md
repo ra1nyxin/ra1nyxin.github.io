@@ -108,6 +108,6 @@ semgrep scan --config p/default --timeout 60
 semgrep scan --config p/default --exclude vendor --exclude node_modules
 ```
 
-## 小记录
+## 备注
 
 Semgrep 的价值在于把项目里反复出现的代码模式固定成规则。第一次写规则不用追求复杂，先抓住一个容易误用的 API，再用测试样例慢慢收紧。

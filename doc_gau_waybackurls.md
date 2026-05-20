@@ -48,6 +48,6 @@ cat domains.txt | waybackurls > wayback.txt
 cat urls.txt wayback.txt | sort -u > all-urls.txt
 ```
 
-## 小记录
+## 备注
 
 历史 URL 适合找老接口、参数名、备份路径和被前端隐藏的功能点。整理后可以按扩展名、参数和状态码继续筛。

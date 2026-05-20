@@ -70,6 +70,6 @@ procdump64.exe -ma 1234 proc.dmp
 procdump64.exe -h
 ```
 
-## 小记录
+## 备注
 
 Sysinternals 工具很适合做本地排查和权限确认。它们不会替代 PowerView、PEAS 或 BloodHound，但能很快把目录权限、服务权限和文件签名这些基础信息补齐。

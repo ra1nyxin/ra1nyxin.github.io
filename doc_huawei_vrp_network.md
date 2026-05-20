@@ -162,6 +162,6 @@ display current-configuration | include route-static
 display current-configuration interface GigabitEthernet 0/0/1
 ```
 
-## 小记录
+## 备注
 
 华为 VRP 的视图层级很重要。排查时先在用户视图用 `display` 看状态，确认要改的对象后再进系统视图和接口视图处理。

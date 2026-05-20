@@ -120,6 +120,6 @@ tcpdump -nn -r capture.pcap port 53
 tcpdump -nn -A -r capture.pcap
 ```
 
-## 小记录
+## 备注
 
 tcpdump 适合抓“刚好够用”的包。抓之前先写清楚要确认什么，再决定接口、主机、端口和数量。线上机器尽量加 `-c` 或轮转参数，避免文件把磁盘打满。

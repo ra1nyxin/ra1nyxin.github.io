@@ -102,6 +102,6 @@ ncat --ssl example.com 443
 socat - OPENSSL:example.com:443,verify=0
 ```
 
-## 小记录
+## 备注
 
 nc 适合快速确认端口和发简单明文请求。socat 参数更长，但能处理转发、Unix Socket、TLS 和复杂桥接。临时监听端口时要留意机器的防火墙和安全组。

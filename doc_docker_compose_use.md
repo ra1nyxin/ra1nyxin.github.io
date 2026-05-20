@@ -146,6 +146,6 @@ docker compose down -v
 docker compose down --rmi local
 ```
 
-## 小记录
+## 备注
 
 Compose 排错先看 `docker compose config`，确认环境变量和路径展开后的结果。容器起不来时看日志，服务互相连不上时看网络名、服务名和端口暴露方向。

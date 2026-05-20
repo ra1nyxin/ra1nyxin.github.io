@@ -150,6 +150,6 @@ Torch 看流量。
 /tool torch interface=ether1
 ```
 
-## 小记录
+## 备注
 
 RouterOS 排查网络时先看接口、地址、路由、NAT 和 filter。配置导出文件要保护好，里面经常会包含公网地址、隧道配置和账号相关信息。

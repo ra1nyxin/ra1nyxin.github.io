@@ -62,6 +62,6 @@ zeek-cut id.orig_h id.resp_h id.resp_p proto service < conn.log
 zeek-cut id.orig_h id.resp_h id.resp_p orig_bytes resp_bytes < conn.log | sort -k4,4nr | head
 ```
 
-## 小记录
+## 备注
 
 Zeek 适合先把流量拆成日志表，再按 DNS、HTTP、TLS、连接量慢慢收窄。比赛里查异常域名、可疑下载、横向连接时很顺手。

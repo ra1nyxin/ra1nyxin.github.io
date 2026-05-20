@@ -98,6 +98,6 @@ cat /etc/crontab
 systemctl list-timers
 ```
 
-## 小记录
+## 备注
 
 Linux 本地枚举先看身份、sudo、内核、SUID、可写路径、计划任务和监听服务。脚本能加速，但手工命令能让你更清楚线索从哪里来。

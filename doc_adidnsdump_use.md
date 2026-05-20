@@ -42,6 +42,6 @@ cat dnsdump/dns_records.csv
 cut -d, -f1 dnsdump/dns_records.csv
 ```
 
-## 小记录
+## 备注
 
 AD DNS 里的记录经常能补齐机器名和子域名，和 LDAP、BloodHound 的数据一起看会更完整。导出后先看 A、CNAME 和 SRV 记录，再决定要不要继续深挖。

@@ -94,6 +94,6 @@ feroxbuster -u http://192.168.1.10 -w wordlist.txt -o ferox.txt
 feroxbuster -u http://192.168.1.10 -w wordlist.txt --json -o ferox.json
 ```
 
-## 小记录
+## 备注
 
 Feroxbuster 默认递归能力很方便，也更容易扫出大量噪声。先找 404 页面长度和站点跳转规律，再设置过滤条件，结果会干净很多。

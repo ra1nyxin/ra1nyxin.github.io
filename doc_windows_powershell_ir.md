@@ -68,6 +68,6 @@ Get-WinEvent -LogName 'Microsoft-Windows-PowerShell/Operational' -MaxEvents 50
 Get-WinEvent -LogName Security -MaxEvents 200 | Where-Object {$_.Message -match 'administrator'}
 ```
 
-## 小记录
+## 备注
 
 PowerShell 适合快速看现场。比赛里先查网络连接、进程、服务、计划任务和关键事件，再决定是否导出 EVTX 做离线分析。

@@ -112,6 +112,6 @@ sqlmap -r request.txt --timeout 10
 sqlmap -r request.txt --flush-session
 ```
 
-## 小记录
+## 备注
 
 sqlmap 适合验证和辅助分析，前提是请求样本准确。先手工确认参数可控、响应有差异，再让 sqlmap 接手，会比盲目扫全站靠谱很多。

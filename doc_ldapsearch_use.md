@@ -82,6 +82,6 @@ ldapsearch -x -E pr=1000/noprompt -H ldap://192.168.1.10 -b "DC=example,DC=local
 ldapsearch -x -H ldap://192.168.1.10 -b "DC=example,DC=local" > ldap.txt
 ```
 
-## 小记录
+## 备注
 
 ldapsearch 的难点通常在 base DN、绑定账号格式和过滤器。先查 RootDSE 拿 namingContexts，再逐步缩小过滤条件，会比直接写复杂查询稳定。

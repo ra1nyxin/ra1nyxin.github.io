@@ -144,6 +144,6 @@ show vpn ipsec-sa
 show global-protect-gateway current-user
 ```
 
-## 小记录
+## 备注
 
 PAN-OS 排查策略时，`test security-policy-match` 和 `test nat-policy-match` 很省时间。实际流量仍然要结合会话表、路由、NAT 和日志一起判断。

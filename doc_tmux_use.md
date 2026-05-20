@@ -120,6 +120,6 @@ tmux show-options -g
 tmux source-file ~/.tmux.conf
 ```
 
-## 小记录
+## 备注
 
 tmux 最常用的场景是远程长任务。任务跑起来后断开 SSH，晚点再 attach 回去看结果。遇到网络不稳的机器，先开 tmux 再做操作，现场会保住很多。

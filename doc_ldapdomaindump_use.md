@@ -56,6 +56,6 @@ jq -r '.[].attributes.sAMAccountName[0]' dump/domain_users.json
 jq -r '.[].attributes.dNSHostName[0]' dump/domain_computers.json
 ```
 
-## 小记录
+## 备注
 
 ldapdomaindump 适合把 LDAP 结果一次性铺开，后面找 SPN、组成员、计算机和 OU 会方便很多。导出后最好和 BloodHound 数据一起看，关系会更完整。

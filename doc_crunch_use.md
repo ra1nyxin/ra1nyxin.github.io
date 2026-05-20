@@ -48,6 +48,6 @@ crunch 6 6 0123456789 -o START -z gzip
 crunch 8 8 abcdefghijklmnopqrstuvwxyz -b 50mb -o START
 ```
 
-## 小记录
+## 备注
 
 Crunch 适合生成很明确的模式，比如编号、年份、固定前缀。生成前先估算大小，不然词表很容易比预期大很多。

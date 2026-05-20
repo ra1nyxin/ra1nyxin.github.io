@@ -122,6 +122,6 @@ trivy image --ignorefile .trivyignore nginx:latest
 trivy image --ignorefile .trivyignore.yaml nginx:latest
 ```
 
-## 小记录
+## 备注
 
 Trivy 适合放在镜像构建后、发布前的位置。报告里要优先看基础镜像、系统包、语言依赖这三类来源，修复动作通常也从这三条线展开。遇到第三方闭源组件时，记录版本、影响范围、隔离措施和复查时间会更清楚。

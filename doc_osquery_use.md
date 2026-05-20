@@ -62,6 +62,6 @@ osqueryi "select pid,name,path from processes limit 20;"
 osqueryi --json "select pid,name,path from processes limit 20;"
 ```
 
-## 小记录
+## 备注
 
 osquery 适合把主机状态变成可查询数据。比赛里常查进程、网络、用户、启动项、计划任务和浏览器扩展。

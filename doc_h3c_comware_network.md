@@ -156,6 +156,6 @@ display boot-loader
 display current-configuration | include vlan
 ```
 
-## 小记录
+## 备注
 
 Comware 排查交换问题时，接口、VLAN、MAC、STP、聚合状态要连着看。端口状态正常但业务不通时，优先确认 VLAN 透传和链路聚合成员是否一致。

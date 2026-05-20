@@ -56,6 +56,6 @@ csvtk grep -f Level -p critical,high timeline.csv
 rg -i "powershell" timeline.csv
 ```
 
-## 小记录
+## 备注
 
 Hayabusa 适合把 Windows 日志直接变成时间线。比赛中先看 critical/high，再按主机、用户、进程和时间段缩小范围。

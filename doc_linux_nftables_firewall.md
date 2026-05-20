@@ -132,6 +132,6 @@ sudo nft -f nftables.conf
 sudo nft -c -f nftables.conf
 ```
 
-## 小记录
+## 备注
 
 nftables 临时命令马上生效，远程机器上改默认策略时要特别谨慎。建议先允许当前管理端口和已建立连接，再逐步加限制规则。

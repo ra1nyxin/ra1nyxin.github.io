@@ -100,6 +100,6 @@ make fmt
 make clean
 ```
 
-## 小记录
+## 备注
 
 Makefile 好用的地方是把复杂命令固定成少数几个目标。排查时先用 `make -n target` 看实际会执行什么，再决定是否真正运行。

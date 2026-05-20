@@ -68,6 +68,6 @@ cat hosts.txt | naabu -silent | httpx -silent -title -status-code
 cat subdomains.txt | httpx -silent -title -status-code -tech-detect
 ```
 
-## 小记录
+## 备注
 
 naabu 和 httpx 适合比赛里快速从资产列表收敛到可访问 Web 服务。结果里优先看标题、状态码、技术栈和非常规端口。

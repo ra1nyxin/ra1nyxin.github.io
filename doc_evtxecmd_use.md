@@ -50,6 +50,6 @@ Select-String -Path C:\Output\*.csv -Pattern "4624"
 Select-String -Path C:\Output\*.csv -Pattern "PowerShell"
 ```
 
-## 小记录
+## 备注
 
 EvtxECmd 适合先把事件日志转成统一格式，再交给 Hayabusa、Chainsaw 或表格分析。关键是保存原始 EVTX 和导出结果对应关系。

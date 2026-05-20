@@ -102,6 +102,6 @@ impacket-secretsdump DOMAIN/USER:'PASSWORD'@192.168.1.10
 impacket-secretsdump -ntds ntds.dit -system SYSTEM LOCAL
 ```
 
-## 小记录
+## 备注
 
 Impacket 工具很多，命令格式通常是 `DOMAIN/USER:PASSWORD@TARGET`。涉及 Kerberos 时要注意域名、时间同步、DNS 和 KRB5CCNAME 环境变量。
