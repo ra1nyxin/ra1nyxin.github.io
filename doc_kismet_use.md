@@ -24,4 +24,4 @@ kismet_server -c wlan0mon
 kismetdb_to_pcap --in capture.kismet --out capture.pcapng
 ```
 
-小记录：适合长期被动观察，输出数据库要和时间、地点、天线配置一起记录。
+适合长期被动观察，输出数据库要和时间、地点、天线配置一起记录。

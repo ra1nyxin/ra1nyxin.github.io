@@ -24,4 +24,4 @@ GetUserSPNs.py -k -no-pass domain.local/user
 hashcat -m 13100 spn_hashes.txt wordlist.txt
 ```
 
-小记录：服务账号要看 SPN、密码年龄、加密类型和权限范围，弱口令只是其中一部分风险。
+服务账号要看 SPN、密码年龄、加密类型和权限范围，弱口令只是其中一部分风险。

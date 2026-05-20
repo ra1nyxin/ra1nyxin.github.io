@@ -24,4 +24,4 @@ o365spray --enum -U users.txt --rate 5 --domain example.com
 o365spray --spray -U users.txt -P passwords.txt --domain example.com
 ```
 
-小记录：测试前要确认锁定策略、窗口期和排除账号，结果要和登录日志交叉验证。
+测试前要确认锁定策略、窗口期和排除账号，结果要和登录日志交叉验证。

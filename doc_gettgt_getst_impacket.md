@@ -24,4 +24,4 @@ getST.py -impersonate administrator -spn cifs/server.domain.local domain.local/u
 export KRB5CCNAME=user.ccache
 ```
 
-小记录：Kerberos 问题先看时间同步、SPN、DNS 和 KRB5CCNAME，很多失败都在这些基础项。
+Kerberos 问题先看时间同步、SPN、DNS 和 KRB5CCNAME，很多失败都在这些基础项。

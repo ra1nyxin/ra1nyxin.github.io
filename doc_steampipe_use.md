@@ -24,4 +24,4 @@ steampipe check benchmark.cis_v150
 steampipe service start
 ```
 
-小记录：适合把云资产变成可查询表，复杂审计可以保存 SQL 和结果。
+适合把云资产变成可查询表，复杂审计可以保存 SQL 和结果。

@@ -18,4 +18,4 @@ cat urls.txt | unfurl keys
 cat urls.txt | unfurl values
 ```
 
-小记录：unfurl 很适合做 URL 整理前的拆解。和 uro、qsreplace 一起用，参数测试会更快。
+unfurl 很适合做 URL 整理前的拆解。和 uro、qsreplace 一起用，参数测试会更快。

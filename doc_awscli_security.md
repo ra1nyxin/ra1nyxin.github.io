@@ -44,4 +44,4 @@ aws ec2 describe-security-groups --query 'SecurityGroups[].{Group:GroupName,Ingr
 aws s3 ls
 ```
 
-小记录：AWS 记录要写 region、profile 和账号 ID。安全组的 `0.0.0.0/0`、长期 Access Key、公开 S3 是优先复核项。
+AWS 记录要写 region、profile 和账号 ID。安全组的 `0.0.0.0/0`、长期 Access Key、公开 S3 是优先复核项。

@@ -24,4 +24,4 @@ npm audit fix --dry-run
 npm audit signatures
 ```
 
-小记录：Node 项目要区分 devDependency 和生产依赖，构建期工具漏洞与运行时风险要分开写。
+Node 项目要区分 devDependency 和生产依赖，构建期工具漏洞与运行时风险要分开写。

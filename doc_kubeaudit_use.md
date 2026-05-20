@@ -24,4 +24,4 @@ kubeaudit all --minSeverity warning
 kubeaudit all --format json > kubeaudit.json
 ```
 
-小记录：重点看特权容器、root 用户、能力集、只读根文件系统和镜像标签。
+重点看特权容器、root 用户、能力集、只读根文件系统和镜像标签。

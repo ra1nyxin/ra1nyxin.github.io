@@ -24,4 +24,4 @@ patchelf --set-rpath ./lib ./app
 patchelf --replace-needed libc.so.6 ./libc.so.6 ./app
 ```
 
-小记录：修改前先复制原文件，记录 libc、ld 和 RPATH，避免把样本改乱。
+修改前先复制原文件，记录 libc、ld 和 RPATH，避免把样本改乱。

@@ -40,4 +40,4 @@ mysql -h 192.168.1.10 -u app -p -e "show grants;"
 mysql -h 192.168.1.10 -u app -p -e "show variables like 'secure_file_priv';"
 ```
 
-小记录：MySQL 文档里建议把账号、来源 IP、授权语句和敏感库表一起写。很多风险来自过宽授权，例如业务账号带了 `FILE`、`SUPER` 或全库写权限。
+MySQL 文档里建议把账号、来源 IP、授权语句和敏感库表一起写。很多风险来自过宽授权，例如业务账号带了 `FILE`、`SUPER` 或全库写权限。

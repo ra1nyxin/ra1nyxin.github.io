@@ -24,4 +24,4 @@ AppCompatCacheParser.exe -d C:\Evidence --csv C:\Output
 TimelineExplorer.exe C:\Output\shimcache.csv
 ```
 
-小记录：ShimCache 更适合作为执行线索，具体执行时间要结合 Prefetch、Amcache 和日志。
+ShimCache 更适合作为执行线索，具体执行时间要结合 Prefetch、Amcache 和日志。

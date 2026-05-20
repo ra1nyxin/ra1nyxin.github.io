@@ -24,4 +24,4 @@ kubectl get all -n default -o yaml | kubectl neat
 kubectl get cm app -o yaml | kubectl neat
 ```
 
-小记录：导出资源做审计时先 neat 一遍，可读性会好很多。
+导出资源做审计时先 neat 一遍，可读性会好很多。

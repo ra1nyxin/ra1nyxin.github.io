@@ -18,4 +18,4 @@ donpapi collect -d example.local -u USER -H NTLM_HASH -t 192.168.1.10
 donpapi --help
 ```
 
-小记录：DonPAPI 偏主机凭据收集，输出很长。拿到结果后先按浏览器、WiFi、DPAPI masterkey 和 Outlook 分目录看。
+DonPAPI 偏主机凭据收集，输出很长。拿到结果后先按浏览器、WiFi、DPAPI masterkey 和 Outlook 分目录看。

@@ -24,4 +24,4 @@ python3 smuggler.py -u https://example.local --timeout 10
 python3 smuggler.py -u https://example.local -x http://127.0.0.1:8080
 ```
 
-小记录：请求走私测试要控制目标和时间，命中后需要用原始请求手工复核。
+请求走私测试要控制目标和时间，命中后需要用原始请求手工复核。

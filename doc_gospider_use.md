@@ -18,4 +18,4 @@ gospider -S urls.txt -o gospider-out
 gospider -s https://example.com --robots --sitemap
 ```
 
-小记录：GoSpider 适合把站点链接先铺开，再按参数、扩展名、状态码做筛选。
+GoSpider 适合把站点链接先铺开，再按参数、扩展名、状态码做筛选。

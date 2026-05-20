@@ -44,4 +44,4 @@ kubectl describe clusterrolebinding cluster-admin
 kubectl get clusterrolebinding -o json | jq '.items[] | {name:.metadata.name, subjects:.subjects}'
 ```
 
-小记录：K8s 权限风险要看实际动作。能读 secret、创建 pod、绑定角色、访问宿主机路径都要单独标记。
+K8s 权限风险要看实际动作。能读 secret、创建 pod、绑定角色、访问宿主机路径都要单独标记。

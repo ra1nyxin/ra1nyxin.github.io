@@ -40,4 +40,4 @@ psql postgresql://user:pass@192.168.1.10:5432/appdb -c "\\du"
 psql postgresql://user:pass@192.168.1.10:5432/appdb -c "select * from pg_available_extensions where installed_version is not null;"
 ```
 
-小记录：PostgreSQL 的 `\du`、扩展列表和函数权限很有价值。看到超级用户或危险扩展时，先确认业务必要性和连接来源。
+PostgreSQL 的 `\du`、扩展列表和函数权限很有价值。看到超级用户或危险扩展时，先确认业务必要性和连接来源。

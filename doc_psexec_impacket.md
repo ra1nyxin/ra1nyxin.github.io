@@ -24,4 +24,4 @@ psexec.py -service-name audit domain.local/user:pass@192.168.1.10
 psexec.py -target-ip 192.168.1.10 domain.local/user:pass@host
 ```
 
-小记录：它会创建服务，测试后要确认服务和临时文件已经清理。
+它会创建服务，测试后要确认服务和临时文件已经清理。

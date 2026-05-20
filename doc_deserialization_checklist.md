@@ -40,4 +40,4 @@ ysoserial.exe -f BinaryFormatter -g TypeConfuseDelegate -c calc.exe
 python3 -m pickletools payload.pickle
 ```
 
-小记录：反序列化验证要记录入口参数、编码层、服务端框架和依赖线索。不要只保存 payload，触发请求同样重要。
+反序列化验证要记录入口参数、编码层、服务端框架和依赖线索。不要只保存 payload，触发请求同样重要。

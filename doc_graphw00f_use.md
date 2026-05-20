@@ -24,4 +24,4 @@ graphw00f -t http://example.local/graphql -o json
 graphw00f -t http://example.local/graphql --headers "Authorization: Bearer TOKEN"
 ```
 
-小记录：识别到实现后，再按对应框架查 introspection、错误格式和限制策略。
+识别到实现后，再按对应框架查 introspection、错误格式和限制策略。

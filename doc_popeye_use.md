@@ -24,4 +24,4 @@ popeye -o json > popeye.json
 popeye --context mycluster
 ```
 
-小记录：它适合做日常体检，安全相关重点看权限、镜像、资源限制和暴露服务。
+它适合做日常体检，安全相关重点看权限、镜像、资源限制和暴露服务。

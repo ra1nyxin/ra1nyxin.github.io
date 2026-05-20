@@ -24,4 +24,4 @@ stormspotter --server http://127.0.0.1:9090
 az account show
 ```
 
-小记录：它适合看 Azure 资源关系，采集前先确认租户和订阅边界。
+它适合看 Azure 资源关系，采集前先确认租户和订阅边界。

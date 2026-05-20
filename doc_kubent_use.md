@@ -24,4 +24,4 @@ kubent --helm3
 kubent --target-version 1.29.0
 ```
 
-小记录：适合升级前排雷，和 Pluto 交叉检查能减少漏项。
+适合升级前排雷，和 Pluto 交叉检查能减少漏项。

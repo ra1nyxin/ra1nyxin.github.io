@@ -24,4 +24,4 @@ odat all -s 192.168.1.10 -p 1521 -d ORCL -U user -P pass
 odat utlfile -s 192.168.1.10 -d ORCL -U user -P pass --test-module
 ```
 
-小记录：Oracle 测试先确认 SID/Service Name 和账号权限，写文件类模块只在明确授权下使用。
+Oracle 测试先确认 SID/Service Name 和账号权限，写文件类模块只在明确授权下使用。

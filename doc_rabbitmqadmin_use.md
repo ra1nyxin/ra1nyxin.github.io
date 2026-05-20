@@ -24,4 +24,4 @@ rabbitmqadmin -H 192.168.1.10 -u user -p pass get queue=queue requeue=false
 rabbitmqadmin -H 192.168.1.10 -u user -p pass export rabbitmq.json
 ```
 
-小记录：检查重点是默认账号、管理端口暴露、vhost 权限和消息敏感内容。
+检查重点是默认账号、管理端口暴露、vhost 权限和消息敏感内容。

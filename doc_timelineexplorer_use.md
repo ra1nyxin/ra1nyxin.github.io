@@ -24,4 +24,4 @@ TimelineExplorer.exe C:\Output\timeline.csv
 TimelineExplorer.exe
 ```
 
-小记录：适合人工浏览大量 CSV，最终结论仍要回到原始证据文件。
+适合人工浏览大量 CSV，最终结论仍要回到原始证据文件。

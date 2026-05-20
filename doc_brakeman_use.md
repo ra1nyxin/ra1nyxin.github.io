@@ -24,4 +24,4 @@ brakeman -A
 brakeman --confidence-level 2
 ```
 
-小记录：Rails 项目里重点看 SQL 拼接、模板输出、redirect 和 mass assignment。
+Rails 项目里重点看 SQL 拼接、模板输出、redirect 和 mass assignment。

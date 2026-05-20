@@ -18,4 +18,4 @@ python3 jwt_tool.py TOKEN -T
 python3 jwt_tool.py TOKEN -I -pc role -pv admin
 ```
 
-小记录：JWT 测试先看 alg、kid、exp、iss、aud 和业务字段。签名验证逻辑要结合服务端行为确认。
+JWT 测试先看 alg、kid、exp、iss、aud 和业务字段。签名验证逻辑要结合服务端行为确认。

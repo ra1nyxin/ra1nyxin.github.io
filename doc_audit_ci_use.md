@@ -24,4 +24,4 @@ audit-ci --report-type full
 audit-ci --allowlist GHSA-xxxx-yyyy-zzzz
 ```
 
-小记录：门禁阈值要和项目节奏匹配，allowlist 必须写清原因和复查时间。
+门禁阈值要和项目节奏匹配，allowlist 必须写清原因和复查时间。

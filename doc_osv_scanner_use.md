@@ -40,4 +40,4 @@ osv-scanner --sbom sbom.spdx.json
 osv-scanner --docker nginx:latest
 ```
 
-小记录：osv-scanner 的结果适合和包管理器锁文件一起归档。修复时优先看 direct dependency，再处理传递依赖。
+osv-scanner 的结果适合和包管理器锁文件一起归档。修复时优先看 direct dependency，再处理传递依赖。

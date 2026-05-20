@@ -18,4 +18,4 @@ Get-UnquotedService
 Get-ModifiableServiceFile
 ```
 
-小记录：PowerUp 的重点是找服务权限、计划任务、注册表和可写路径。检查结果要手工确认实际可利用性。
+PowerUp 的重点是找服务权限、计划任务、注册表和可写路径。检查结果要手工确认实际可利用性。

@@ -24,4 +24,4 @@ pwninit --template-path template.py
 ldd ./vuln
 ```
 
-小记录：适合快速搭本地复现环境，生成后仍要检查保护和 libc 偏移。
+适合快速搭本地复现环境，生成后仍要检查保护和 libc 偏移。

@@ -24,4 +24,4 @@ ggshield secret scan ci
 ggshield secret ignore --last-found
 ```
 
-小记录：密钥扫描命中后先吊销和轮换，再处理 Git 历史和误报标记。
+密钥扫描命中后先吊销和轮换，再处理 Git 历史和误报标记。

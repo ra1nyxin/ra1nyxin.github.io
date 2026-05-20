@@ -40,4 +40,4 @@ opa test policy/
 opa eval -i input.json -d policy/ 'data.main.deny'
 ```
 
-小记录：conftest 的优势是可表达组织自己的规则。适合把“必须设置资源限制”“禁止特权容器”这类基线固化下来。
+conftest 的优势是可表达组织自己的规则。适合把“必须设置资源限制”“禁止特权容器”这类基线固化下来。

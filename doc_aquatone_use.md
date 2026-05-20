@@ -18,4 +18,4 @@ cat urls.txt | aquatone -out aquatone-out -http-timeout 5
 cat urls.txt | aquatone -out aquatone-out -resolution 1440x900
 ```
 
-小记录：Aquatone 适合从大量站点里快速挑异常页面。和 httpx 一起跑，能很快看出标题、截图和状态码差异。
+Aquatone 适合从大量站点里快速挑异常页面。和 httpx 一起跑，能很快看出标题、截图和状态码差异。

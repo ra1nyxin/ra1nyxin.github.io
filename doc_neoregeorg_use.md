@@ -24,4 +24,4 @@ proxychains curl http://10.0.0.10
 python3 neoreg.py -k password -u http://target/tunnel.jsp -p 1081
 ```
 
-小记录：授权测试中要记录上传路径、代理端口和清理动作。
+授权测试中要记录上传路径、代理端口和清理动作。

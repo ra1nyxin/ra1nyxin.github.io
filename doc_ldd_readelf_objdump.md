@@ -44,4 +44,4 @@ objdump -d ./app | less
 objdump -R ./app
 ```
 
-小记录：先看架构、PIE、NX、RELRO、Canary，再决定调试路线。动态链接库路径异常时，继续查 RPATH、RUNPATH 和加载顺序。
+先看架构、PIE、NX、RELRO、Canary，再决定调试路线。动态链接库路径异常时，继续查 RPATH、RUNPATH 和加载顺序。

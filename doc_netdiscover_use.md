@@ -24,4 +24,4 @@ sudo netdiscover -i eth0 -r 192.168.1.0/24
 sudo netdiscover -s 10 -r 192.168.1.0/24
 ```
 
-小记录：适合刚接入内网时观察网段，结果要和 DHCP、ARP 表交叉确认。
+适合刚接入内网时观察网段，结果要和 DHCP、ARP 表交叉确认。

@@ -24,4 +24,4 @@ python3 exploit.py
 python3 -c "from pwn import *; io=remote(\"127.0.0.1\",31337); io.interactive()"
 ```
 
-小记录：脚本里记录 offset、架构、保护和 libc 版本，后续复现会更稳。
+脚本里记录 offset、架构、保护和 libc 版本，后续复现会更稳。

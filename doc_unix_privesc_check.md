@@ -18,4 +18,4 @@ unix-privesc-check 适合 Unix/Linux 提权线索枚举。常用参数：`standa
 ./unix-privesc-check detailed | tee upc-detailed.txt
 ```
 
-小记录：这个工具偏老，但在一些基础环境里仍然能补线索。输出适合和 LinEnum、linPEAS 交叉看。
+这个工具偏老，但在一些基础环境里仍然能补线索。输出适合和 LinEnum、linPEAS 交叉看。

@@ -18,4 +18,4 @@ mitmdump -p 8080 -w flows.mitm
 mitmdump -p 8080 -s addon.py
 ```
 
-小记录：mitmproxy 适合需要脚本化观察请求的场景。证书安装和代理设置要先确认好。
+mitmproxy 适合需要脚本化观察请求的场景。证书安装和代理设置要先确认好。

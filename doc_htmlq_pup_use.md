@@ -36,4 +36,4 @@ curl -s http://example.local/login | pup 'form json{}'
 while read u; do curl -sk "$u" | htmlq -a href a; done < urls.txt | sort -u
 ```
 
-小记录：HTML 解析尽量用 selector。链接、表单 action、脚本 src 和隐藏 input 是最常用的提取对象。
+HTML 解析尽量用 selector。链接、表单 action、脚本 src 和隐藏 input 是最常用的提取对象。

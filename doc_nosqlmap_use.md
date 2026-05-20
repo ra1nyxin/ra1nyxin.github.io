@@ -18,4 +18,4 @@ python3 nosqlmap.py -t http://192.168.1.10/login -p username --proxy 127.0.0.1:8
 python3 nosqlmap.py -h
 ```
 
-小记录：NoSQL 测试常见于 MongoDB/Elastic 相关站点。字段名、JSON 结构和查询行为都要先确认。
+NoSQL 测试常见于 MongoDB/Elastic 相关站点。字段名、JSON 结构和查询行为都要先确认。

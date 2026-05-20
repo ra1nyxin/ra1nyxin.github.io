@@ -24,4 +24,4 @@ python3 zircolite.py --evtx Security.evtx --ruleset rules --debug
 python3 zircolite.py --ruleset rules --evtx logs/ --template templates/exportForTimesketch.tmpl
 ```
 
-小记录：Sigma 命中要看字段映射和日志源，规则标题只能作为入口。
+Sigma 命中要看字段映射和日志源，规则标题只能作为入口。

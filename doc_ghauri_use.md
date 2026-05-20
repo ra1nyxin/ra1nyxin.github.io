@@ -18,4 +18,4 @@ ghauri -r request.txt
 ghauri -u "http://192.168.1.10/item.php?id=1" --technique BEUSTQ
 ```
 
-小记录：Ghauri 可以作为 sqlmap 的补充。命中前还是要先看手工响应差异，避免把无注入参数跑得太久。
+Ghauri 可以作为 sqlmap 的补充。命中前还是要先看手工响应差异，避免把无注入参数跑得太久。

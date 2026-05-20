@@ -24,4 +24,4 @@ kr wordlist build routes.txt -o routes.kite
 kr scan targets.txt -w routes.kite -o kr.json
 ```
 
-小记录：API 枚举结果要结合状态码、响应长度和认证状态分析。
+API 枚举结果要结合状态码、响应长度和认证状态分析。

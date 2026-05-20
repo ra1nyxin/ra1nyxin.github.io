@@ -24,4 +24,4 @@ container-diff analyze daemon://app:latest --type=apt
 container-diff analyze daemon://app:latest --json
 ```
 
-小记录：适合回答新旧镜像究竟改了哪些包和文件，方便定位引入风险。
+适合回答新旧镜像究竟改了哪些包和文件，方便定位引入风险。

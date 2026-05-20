@@ -24,4 +24,4 @@ pdfid.py -s sample.pdf
 pdfid.py samples/*.pdf
 ```
 
-小记录：看到 JavaScript、OpenAction、Launch、EmbeddedFile 后继续用 pdf-parser 深挖。
+看到 JavaScript、OpenAction、Launch、EmbeddedFile 后继续用 pdf-parser 深挖。

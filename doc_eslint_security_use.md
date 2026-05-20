@@ -24,4 +24,4 @@ npx eslint src --ext .js,.ts
 npx eslint . --rule "security/detect-child-process:error"
 ```
 
-小记录：它适合发现危险 API 使用，确认漏洞还需要看调用路径和参数来源。
+它适合发现危险 API 使用，确认漏洞还需要看调用路径和参数来源。

@@ -24,4 +24,4 @@ oledump.py -s A -v sample.doc
 oledump.py -p plugin_http_heuristics.py sample.doc
 ```
 
-小记录：流编号、宏内容和可疑字符串要一起保存，方便报告复现。
+流编号、宏内容和可疑字符串要一起保存，方便报告复现。

@@ -24,4 +24,4 @@ xsrfprobe -u http://example.local --proxy http://127.0.0.1:8080
 xsrfprobe -u http://example.local --output xsrfprobe.txt
 ```
 
-小记录：CSRF 结论要看状态变更、认证方式和 SameSite/CORS 配置。
+CSRF 结论要看状态变更、认证方式和 SameSite/CORS 配置。

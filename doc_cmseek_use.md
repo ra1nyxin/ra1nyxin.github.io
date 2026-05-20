@@ -36,4 +36,4 @@ cmseek -l urls.txt --output results
 cmseek -u http://example.local --proxy http://127.0.0.1:8080
 ```
 
-小记录：CMSeeK 适合给 Web 资产打标签。识别出 CMS 后，再换对应专用工具深入枚举，准确率和可读性会更好。
+CMSeeK 适合给 Web 资产打标签。识别出 CMS 后，再换对应专用工具深入枚举，准确率和可读性会更好。

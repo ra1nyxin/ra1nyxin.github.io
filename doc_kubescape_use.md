@@ -18,4 +18,4 @@ kubescape scan cluster --format json
 kubescape scan file *.yaml --output-format html
 ```
 
-小记录：Kubescape 适合比赛里做 Kubernetes 基线检查。先看高风险工作负载，再看 RBAC、镜像和挂载。
+Kubescape 适合比赛里做 Kubernetes 基线检查。先看高风险工作负载，再看 RBAC、镜像和挂载。

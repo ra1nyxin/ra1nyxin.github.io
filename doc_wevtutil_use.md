@@ -24,4 +24,4 @@ wevtutil gli Security
 wevtutil qe Microsoft-Windows-PowerShell/Operational /q:"*[System[(EventID=4104)]]" /f:text
 ```
 
-小记录：授权排查时优先导出 evtx，直接在生产机上做复杂查询容易漏上下文。
+授权排查时优先导出 evtx，直接在生产机上做复杂查询容易漏上下文。

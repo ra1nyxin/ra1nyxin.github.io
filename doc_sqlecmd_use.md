@@ -24,4 +24,4 @@ SQLECmd.exe -f C:\Evidence\History --hunt C:\Rules\SQLiteHunt
 SQLECmd.exe -d C:\Evidence --csv C:\Output --dedupe
 ```
 
-小记录：SQLite 证据要先复制副本再分析，避免锁文件或运行中数据库影响结果。
+SQLite 证据要先复制副本再分析，避免锁文件或运行中数据库影响结果。

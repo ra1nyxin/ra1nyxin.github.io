@@ -18,4 +18,4 @@ python3 whatwaf.py -u https://example.com --proxy http://127.0.0.1:8080
 python3 whatwaf.py -l urls.txt
 ```
 
-小记录：WhatWaf 适合辅助判断防护存在。比赛里不要把绕过测试做得太吵，先确认目标范围和速率。
+WhatWaf 适合辅助判断防护存在。比赛里不要把绕过测试做得太吵，先确认目标范围和速率。

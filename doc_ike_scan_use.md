@@ -40,4 +40,4 @@ ike-scan -M -A --id=test 192.168.1.10
 psk-crack -d wordlist.txt ike_hash.txt
 ```
 
-小记录：VPN 网关的风险要结合可达范围、账号策略和日志情况判断。Aggressive Mode 命中后，把抓到的哈希、组名和网关地址分开保存。
+VPN 网关的风险要结合可达范围、账号策略和日志情况判断。Aggressive Mode 命中后，把抓到的哈希、组名和网关地址分开保存。

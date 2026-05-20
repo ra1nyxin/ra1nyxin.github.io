@@ -18,4 +18,4 @@ stern -l app=web
 stern -n default app --tail 100
 ```
 
-小记录：stern 比单个 `kubectl logs -f` 更适合看一组副本。比赛里服务抖动时，用它看多 Pod 日志很省时间。
+stern 比单个 `kubectl logs -f` 更适合看一组副本。比赛里服务抖动时，用它看多 Pod 日志很省时间。

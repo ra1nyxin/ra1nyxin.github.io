@@ -18,4 +18,4 @@ dnsrecon -d example.com -D subdomains.txt -t brt
 dnsrecon -d example.com -a -j dnsrecon.json
 ```
 
-小记录：dnsrecon 输出比较完整，适合做 DNS 侦察记录。区域传送、NS、MX、TXT 都值得看。
+dnsrecon 输出比较完整，适合做 DNS 侦察记录。区域传送、NS、MX、TXT 都值得看。

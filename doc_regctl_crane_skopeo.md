@@ -40,4 +40,4 @@ crane config nginx:latest
 skopeo inspect docker://nginx:latest
 ```
 
-小记录：无 daemon 工具适合做供应链排查。镜像 digest、创建时间、入口命令和环境变量都值得保存。
+无 daemon 工具适合做供应链排查。镜像 digest、创建时间、入口命令和环境变量都值得保存。

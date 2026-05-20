@@ -24,4 +24,4 @@ smbpasswd.py -dc-ip 192.168.1.10 domain.local/user:oldpass@dc01 -newpass NewPass
 rpcclient -U "domain/user%pass" dc01.domain.local -c "setuserinfo2 user 23 NewPass123!"
 ```
 
-小记录：这类动作影响账号状态，测试账号和真实账号要分开处理。
+这类动作影响账号状态，测试账号和真实账号要分开处理。

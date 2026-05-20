@@ -18,4 +18,4 @@ fierce --domain example.com --dns-servers 8.8.8.8
 fierce --domain example.com --wide
 ```
 
-小记录：Fierce 适合轻量 DNS 摸底。比赛里可以和 dnsrecon、subfinder、amass 的结果互相补齐。
+Fierce 适合轻量 DNS 摸底。比赛里可以和 dnsrecon、subfinder、amass 的结果互相补齐。

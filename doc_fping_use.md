@@ -24,4 +24,4 @@ fping -r1 -t500 -a -f targets.txt
 fping -u -f targets.txt
 ```
 
-小记录：ICMP 被限制时结果会偏少，要结合 TCP ping 和 ARP 发现。
+ICMP 被限制时结果会偏少，要结合 TCP ping 和 ARP 发现。

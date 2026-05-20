@@ -40,4 +40,4 @@ lftp -u user,password -e "put test.txt; ls; rm test.txt; bye" 192.168.1.10
 hydra -L users.txt -P passwords.txt -V 192.168.1.10 ftp
 ```
 
-小记录：FTP 目录里优先找备份包、配置文件、数据库导出和部署脚本。可写目录要谨慎验证，上传测试文件后及时删除。
+FTP 目录里优先找备份包、配置文件、数据库导出和部署脚本。可写目录要谨慎验证，上传测试文件后及时删除。

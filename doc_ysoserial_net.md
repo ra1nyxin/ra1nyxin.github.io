@@ -18,4 +18,4 @@ ysoserial.net 适合 .NET 反序列化 payload 生成。常用参数：`-g` gadg
 .\ysoserial.exe -l
 ```
 
-小记录：ysoserial.net 的关键是 formatter 和 gadget 对得上。先确认入口使用的序列化组件，再选链。
+ysoserial.net 的关键是 formatter 和 gadget 对得上。先确认入口使用的序列化组件，再选链。

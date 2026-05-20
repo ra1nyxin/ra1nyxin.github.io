@@ -30,4 +30,4 @@ ldapnomnom -input users.txt -server 192.168.1.10 -domain domain.local -port 389
 ldapnomnom -input users.txt -server 192.168.1.10 -domain domain.local -ssl
 ```
 
-小记录：用户枚举结果要和锁定策略一起看。喷洒前先去掉管理员、服务账号和明显敏感账号，降低业务影响。
+用户枚举结果要和锁定策略一起看。喷洒前先去掉管理员、服务账号和明显敏感账号，降低业务影响。

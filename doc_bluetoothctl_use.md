@@ -24,4 +24,4 @@ bluetoothctl info AA:BB:CC:DD:EE:FF
 bluetoothctl pair AA:BB:CC:DD:EE:FF
 ```
 
-小记录：蓝牙测试要记录设备地址、名称、RSSI 和服务 UUID，避免只写显示名。
+蓝牙测试要记录设备地址、名称、RSSI 和服务 UUID，避免只写显示名。

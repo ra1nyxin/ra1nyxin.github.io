@@ -24,4 +24,4 @@ sudo bully wlan0mon -b AA:BB:CC:DD:EE:FF -p 12345670
 sudo wash -i wlan0mon
 ```
 
-小记录：如果 AP 启用 WPS 锁定，继续测试意义不大，记录锁定行为即可。
+如果 AP 启用 WPS 锁定，继续测试意义不大，记录锁定行为即可。

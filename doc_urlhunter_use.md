@@ -24,4 +24,4 @@ urlhunter -u http://example.local -depth 2
 urlhunter -l urls.txt -json
 ```
 
-小记录：URL 提取结果噪声大，后续要按域名、扩展名和参数做归一化。
+URL 提取结果噪声大，后续要按域名、扩展名和参数做归一化。

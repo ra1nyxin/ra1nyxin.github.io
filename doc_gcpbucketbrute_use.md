@@ -24,4 +24,4 @@ python3 gcpbucketbrute.py -k example --check
 python3 gcpbucketbrute.py -k example -o results.txt
 ```
 
-小记录：命中 bucket 后继续用 gcloud storage 检查列表、读取和写入权限。
+命中 bucket 后继续用 gcloud storage 检查列表、读取和写入权限。

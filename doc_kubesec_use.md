@@ -18,4 +18,4 @@ kubesec scan deployment.yaml --threshold 5
 kubesec scan *.yaml
 ```
 
-小记录：kubesec 适合在比赛里快速检查高风险 manifest。重点看特权容器、挂载、capabilities 和镜像来源。
+kubesec 适合在比赛里快速检查高风险 manifest。重点看特权容器、挂载、capabilities 和镜像来源。

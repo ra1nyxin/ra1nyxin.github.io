@@ -40,4 +40,4 @@ gron user.json > user.gron
 diff -u user.gron admin.gron
 ```
 
-小记录：gron 适合找隐藏字段、权限差异和敏感键名。JSON 很深时，它比肉眼翻浏览器响应稳定。
+gron 适合找隐藏字段、权限差异和敏感键名。JSON 很深时，它比肉眼翻浏览器响应稳定。

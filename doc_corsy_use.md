@@ -24,4 +24,4 @@ python3 corsy.py -u http://example.local -o corsy.json
 python3 corsy.py -u http://example.local --headers "Cookie: session=abc"
 ```
 
-小记录：CORS 风险要结合凭据发送、敏感响应和 Origin 反射判断。
+CORS 风险要结合凭据发送、敏感响应和 Origin 反射判断。

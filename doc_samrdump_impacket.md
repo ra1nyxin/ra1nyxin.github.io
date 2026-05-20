@@ -24,4 +24,4 @@ samrdump.py -dc-ip 192.168.1.10 domain.local/user:pass@dc01
 samrdump.py -csv domain.local/user:pass@192.168.1.10
 ```
 
-小记录：它适合补充 SMB 和 LDAP 枚举，输出里 RID、组和描述字段很有价值。
+它适合补充 SMB 和 LDAP 枚举，输出里 RID、组和描述字段很有价值。

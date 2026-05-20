@@ -24,4 +24,4 @@ cartography --selected-modules aws,github
 cypher-shell -u neo4j -p pass "MATCH (n) RETURN labels(n), count(n)"
 ```
 
-小记录：它适合做持续图谱，初次落地要先控制同步范围和凭据权限。
+它适合做持续图谱，初次落地要先控制同步范围和凭据权限。

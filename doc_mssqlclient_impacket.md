@@ -24,4 +24,4 @@ mssqlclient.py -k -no-pass domain.local/user@sql01.domain.local
 mssqlclient.py user:pass@192.168.1.10 -db master
 ```
 
-小记录：MSSQL 风险要看登录权限、数据库角色、链接服务器和 xp_cmdshell 状态。
+MSSQL 风险要看登录权限、数据库角色、链接服务器和 xp_cmdshell 状态。

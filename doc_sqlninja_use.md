@@ -24,4 +24,4 @@ sqlninja -m s -f sqlninja.conf
 sqlninja -m r -f sqlninja.conf
 ```
 
-小记录：现代环境更多用 sqlmap，但遇到老 MSSQL 注入时 sqlninja 仍可作为参考。
+现代环境更多用 sqlmap，但遇到老 MSSQL 注入时 sqlninja 仍可作为参考。

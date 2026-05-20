@@ -36,4 +36,4 @@ for f in startup-config running-config router.cfg switch.cfg; do tftp 192.168.1.
 tftp 192.168.1.10 -c put test.txt test.txt
 ```
 
-小记录：TFTP 枚举经常靠文件名猜测。网络设备配置、PXE 配置和自动化脚本是高价值目标，写入测试要提前确认授权范围。
+TFTP 枚举经常靠文件名猜测。网络设备配置、PXE 配置和自动化脚本是高价值目标，写入测试要提前确认授权范围。

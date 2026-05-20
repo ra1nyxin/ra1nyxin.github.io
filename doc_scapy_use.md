@@ -24,4 +24,4 @@ python3 -c "from scapy.all import *; sniff(count=10)"
 python3 -c "from scapy.all import *; wrpcap(\"out.pcap\", sniff(count=10))"
 ```
 
-小记录：适合做小规模验证，复杂流量测试要写脚本并保存 pcap。
+适合做小规模验证，复杂流量测试要写脚本并保存 pcap。

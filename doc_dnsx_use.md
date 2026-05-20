@@ -18,4 +18,4 @@ dnsx -l subdomains.txt -aaaa -resp-only
 dnsx -l subdomains.txt -resolver resolvers.txt -o resolved.txt
 ```
 
-小记录：dnsx 适合把子域名发现结果变成可解析资产。后面一般接 httpx 或端口扫描。
+dnsx 适合把子域名发现结果变成可解析资产。后面一般接 httpx 或端口扫描。

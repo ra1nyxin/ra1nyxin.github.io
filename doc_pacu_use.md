@@ -44,4 +44,4 @@ data EC2
 whoami
 ```
 
-小记录：Pacu 的模块很多，建议一次只跑一类。云环境记录要带上账号 ID、region、profile 和模块名称。
+Pacu 的模块很多，建议一次只跑一类。云环境记录要带上账号 ID、region、profile 和模块名称。

@@ -24,4 +24,4 @@ nats --server nats://192.168.1.10:4222 stream ls
 nats --server nats://user:pass@192.168.1.10:4222 account info
 ```
 
-小记录：NATS 检查重点是匿名连接、通配订阅、JetStream 数据和账号权限。
+NATS 检查重点是匿名连接、通配订阅、JetStream 数据和账号权限。

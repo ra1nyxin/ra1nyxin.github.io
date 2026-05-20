@@ -24,4 +24,4 @@ AmcacheParser.exe -d C:\Evidence --csv C:\Output
 TimelineExplorer.exe C:\Output\amcache.csv
 ```
 
-小记录：Amcache 适合确认程序路径、哈希和首次执行线索，时间语义要和其他证据对照。
+Amcache 适合确认程序路径、哈希和首次执行线索，时间语义要和其他证据对照。

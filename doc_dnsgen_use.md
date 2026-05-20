@@ -18,4 +18,4 @@ dnsgen subdomains.txt | dnsx -silent > resolved.txt
 dnsgen subdomains.txt | httpx -silent -title -status-code
 ```
 
-小记录：dnsgen 适合在已有资产基础上做变体扩展。和被动发现工具一起用时，能补出不少难找的名字。
+dnsgen 适合在已有资产基础上做变体扩展。和被动发现工具一起用时，能补出不少难找的名字。

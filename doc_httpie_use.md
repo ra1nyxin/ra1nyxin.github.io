@@ -24,4 +24,4 @@ http --form POST http://example.local/upload file@sample.txt
 http --verify=no GET https://example.local
 ```
 
-小记录：适合手工复现 API 请求，复杂认证和批量测试再交给脚本。
+适合手工复现 API 请求，复杂认证和批量测试再交给脚本。

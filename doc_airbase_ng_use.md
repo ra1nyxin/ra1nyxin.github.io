@@ -24,4 +24,4 @@ sudo airbase-ng --essid TestAP --channel 6 wlan0mon
 brctl show
 ```
 
-小记录：适合实验 Rogue AP 防护和客户端自动连接策略，生产环境要避免误导真实用户。
+适合实验 Rogue AP 防护和客户端自动连接策略，生产环境要避免误导真实用户。

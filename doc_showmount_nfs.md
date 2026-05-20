@@ -44,4 +44,4 @@ id && ls -lan /tmp/nfs-test
 sudo umount /tmp/nfs-test
 ```
 
-小记录：NFS 风险经常来自 `no_root_squash`、过宽网段和备份目录。挂载后先看 UID/GID 映射，再判断是否存在越权写入。
+NFS 风险经常来自 `no_root_squash`、过宽网段和备份目录。挂载后先看 UID/GID 映射，再判断是否存在越权写入。

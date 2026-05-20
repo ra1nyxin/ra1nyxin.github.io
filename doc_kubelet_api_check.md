@@ -36,4 +36,4 @@ curl -k https://192.168.1.10:10250/stats/summary
 curl -k -H "Authorization: Bearer $TOKEN" https://192.168.1.10:10250/pods
 ```
 
-小记录：10255 只读端口在老集群里很关键。10250 如果需要认证，也要检查节点证书、Webhook 鉴权和 anonymous-auth 配置。
+10255 只读端口在老集群里很关键。10250 如果需要认证，也要检查节点证书、Webhook 鉴权和 anonymous-auth 配置。

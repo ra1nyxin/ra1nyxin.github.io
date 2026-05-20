@@ -18,4 +18,4 @@ python3 targetedKerberoast.py -d example.local -u USER -p 'PASSWORD' --request-u
 python3 targetedKerberoast.py -h
 ```
 
-小记录：Kerberoast 相关结果要记录 SPN、账号、加密类型和 hash 来源。后续破解和权限验证要分开保存。
+Kerberoast 相关结果要记录 SPN、账号、加密类型和 hash 来源。后续破解和权限验证要分开保存。

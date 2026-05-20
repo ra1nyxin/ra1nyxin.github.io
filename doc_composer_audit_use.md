@@ -24,4 +24,4 @@ composer update vendor/package --with-dependencies --dry-run
 composer show vendor/package --all
 ```
 
-小记录：PHP 依赖修复经常牵动框架版本，先 dry-run 再和业务测试一起推进。
+PHP 依赖修复经常牵动框架版本，先 dry-run 再和业务测试一起推进。

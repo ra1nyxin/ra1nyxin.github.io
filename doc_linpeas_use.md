@@ -18,4 +18,4 @@ chmod +x linpeas.sh
 ./linpeas.sh -q | tee linpeas-quiet.txt
 ```
 
-小记录：linPEAS 输出很长，建议按用户权限、SUID、服务、cron、文件权限和网络分区段记录。
+linPEAS 输出很长，建议按用户权限、SUID、服务、cron、文件权限和网络分区段记录。

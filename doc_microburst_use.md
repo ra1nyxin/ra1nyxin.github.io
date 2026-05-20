@@ -24,4 +24,4 @@ Get-AzDomainInfo -folder MicroBurst
 Invoke-AzureRmVMBulkCMD -Verbose
 ```
 
-小记录：Azure 测试要区分外部枚举和登录后枚举，输出目录要按租户整理。
+Azure 测试要区分外部枚举和登录后枚举，输出目录要按租户整理。

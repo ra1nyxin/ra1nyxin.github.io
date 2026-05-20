@@ -32,4 +32,4 @@ hash_extender --data 'a=b' --secret 16 --signature abcdef --format sha1 --append
 curl 'http://example.local/api?action=list%80...' -H 'X-Signature: new_signature'
 ```
 
-小记录：长度扩展成立需要签名结构满足条件。看到 HMAC 时通常走不通，看到 `md5(secret + data)` 这类写法再重点验证。
+长度扩展成立需要签名结构满足条件。看到 HMAC 时通常走不通，看到 `md5(secret + data)` 这类写法再重点验证。

@@ -24,4 +24,4 @@ aclpwn -f path.json -d domain.local -u user -p pass --server dc01.domain.local
 aclpwn -f path.json -d domain.local -u user -p pass --no-color
 ```
 
-小记录：执行前先 dry-run，变更类动作必须准备 restore 文件。
+执行前先 dry-run，变更类动作必须准备 restore 文件。

@@ -24,4 +24,4 @@ vault secrets list
 vault kv get secret/app
 ```
 
-小记录：Vault 评估要先确认 token 来源和权限，读取 secret 只取必要样本。
+Vault 评估要先确认 token 来源和权限，读取 secret 只取必要样本。

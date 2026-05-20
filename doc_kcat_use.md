@@ -24,4 +24,4 @@ kcat -b 192.168.1.10:9092 -X security.protocol=SASL_SSL -X sasl.username=user -X
 kcat -b 192.168.1.10:9092 -G group topic
 ```
 
-小记录：Kafka 检查要看匿名访问、topic ACL、消息敏感内容和消费组权限。
+Kafka 检查要看匿名访问、topic ACL、消息敏感内容和消费组权限。

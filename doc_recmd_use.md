@@ -24,4 +24,4 @@ RECmd.exe --sync
 RECmd.exe -f C:\Evidence\SYSTEM --json C:\Output
 ```
 
-小记录：注册表分析要按 hive 和用户分开，批处理结果适合快速初筛。
+注册表分析要按 hive 和用户分开，批处理结果适合快速初筛。

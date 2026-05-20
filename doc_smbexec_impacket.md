@@ -24,4 +24,4 @@ smbexec.py -mode SERVER domain.local/user:pass@192.168.1.10
 smbexec.py -share C$ domain.local/user:pass@192.168.1.10
 ```
 
-小记录：不同执行方式留下的日志不同，报告里最好写清使用的是 WMI、服务还是计划任务。
+不同执行方式留下的日志不同，报告里最好写清使用的是 WMI、服务还是计划任务。

@@ -24,4 +24,4 @@ dasel -f config.yaml -w json
 dasel put -f config.yaml -t string ".env" "prod"
 ```
 
-小记录：多格式配置项目里很方便，适合快速抽取安全相关字段。
+多格式配置项目里很方便，适合快速抽取安全相关字段。

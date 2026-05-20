@@ -24,4 +24,4 @@ changepasswd.py -hashes LMHASH:NTHASH domain.local/user@dc01.domain.local -newpa
 net user user NewPass123! /domain
 ```
 
-小记录：密码变更测试要提前确认授权，避免影响真实账号登录和服务运行。
+密码变更测试要提前确认授权，避免影响真实账号登录和服务运行。

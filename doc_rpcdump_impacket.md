@@ -24,4 +24,4 @@ rpcdump.py -hashes LMHASH:NTHASH domain.local/user@192.168.1.10
 rpcdump.py -port 135 192.168.1.10
 ```
 
-小记录：RPC 枚举能帮助解释为什么某些远程执行或强制认证工具可用。
+RPC 枚举能帮助解释为什么某些远程执行或强制认证工具可用。

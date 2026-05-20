@@ -18,4 +18,4 @@ windapsearch -d example.local --dc-ip 192.168.1.10 -u USER -p 'PASSWORD' --compu
 windapsearch -d example.local --dc-ip 192.168.1.10 -u USER -p 'PASSWORD' --da
 ```
 
-小记录：windapsearch 输出很适合快速拿用户、组、计算机和域管信息。后面可以接 BloodHound 做关系分析。
+windapsearch 输出很适合快速拿用户、组、计算机和域管信息。后面可以接 BloodHound 做关系分析。

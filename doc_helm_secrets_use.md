@@ -24,4 +24,4 @@ helm secrets upgrade --install app ./chart -f secrets.yaml
 helm secrets template app ./chart -f secrets.yaml
 ```
 
-小记录：适合把敏感 values 加密进仓库，但密钥管理和 CI 解密权限要单独设计。
+适合把敏感 values 加密进仓库，但密钥管理和 CI 解密权限要单独设计。

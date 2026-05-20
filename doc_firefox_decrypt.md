@@ -36,4 +36,4 @@ python3 firefox_decrypt.py --format json ~/.mozilla/firefox/xxxx.default-release
 python3 firefox_decrypt.py --format json ~/.mozilla/firefox/xxxx.default-release > firefox_passwords.json
 ```
 
-小记录：浏览器保存密码属于高敏感数据。做授权验证时只记录风险结论和必要证据，避免把完整明文扩散到报告之外。
+浏览器保存密码属于高敏感数据。做授权验证时只记录风险结论和必要证据，避免把完整明文扩散到报告之外。

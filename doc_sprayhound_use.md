@@ -30,4 +30,4 @@ sprayhound --users users.txt --passwords passwords.txt --lockout-threshold 5
 sprayhound --users users.txt --exclude privileged.txt --password 'Welcome2026!'
 ```
 
-小记录：密码喷洒要先确认锁定阈值、观察窗口和授权时间。高权限账号、服务账号和脆弱业务时段都要从计划里排除。
+密码喷洒要先确认锁定阈值、观察窗口和授权时间。高权限账号、服务账号和脆弱业务时段都要从计划里排除。

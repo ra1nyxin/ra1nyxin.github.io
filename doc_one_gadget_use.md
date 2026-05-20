@@ -24,4 +24,4 @@ one_gadget --near exit,malloc libc.so.6
 ldd ./vuln
 ```
 
-小记录：one_gadget 有约束条件，使用前要确认寄存器和栈上的条件能满足。
+one_gadget 有约束条件，使用前要确认寄存器和栈上的条件能满足。

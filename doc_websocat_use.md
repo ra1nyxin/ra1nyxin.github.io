@@ -24,4 +24,4 @@ echo ping | websocat ws://example.local/socket
 websocat -b ws-l:127.0.0.1:9001 ws://example.local/socket
 ```
 
-小记录：WebSocket 测试要记录握手头、消息格式和服务端关闭原因。
+WebSocket 测试要记录握手头、消息格式和服务端关闭原因。

@@ -40,4 +40,4 @@ mongosh mongodb://user:pass@192.168.1.10:27017/admin --eval 'db.runCommand({conn
 mongosh mongodb://user:pass@192.168.1.10:27017/admin --eval 'db.getUser("user")'
 ```
 
-小记录：MongoDB 的风险判断要看业务库内容和账号角色。只看到开放端口还不够，能否未授权读集合、是否能写入、是否能管理用户才是关键。
+MongoDB 的风险判断要看业务库内容和账号角色。只看到开放端口还不够，能否未授权读集合、是否能写入、是否能管理用户才是关键。

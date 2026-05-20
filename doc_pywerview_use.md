@@ -18,4 +18,4 @@ pywerview get-netgroup -t 192.168.1.10 -u USER -p 'PASSWORD' -d example.local
 pywerview get-netdomaincontroller -t 192.168.1.10 -u USER -p 'PASSWORD' -d example.local
 ```
 
-小记录：Pywerview 适合在没有 Windows 会话时补 AD 信息。输出字段多，建议把结果保存后再筛。
+Pywerview 适合在没有 Windows 会话时补 AD 信息。输出字段多，建议把结果保存后再筛。

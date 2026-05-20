@@ -24,4 +24,4 @@ ltrace -e malloc,free ./app
 ltrace -s 200 ./app
 ```
 
-小记录：适合快速看 strcmp、system、fopen 等调用，静态链接程序效果会差很多。
+适合快速看 strcmp、system、fopen 等调用，静态链接程序效果会差很多。

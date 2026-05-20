@@ -24,4 +24,4 @@ kubeval k8s/*.yaml
 helm template app ./chart | kubeval --strict
 ```
 
-小记录：新项目更推荐 kubeconform，但 kubeval 在旧流水线里仍然常见。
+新项目更推荐 kubeconform，但 kubeval 在旧流水线里仍然常见。

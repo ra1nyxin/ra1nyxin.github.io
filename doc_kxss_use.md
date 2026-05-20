@@ -18,4 +18,4 @@ cat urls.txt | kxss | tee kxss.txt
 cat urls.txt | kxss | qsreplace '<svg/onload=alert(1)>'
 ```
 
-小记录：kxss 适合作为筛选器使用。命中后要手工确认上下文、编码和过滤逻辑。
+kxss 适合作为筛选器使用。命中后要手工确认上下文、编码和过滤逻辑。

@@ -24,4 +24,4 @@ tnscmd10g services -h 192.168.1.10
 tnscmd10g status -h 192.168.1.10 -p 1521
 ```
 
-小记录：适合快速看 listener 状态，后续再用 ODAT 或 sqlplus 验证。
+适合快速看 listener 状态，后续再用 ODAT 或 sqlplus 验证。

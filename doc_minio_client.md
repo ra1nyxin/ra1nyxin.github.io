@@ -44,4 +44,4 @@ mc anonymous list target/backups
 mc cp target/backups/db.sql ./db.sql
 ```
 
-小记录：MinIO 常见风险是测试桶公开、控制台弱口令和长期 key 泄露。匿名策略和管理员接口要分开记录。
+MinIO 常见风险是测试桶公开、控制台弱口令和长期 key 泄露。匿名策略和管理员接口要分开记录。

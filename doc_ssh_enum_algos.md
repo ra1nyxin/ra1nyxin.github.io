@@ -40,4 +40,4 @@ ssh -oKexAlgorithms=+diffie-hellman-group1-sha1 user@192.168.1.10
 ssh -oHostKeyAlgorithms=+ssh-rsa -oPubkeyAcceptedAlgorithms=+ssh-rsa user@192.168.1.10
 ```
 
-小记录：看到旧算法先记录影响范围，再确认是否只是兼容性开启。跳板机和管理网里的 SSH 配置，通常比普通业务机更值得优先复核。
+看到旧算法先记录影响范围，再确认是否只是兼容性开启。跳板机和管理网里的 SSH 配置，通常比普通业务机更值得优先复核。

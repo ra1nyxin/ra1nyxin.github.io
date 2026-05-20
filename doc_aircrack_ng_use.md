@@ -24,4 +24,4 @@ aircrack-ng -a2 -w wordlist.txt capture.cap
 aircrack-ng -J hash capture.cap
 ```
 
-小记录：无线测试要提前确认频段、BSSID 和授权范围，避免干扰邻近网络。
+无线测试要提前确认频段、BSSID 和授权范围，避免干扰邻近网络。

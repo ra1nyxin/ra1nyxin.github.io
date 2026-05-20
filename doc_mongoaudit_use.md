@@ -24,4 +24,4 @@ mongoaudit --host 192.168.1.10 --username user --password pass
 mongoaudit --host 192.168.1.10 --json
 ```
 
-小记录：它适合快速发现无认证、弱配置和危险版本，结论要用 mongosh 复核。
+它适合快速发现无认证、弱配置和危险版本，结论要用 mongosh 复核。

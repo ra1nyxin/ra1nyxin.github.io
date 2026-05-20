@@ -24,4 +24,4 @@ swagger-cli validate swagger.json
 npx swagger-cli validate openapi.yaml
 ```
 
-小记录：安全审计前先校验规范，引用展开后更方便做路径和参数检查。
+安全审计前先校验规范，引用展开后更方便做路径和参数检查。

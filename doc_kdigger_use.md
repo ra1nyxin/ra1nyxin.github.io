@@ -24,4 +24,4 @@ kdigger version
 kubectl run kdigger --rm -it --image=quay.io/inguardians/kdigger
 ```
 
-小记录：适合在授权场景里确认 Pod 内能看到哪些集群和宿主机信息。
+适合在授权场景里确认 Pod 内能看到哪些集群和宿主机信息。

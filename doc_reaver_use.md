@@ -24,4 +24,4 @@ sudo reaver -i wlan0mon -b AA:BB:CC:DD:EE:FF -d 15
 sudo wash -i wlan0mon
 ```
 
-小记录：WPS 测试会触发锁定机制，先用 wash 观察状态再决定是否继续。
+WPS 测试会触发锁定机制，先用 wash 观察状态再决定是否继续。

@@ -24,4 +24,4 @@ parameth -u http://example.local/page.php --header "Cookie: sid=abc"
 parameth -u http://example.local/page.php -o params_found.txt
 ```
 
-小记录：参数发现后要结合响应差异和业务含义，不要只看状态码。
+参数发现后要结合响应差异和业务含义，不要只看状态码。

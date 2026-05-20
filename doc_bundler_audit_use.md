@@ -24,4 +24,4 @@ bundle audit check --ignore CVE-2023-22795
 bundle audit update
 ```
 
-小记录：Gem 漏洞复核时要看 Gemfile.lock，开发环境和生产环境依赖最好分开判断。
+Gem 漏洞复核时要看 Gemfile.lock，开发环境和生产环境依赖最好分开判断。

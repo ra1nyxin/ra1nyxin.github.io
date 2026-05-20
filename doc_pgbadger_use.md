@@ -24,4 +24,4 @@ pgbadger -j 4 postgresql.log -o report.html
 pgbadger --prefix "%t [%p]: [%l-1] user=%u,db=%d,app=%a,client=%h " postgresql.log
 ```
 
-小记录：日志格式要和 prefix 匹配，安全分析重点看高频失败登录和异常查询模式。
+日志格式要和 prefix 匹配，安全分析重点看高频失败登录和异常查询模式。

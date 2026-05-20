@@ -24,4 +24,4 @@ bleah -b AA:BB:CC:DD:EE:FF -w 0x0025 -d 0100
 bleah -t0
 ```
 
-小记录：记录时把服务 UUID、characteristic、属性和读取结果分开写。
+记录时把服务 UUID、characteristic、属性和读取结果分开写。

@@ -24,4 +24,4 @@ rbac-lookup --output wide
 rbac-lookup --cluster-wide
 ```
 
-小记录：适合快速回答某个用户、组或 ServiceAccount 绑定了哪些角色。
+适合快速回答某个用户、组或 ServiceAccount 绑定了哪些角色。

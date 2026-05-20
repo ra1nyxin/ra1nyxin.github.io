@@ -24,4 +24,4 @@ rtfobj sample.rtf
 mraptor sample.doc
 ```
 
-小记录：Office 样本先用 oleid 初筛，再看宏、外链、嵌入对象和自动执行点。
+Office 样本先用 oleid 初筛，再看宏、外链、嵌入对象和自动执行点。

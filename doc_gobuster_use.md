@@ -18,4 +18,4 @@ gobuster vhost -u http://example.local -w subdomains.txt --append-domain
 gobuster dns -d example.local -w subdomains.txt
 ```
 
-小记录：Gobuster 输出直接，适合做第一轮枚举。遇到统一 404 页面时，先观察响应长度，再加过滤参数收噪声。
+Gobuster 输出直接，适合做第一轮枚举。遇到统一 404 页面时，先观察响应长度，再加过滤参数收噪声。

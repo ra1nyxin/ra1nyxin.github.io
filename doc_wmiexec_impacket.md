@@ -24,4 +24,4 @@ wmiexec.py -dc-ip 192.168.1.10 domain.local/user:pass@host
 wmiexec.py -nooutput domain.local/user:pass@192.168.1.10
 ```
 
-小记录：WMI 日志和 EDR 记录较明显，授权测试里要标注执行时间和命令内容。
+WMI 日志和 EDR 记录较明显，授权测试里要标注执行时间和命令内容。

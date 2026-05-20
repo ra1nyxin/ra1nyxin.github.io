@@ -24,4 +24,4 @@ kubiscan -rp
 kubiscan -csa
 ```
 
-小记录：它适合找权限提升线索，结果要回到 RoleBinding 和 ClusterRoleBinding 手工确认。
+它适合找权限提升线索，结果要回到 RoleBinding 和 ClusterRoleBinding 手工确认。

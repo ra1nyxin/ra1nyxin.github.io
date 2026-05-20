@@ -18,4 +18,4 @@ proxychains4 smbclient -L //10.10.10.10 -N
 tail -n 20 /etc/proxychains4.conf
 ```
 
-小记录：proxychains 适合 TCP 工具代理。Nmap 走代理时用 `-sT`，不要期望 SYN 扫描能正常过 SOCKS。
+proxychains 适合 TCP 工具代理。Nmap 走代理时用 `-sT`，不要期望 SYN 扫描能正常过 SOCKS。

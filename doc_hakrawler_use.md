@@ -18,4 +18,4 @@ cat urls.txt | hakrawler -plain > crawled.txt
 echo https://example.com | hakrawler -subs -plain
 ```
 
-小记录：hakrawler 输出简洁，适合快速接管道。复杂爬取用 Katana，轻量 URL 扩展用 hakrawler 就够。
+hakrawler 输出简洁，适合快速接管道。复杂爬取用 Katana，轻量 URL 扩展用 hakrawler 就够。

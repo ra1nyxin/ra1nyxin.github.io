@@ -24,4 +24,4 @@ cargo deny check licenses
 cargo deny check bans
 ```
 
-小记录：适合把许可证、漏洞和依赖来源放在同一套规则里处理，CI 阶段很实用。
+适合把许可证、漏洞和依赖来源放在同一套规则里处理，CI 阶段很实用。

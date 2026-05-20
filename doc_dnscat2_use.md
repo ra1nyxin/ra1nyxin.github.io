@@ -24,4 +24,4 @@ dnscat --dns domain=tunnel.example.com
 tcpdump -i eth0 udp port 53
 ```
 
-小记录：结果要关注解析器路径、递归 DNS 和是否有流量检测拦截。
+结果要关注解析器路径、递归 DNS 和是否有流量检测拦截。

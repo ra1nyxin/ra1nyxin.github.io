@@ -40,4 +40,4 @@ xxd -r patch.hex output.bin
 dd if=sample.bin of=part.bin bs=1 skip=1024 count=512
 ```
 
-小记录：先找 URL、IP、路径、密钥字段和错误信息。看到编码痕迹时，再切到 CyberChef、base64、jq 或专门解析器处理。
+先找 URL、IP、路径、密钥字段和错误信息。看到编码痕迹时，再切到 CyberChef、base64、jq 或专门解析器处理。

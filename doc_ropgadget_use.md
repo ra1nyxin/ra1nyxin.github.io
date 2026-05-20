@@ -24,4 +24,4 @@ ROPgadget --binary ./libc.so.6 --ropchain
 ROPgadget --binary ./vuln --depth 5
 ```
 
-小记录：ROP 结果要结合坏字符、栈对齐和可写段一起看。
+ROP 结果要结合坏字符、栈对齐和可写段一起看。

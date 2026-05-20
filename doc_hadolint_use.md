@@ -24,4 +24,4 @@ hadolint Dockerfile --trusted-registry registry.local
 find . -name Dockerfile -print -exec hadolint {} \;
 ```
 
-小记录：重点看基础镜像、包版本固定、root 用户和层缓存里的敏感文件。
+重点看基础镜像、包版本固定、root 用户和层缓存里的敏感文件。

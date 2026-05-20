@@ -24,4 +24,4 @@ gradle spotbugsMain
 spotbugs -pluginList findsecbugs-plugin.jar -effort:max -low target/classes
 ```
 
-小记录：重点看反序列化、表达式注入、路径穿越、XXE 和弱加密。
+重点看反序列化、表达式注入、路径穿越、XXE 和弱加密。

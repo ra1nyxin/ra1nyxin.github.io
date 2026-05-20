@@ -18,4 +18,4 @@ bloodyAD -d example.local -u USER -p 'PASSWORD' --host 192.168.1.10 get membersh
 bloodyAD -d example.local -u USER -p 'PASSWORD' --host 192.168.1.10 get writable
 ```
 
-小记录：bloodyAD 适合细查对象和 ACL。任何修改类操作都要先记录目标 DN、原始权限和预期结果。
+bloodyAD 适合细查对象和 ACL。任何修改类操作都要先记录目标 DN、原始权限和预期结果。

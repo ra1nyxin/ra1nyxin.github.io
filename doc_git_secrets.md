@@ -18,4 +18,4 @@ git secrets --add 'API_KEY'
 git secrets --scan
 ```
 
-小记录：git-secrets 适合做提交前的最低防线。模式别写太宽，不然正常文本也会被误拦。
+git-secrets 适合做提交前的最低防线。模式别写太宽，不然正常文本也会被误拦。

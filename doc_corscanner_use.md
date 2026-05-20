@@ -24,4 +24,4 @@ python3 cors_scan.py -u http://example.local -o output.json
 python3 cors_scan.py -u http://example.local --cookie "sid=abc"
 ```
 
-小记录：批量命中后要挑代表性接口手工复核响应头和敏感数据。
+批量命中后要挑代表性接口手工复核响应头和敏感数据。

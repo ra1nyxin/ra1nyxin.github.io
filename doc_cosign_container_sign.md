@@ -36,4 +36,4 @@ cosign verify-attestation image.example.com/app:1.0 --key cosign.pub
 cosign verify image.example.com/app:1.0 --certificate-identity user@example.com --certificate-oidc-issuer https://accounts.google.com
 ```
 
-小记录：镜像签名检查要和构建流水线一起看。签名存在只能说明来源链路，不能替代漏洞扫描和运行时配置检查。
+镜像签名检查要和构建流水线一起看。签名存在只能说明来源链路，不能替代漏洞扫描和运行时配置检查。

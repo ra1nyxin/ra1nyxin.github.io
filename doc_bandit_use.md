@@ -24,4 +24,4 @@ bandit -r app -x tests,venv
 bandit -c bandit.yaml -r app
 ```
 
-小记录：重点看命令执行、反序列化、硬编码密钥、弱随机数和危险文件权限。
+重点看命令执行、反序列化、硬编码密钥、弱随机数和危险文件权限。

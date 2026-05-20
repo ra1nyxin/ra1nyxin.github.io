@@ -24,4 +24,4 @@ parliament --include-community-auditors --file policy.json
 aws iam get-policy-version --policy-arn arn --version-id v1 > policy.json
 ```
 
-小记录：适合检查语法、资源范围和危险权限，实际风险还要看策略绑定对象。
+适合检查语法、资源范围和危险权限，实际风险还要看策略绑定对象。

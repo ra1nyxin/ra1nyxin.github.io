@@ -24,4 +24,4 @@ Get-Process lsass
 certutil -hashfile C:\Temp\proc.dmp SHA256
 ```
 
-小记录：转储文件通常极敏感，测试机和生产机要严格区分处理流程。
+转储文件通常极敏感，测试机和生产机要严格区分处理流程。

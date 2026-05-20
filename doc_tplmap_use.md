@@ -18,4 +18,4 @@ python3 tplmap.py -u "http://192.168.1.10/?name=test" --cookie "session=VALUE"
 python3 tplmap.py -u "http://192.168.1.10/?name=test" --os-shell
 ```
 
-小记录：SSTI 要看模板引擎和上下文。tplmap 可以辅助验证，但手工 payload 和回显判断仍然很重要。
+SSTI 要看模板引擎和上下文。tplmap 可以辅助验证，但手工 payload 和回显判断仍然很重要。

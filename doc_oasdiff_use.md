@@ -24,4 +24,4 @@ oasdiff diff old.yaml new.yaml -f json
 oasdiff summary old.yaml new.yaml
 ```
 
-小记录：API 变更里新增公开路径、鉴权变化和 schema 放宽都值得重点看。
+API 变更里新增公开路径、鉴权变化和 schema 放宽都值得重点看。

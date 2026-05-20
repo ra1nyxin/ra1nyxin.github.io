@@ -18,4 +18,4 @@ gowitness scan -f urls.txt --threads 8
 gowitness report --db-path gowitness.sqlite
 ```
 
-小记录：gowitness 适合做 Web 资产的视觉留档。比赛里先截图，再按标题、状态码和页面布局筛异常。
+gowitness 适合做 Web 资产的视觉留档。比赛里先截图，再按标题、状态码和页面布局筛异常。

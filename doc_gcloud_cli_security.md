@@ -48,4 +48,4 @@ gcloud compute firewall-rules list
 gcloud storage buckets list
 ```
 
-小记录：GCP 里服务账号权限经常决定横向范围。记录时把项目 ID、服务账号、绑定角色和公开防火墙规则放在一起。
+GCP 里服务账号权限经常决定横向范围。记录时把项目 ID、服务账号、绑定角色和公开防火墙规则放在一起。

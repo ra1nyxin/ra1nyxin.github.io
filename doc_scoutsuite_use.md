@@ -24,4 +24,4 @@ scout gcp
 scout aws --report-dir scout-report
 ```
 
-小记录：它生成的 HTML 报告适合初筛，修复建议要结合组织云架构确认。
+它生成的 HTML 报告适合初筛，修复建议要结合组织云架构确认。

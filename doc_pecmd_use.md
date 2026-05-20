@@ -24,4 +24,4 @@ PECmd.exe -d C:\Evidence\Prefetch --csv C:\Output --csvf prefetch.csv
 TimelineExplorer.exe C:\Output\prefetch.csv
 ```
 
-小记录：Prefetch 对确认程序运行次数、最后运行时间和加载文件很有价值。
+Prefetch 对确认程序运行次数、最后运行时间和加载文件很有价值。

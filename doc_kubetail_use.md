@@ -24,4 +24,4 @@ kubetail app --since 1h
 kubetail app -l app=api
 ```
 
-小记录：多 Pod 日志排查时很省时间，安全事件要同时记录 namespace、pod 和容器名。
+多 Pod 日志排查时很省时间，安全事件要同时记录 namespace、pod 和容器名。

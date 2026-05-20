@@ -24,4 +24,4 @@ sonar-scanner -Dsonar.login=$SONAR_TOKEN
 sonar-scanner -Dsonar.qualitygate.wait=true
 ```
 
-小记录：安全热点需要人工确认，适合把确认结论和代码位置一起沉淀。
+安全热点需要人工确认，适合把确认结论和代码位置一起沉淀。

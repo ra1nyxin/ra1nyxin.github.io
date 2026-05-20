@@ -40,4 +40,4 @@ nmap -p 25 --script smtp-commands 192.168.1.10
 nmap -p 25 --script smtp-enum-users --script-args smtp-enum-users.methods={VRFY,EXPN,RCPT},userdb=users.txt 192.168.1.10
 ```
 
-小记录：SMTP 的响应容易被网关统一处理，建议保存原始 banner 和几组成功、失败样本。响应时间差有时也会暴露账号是否存在。
+SMTP 的响应容易被网关统一处理，建议保存原始 banner 和几组成功、失败样本。响应时间差有时也会暴露账号是否存在。

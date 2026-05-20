@@ -24,4 +24,4 @@ python3 BlobHunter.py -k example -o azure_blobs.txt
 curl -I https://example.blob.core.windows.net/container
 ```
 
-小记录：Azure Blob 要区分容器公开、对象公开和存储账户公开，记录时写完整 URL。
+Azure Blob 要区分容器公开、对象公开和存储账户公开，记录时写完整 URL。

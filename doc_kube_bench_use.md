@@ -24,4 +24,4 @@ kube-bench --json > kube-bench.json
 kube-bench run --check 1.2.1
 ```
 
-小记录：适合基线检查，结果要结合集群版本和托管 Kubernetes 的责任边界。
+适合基线检查，结果要结合集群版本和托管 Kubernetes 的责任边界。

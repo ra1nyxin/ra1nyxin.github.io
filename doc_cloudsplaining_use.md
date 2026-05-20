@@ -24,4 +24,4 @@ cloudsplaining create-exclusions-file
 cloudsplaining scan --input-file default.json --exclusions-file exclusions.yml
 ```
 
-小记录：IAM 结果要按用户、角色、策略和资源范围拆开看，尤其关注权限提升动作。
+IAM 结果要按用户、角色、策略和资源范围拆开看，尤其关注权限提升动作。

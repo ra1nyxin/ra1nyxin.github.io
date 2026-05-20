@@ -36,4 +36,4 @@ etterfilter filter.ecf -o filter.ef
 sudo tcpdump -i eth0 -w mitm.pcap
 ```
 
-小记录：Ettercap 测试前先确认网关和目标 IP，结束后检查 ARP 表是否恢复。交换机侧的动态 ARP 检测能明显改变结果。
+Ettercap 测试前先确认网关和目标 IP，结束后检查 ARP 表是否恢复。交换机侧的动态 ARP 检测能明显改变结果。

@@ -24,4 +24,4 @@ python3 PlumHound.py -x tasks/default.tasks -o reports
 python3 PlumHound.py --HTML
 ```
 
-小记录：它适合把 BloodHound 图数据转成更可读的行动清单。
+它适合把 BloodHound 图数据转成更可读的行动清单。

@@ -24,4 +24,4 @@ python3 -c "import angr; p=angr.Project(\"./crackme\"); print(p.loader.main_obje
 python3 -m pip install angr
 ```
 
-小记录：angr 适合处理分支和约束，外部库和系统调用复杂时要写 hook。
+angr 适合处理分支和约束，外部库和系统调用复杂时要写 hook。

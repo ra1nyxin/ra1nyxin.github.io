@@ -24,4 +24,4 @@ govulncheck -mode=source ./...
 govulncheck -mode=binary ./server
 ```
 
-小记录：它比单纯依赖清单更接近真实风险，报告里的 call stack 很值得保存。
+它比单纯依赖清单更接近真实风险，报告里的 call stack 很值得保存。

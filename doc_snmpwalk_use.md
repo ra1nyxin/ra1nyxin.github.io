@@ -40,4 +40,4 @@ snmpwalk -v2c -c public -On 192.168.1.10 > snmp_192.168.1.10.txt
 snmpbulkwalk -v2c -c public -On 192.168.1.10 > snmp_bulk.txt
 ```
 
-小记录：SNMP 结果里接口描述、路由表和进程列表很有用。看到 `private` 或可写 community 时，要单独标注风险级别。
+SNMP 结果里接口描述、路由表和进程列表很有用。看到 `private` 或可写 community 时，要单独标注风险级别。

@@ -24,4 +24,4 @@ secretsdump.py -sam -system SYSTEM -security SECURITY LOCAL
 secretsdump.py -k -no-pass dc01.domain.local
 ```
 
-小记录：这类输出高度敏感，保存时要加密并控制报告里暴露的哈希范围。
+这类输出高度敏感，保存时要加密并控制报告里暴露的哈希范围。

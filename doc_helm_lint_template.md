@@ -24,4 +24,4 @@ helm upgrade --install app ./chart --dry-run --debug
 helm dependency update ./chart
 ```
 
-小记录：安全复核时重点看渲染后的 securityContext、Service、Ingress 和 Secret。
+安全复核时重点看渲染后的 securityContext、Service、Ingress 和 Secret。

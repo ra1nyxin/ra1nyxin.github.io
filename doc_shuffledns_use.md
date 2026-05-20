@@ -18,4 +18,4 @@ shuffledns -d example.com -w words.txt -r resolvers.txt -mode bruteforce
 shuffledns -d example.com -list subdomains.txt -r resolvers.txt -silent
 ```
 
-小记录：shuffledns 适合大字典快速处理。输出后建议再用 dnsx 或 httpx 做二次确认。
+shuffledns 适合大字典快速处理。输出后建议再用 dnsx 或 httpx 做二次确认。

@@ -24,4 +24,4 @@ DumpIt.exe /TYPE RAW
 volatility3 -f memory.raw windows.pslist
 ```
 
-小记录：采集完成后先计算哈希，再把镜像转入分析机处理。
+采集完成后先计算哈希，再把镜像转入分析机处理。

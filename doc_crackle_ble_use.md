@@ -24,4 +24,4 @@ crackle -i capture.pcap -v
 tshark -r decrypted.pcap
 ```
 
-小记录：它依赖正确的配对包，采集阶段比破解阶段更容易出问题。
+它依赖正确的配对包，采集阶段比破解阶段更容易出问题。

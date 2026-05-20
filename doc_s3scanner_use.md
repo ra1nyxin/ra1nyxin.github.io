@@ -40,4 +40,4 @@ aws s3 ls s3://example-backup --no-sign-request
 aws s3api get-bucket-acl --bucket example-backup --no-sign-request
 ```
 
-小记录：公开 bucket 的风险看对象内容和权限组合。能列目录、能读对象、能写对象的等级不同，记录时要分开写。
+公开 bucket 的风险看对象内容和权限组合。能列目录、能读对象、能写对象的等级不同，记录时要分开写。

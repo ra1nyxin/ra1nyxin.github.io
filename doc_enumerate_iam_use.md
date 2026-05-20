@@ -24,4 +24,4 @@ python3 enumerate-iam.py --services iam,s3,ec2 --access-key AKIA... --secret-key
 python3 enumerate-iam.py --output enumerate-iam.txt --access-key AKIA... --secret-key SECRET
 ```
 
-小记录：适合拿到低权限 key 后判断实际可做动作，输出要和 CloudTrail 时间线对应。
+适合拿到低权限 key 后判断实际可做动作，输出要和 CloudTrail 时间线对应。

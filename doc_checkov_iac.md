@@ -40,4 +40,4 @@ checkov -d . --skip-check CKV_AWS_20
 checkov -d . --framework terraform,kubernetes
 ```
 
-小记录：IaC 扫描适合提前拦截配置风险。跳过规则要写原因和到期时间，避免长期变成例外清单。
+IaC 扫描适合提前拦截配置风险。跳过规则要写原因和到期时间，避免长期变成例外清单。

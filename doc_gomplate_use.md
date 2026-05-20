@@ -24,4 +24,4 @@ gomplate --missing-key=error -f template.yaml
 gomplate -i "{{ getenv \"HOME\" }}"
 ```
 
-小记录：安全复核时要看模板输入来源，避免把未过滤输入渲染进命令或权限配置。
+安全复核时要看模板输入来源，避免把未过滤输入渲染进命令或权限配置。

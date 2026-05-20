@@ -40,4 +40,4 @@ cat urls.txt | uro | sort -u > urls_clean.txt
 cat urls_clean.txt | grep '=' | qsreplace FUZZ > params.txt
 ```
 
-小记录：历史 URL 噪声很大，先去重、归一化、筛参数，再送给探测工具。旧接口命中 403 或 500 时很值得复核。
+历史 URL 噪声很大，先去重、归一化、筛参数，再送给探测工具。旧接口命中 403 或 500 时很值得复核。

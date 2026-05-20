@@ -24,4 +24,4 @@ pre-commit autoupdate
 pre-commit clean
 ```
 
-小记录：适合把轻量检查前移到开发机，重型扫描仍然放 CI。
+适合把轻量检查前移到开发机，重型扫描仍然放 CI。

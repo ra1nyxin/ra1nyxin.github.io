@@ -24,4 +24,4 @@ python3 gcp_enum.py --project PROJECT_ID --service compute
 python3 gcp_enum.py --project PROJECT_ID --output gcp_enum.json
 ```
 
-小记录：GCP 枚举要写清当前 project、账号和激活凭据，避免混淆多项目结果。
+GCP 枚举要写清当前 project、账号和激活凭据，避免混淆多项目结果。

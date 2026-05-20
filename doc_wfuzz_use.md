@@ -18,4 +18,4 @@ wfuzz -w wordlist.txt -u "http://192.168.1.10/index.php?FUZZ=test"
 wfuzz -w wordlist.txt -u http://192.168.1.10/FUZZ -t 20
 ```
 
-小记录：WFuzz 现在不算最轻快，但在复杂表单 fuzz、POST 参数和多 payload 组合时依然好用。
+WFuzz 现在不算最轻快，但在复杂表单 fuzz、POST 参数和多 payload 组合时依然好用。

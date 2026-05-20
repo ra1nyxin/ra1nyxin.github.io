@@ -36,4 +36,4 @@ cat js.txt | httpx -silent -mc 200 > live_js.txt
 cat live_js.txt | while read u; do curl -sk "$u"; done | grep -E "api|token|secret|key"
 ```
 
-小记录：JS 文件里常见 API 路径、环境名、对象存储地址和 feature flag。压缩代码先格式化，再看路径和关键字。
+JS 文件里常见 API 路径、环境名、对象存储地址和 feature flag。压缩代码先格式化，再看路径和关键字。

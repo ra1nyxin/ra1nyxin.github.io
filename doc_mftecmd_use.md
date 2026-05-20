@@ -24,4 +24,4 @@ MFTECmd.exe -d C:\Evidence --csv C:\Output
 MFTECmd.exe -f C:\Evidence\$MFT --csv C:\Output --csvf mft.csv
 ```
 
-小记录：MFT 能看到文件创建、修改和删除痕迹，适合和 USN Journal、Prefetch 交叉分析。
+MFT 能看到文件创建、修改和删除痕迹，适合和 USN Journal、Prefetch 交叉分析。

@@ -18,4 +18,4 @@ dploot masterkeys -u USER -p 'PASSWORD' -d example.local -t 192.168.1.10
 dploot vaults -u USER -p 'PASSWORD' -d example.local -t 192.168.1.10
 ```
 
-小记录：dploot 适合和 LaZagne、mimikatz、浏览器目录一起看。凭据类结果要按来源和用途整理。
+dploot 适合和 LaZagne、mimikatz、浏览器目录一起看。凭据类结果要按来源和用途整理。

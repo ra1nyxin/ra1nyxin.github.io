@@ -24,4 +24,4 @@ sudo eaphammer --bootstrap
 sudo eaphammer --list-creds
 ```
 
-小记录：企业无线测试要提前做告知和隔离，重点验证客户端证书校验策略。
+企业无线测试要提前做告知和隔离，重点验证客户端证书校验策略。

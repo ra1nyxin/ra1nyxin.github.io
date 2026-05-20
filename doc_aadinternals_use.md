@@ -44,4 +44,4 @@ Get-AADIntGlobalAdmins
 Get-AADIntConditionalAccessPolicies
 ```
 
-小记录：AADInternals 权限差异很明显，外部枚举、普通用户和管理员看到的内容不同。记录时要标注当前认证上下文。
+AADInternals 权限差异很明显，外部枚举、普通用户和管理员看到的内容不同。记录时要标注当前认证上下文。

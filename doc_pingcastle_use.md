@@ -24,4 +24,4 @@ PingCastle.exe --scanner share
 PingCastle.exe --carto
 ```
 
-小记录：它适合管理层报告和整改路线，技术复核仍要回到具体对象和权限。
+它适合管理层报告和整改路线，技术复核仍要回到具体对象和权限。

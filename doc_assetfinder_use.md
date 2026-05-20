@@ -18,4 +18,4 @@ assetfinder --all example.com > subdomains.txt
 assetfinder example.com | sort -u > subdomains.txt
 ```
 
-小记录：assetfinder 输出适合接 dnsx、httpx 或 naabu。被动枚举先铺宽，再用解析和探活收窄。
+assetfinder 输出适合接 dnsx、httpx 或 naabu。被动枚举先铺宽，再用解析和探活收窄。

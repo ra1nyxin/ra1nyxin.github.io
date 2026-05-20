@@ -24,4 +24,4 @@ sudo airodump-ng --write scan --output-format pcap,csv wlan0mon
 sudo airodump-ng --essid TargetWiFi -w target wlan0mon
 ```
 
-小记录：采集前先固定信道，输出的 CSV 对整理 AP 和客户端很有用。
+采集前先固定信道，输出的 CSV 对整理 AP 和客户端很有用。

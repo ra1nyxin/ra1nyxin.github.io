@@ -40,4 +40,4 @@ cmsmap --random-agent http://example.local
 cmsmap -U users.txt -P passwords.txt http://example.local
 ```
 
-小记录：CMSmap 的结果适合做第一轮线索，不要把自动识别的版本直接当最终结论。后台路径、插件路径和静态资源版本要手工抽样确认。
+CMSmap 的结果适合做第一轮线索，不要把自动识别的版本直接当最终结论。后台路径、插件路径和静态资源版本要手工抽样确认。

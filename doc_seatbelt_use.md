@@ -18,4 +18,4 @@ Seatbelt 适合 Windows 本地信息枚举。常用参数：检查项名称，`-
 .\Seatbelt.exe -group=user -outputfile=seatbelt.txt
 ```
 
-小记录：Seatbelt 适合补 Windows 现场信息。比赛里重点看凭据痕迹、自动登录、历史命令、服务和防护配置。
+Seatbelt 适合补 Windows 现场信息。比赛里重点看凭据痕迹、自动登录、历史命令、服务和防护配置。

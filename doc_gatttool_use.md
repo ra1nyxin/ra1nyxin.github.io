@@ -24,4 +24,4 @@ gatttool -b AA:BB:CC:DD:EE:FF --char-read -a 0x0025
 gatttool -b AA:BB:CC:DD:EE:FF --char-write-req -a 0x0025 -n 0100
 ```
 
-小记录：BLE 写入测试要非常谨慎，先确认 handle 和属性权限。
+BLE 写入测试要非常谨慎，先确认 handle 和属性权限。

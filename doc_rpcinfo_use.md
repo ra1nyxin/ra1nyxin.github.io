@@ -36,4 +36,4 @@ showmount -e 192.168.1.10
 nmap -p 111,2049 --script nfs-showmount 192.168.1.10
 ```
 
-小记录：RPC 端口经常动态分配，扫描结果要结合 `rpcinfo -p` 看。发现 mountd 后直接进入 NFS 检查流程。
+RPC 端口经常动态分配，扫描结果要结合 `rpcinfo -p` 看。发现 mountd 后直接进入 NFS 检查流程。

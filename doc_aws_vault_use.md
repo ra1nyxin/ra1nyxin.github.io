@@ -24,4 +24,4 @@ aws-vault exec prod --duration=1h -- aws s3 ls
 aws-vault remove prod
 ```
 
-小记录：本地评估多个账号时能减少明文 key 落盘，profile 名称要和项目记录一致。
+本地评估多个账号时能减少明文 key 落盘，profile 名称要和项目记录一致。

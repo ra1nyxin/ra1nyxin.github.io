@@ -24,4 +24,4 @@ python3 h2csmuggler.py -x https://example.local -v
 python3 h2csmuggler.py -x https://example.local --test
 ```
 
-小记录：适合检查反向代理到后端的协议升级边界，结果要结合代理配置复核。
+适合检查反向代理到后端的协议升级边界，结果要结合代理配置复核。

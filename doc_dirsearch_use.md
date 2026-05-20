@@ -18,4 +18,4 @@ dirsearch -u http://192.168.1.10 -x 404,403 --random-agent
 dirsearch -l urls.txt -e php,aspx,jsp -o dirsearch.txt
 ```
 
-小记录：dirsearch 的报告适合保存下来和 httpx、Nuclei 结果合并。扫多目标时先控制线程，避免把比赛环境打得太吵。
+dirsearch 的报告适合保存下来和 httpx、Nuclei 结果合并。扫多目标时先控制线程，避免把比赛环境打得太吵。

@@ -24,4 +24,4 @@ cargo audit --ignore RUSTSEC-2020-0071
 cargo audit fix
 ```
 
-小记录：Rust 项目要优先确认 Cargo.lock 是否提交，库项目和应用项目的扫描方式会有差异。
+Rust 项目要优先确认 Cargo.lock 是否提交，库项目和应用项目的扫描方式会有差异。

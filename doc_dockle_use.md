@@ -24,4 +24,4 @@ dockle --ignore CIS-DI-0001 nginx:latest
 dockle registry.local/app:1.0
 ```
 
-小记录：它关注镜像配置和最佳实践，漏洞扫描需要再配合 Trivy 或 Grype。
+它关注镜像配置和最佳实践，漏洞扫描需要再配合 Trivy 或 Grype。

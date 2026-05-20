@@ -24,4 +24,4 @@ whispers --rules aws_key,private_key .
 whispers --severity BLOCKER .
 ```
 
-小记录：适合扫配置目录、Terraform、Kubernetes manifest 和历史脚本。
+适合扫配置目录、Terraform、Kubernetes manifest 和历史脚本。

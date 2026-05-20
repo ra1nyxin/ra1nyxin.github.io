@@ -18,4 +18,4 @@ Invoke-Inveigh -ConsoleOutput Y -HTTP Y
 Invoke-Inveigh -OutputFolder C:\Inveigh
 ```
 
-小记录：Inveigh 和 Responder 的定位接近，但更适合 Windows 侧运行。比赛里要盯好日志目录和输出文件。
+Inveigh 和 Responder 的定位接近，但更适合 Windows 侧运行。比赛里要盯好日志目录和输出文件。

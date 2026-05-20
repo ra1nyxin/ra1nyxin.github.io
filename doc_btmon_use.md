@@ -24,4 +24,4 @@ sudo btmon | tee btmon.log
 sudo hciconfig hci0 up
 ```
 
-小记录：它适合底层排查，和 Wireshark 打开 snoop 文件一起看更直观。
+它适合底层排查，和 Wireshark 打开 snoop 文件一起看更直观。

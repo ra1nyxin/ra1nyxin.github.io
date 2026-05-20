@@ -24,4 +24,4 @@ adalanche collect activedirectory --username user --password pass --server dc01.
 adalanche analyze --datapath data
 ```
 
-小记录：它适合从防守视角看 AD 暴露面，输出要和 BloodHound 结果互相印证。
+它适合从防守视角看 AD 暴露面，输出要和 BloodHound 结果互相印证。

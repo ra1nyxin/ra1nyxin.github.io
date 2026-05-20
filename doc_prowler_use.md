@@ -24,4 +24,4 @@ prowler azure
 prowler kubernetes
 ```
 
-小记录：报告要按账号、订阅、项目和 region 分开保存，避免多环境结果混在一起。
+报告要按账号、订阅、项目和 region 分开保存，避免多环境结果混在一起。

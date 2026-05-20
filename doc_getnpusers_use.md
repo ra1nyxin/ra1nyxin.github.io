@@ -24,4 +24,4 @@ GetNPUsers.py -no-pass -usersfile users.txt domain.local/
 hashcat -m 18200 asrep.txt wordlist.txt
 ```
 
-小记录：命中后要记录账号、域控、时间和是否需要预认证，后续推动账号配置整改。
+命中后要记录账号、域控、时间和是否需要预认证，后续推动账号配置整改。

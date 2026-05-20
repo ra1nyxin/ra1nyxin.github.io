@@ -40,4 +40,4 @@ sqlplus user/password@192.168.1.10:1521/ORCL -S <<< "select * from session_roles
 sqlplus user/password@192.168.1.10:1521/ORCL -S <<< "select username,account_status from dba_users;"
 ```
 
-小记录：Oracle 结果要区分 SID 和 service name。默认账号锁定状态、DBA 角色、目录对象和外部过程配置都值得单独记录。
+Oracle 结果要区分 SID 和 service name。默认账号锁定状态、DBA 角色、目录对象和外部过程配置都值得单独记录。

@@ -24,4 +24,4 @@ python3 noPac.py -use-ldap domain.local/user:pass -dc-ip 192.168.1.10
 python3 scanner.py domain.local/user:pass -dc-ip 192.168.1.10
 ```
 
-小记录：先做扫描和补丁确认，实际利用动作只放在授权实验或明确范围内。
+先做扫描和补丁确认，实际利用动作只放在授权实验或明确范围内。

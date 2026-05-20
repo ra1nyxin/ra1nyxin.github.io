@@ -24,4 +24,4 @@ crlfuzz -l urls.txt -c 50
 crlfuzz -u http://example.local/?q=test -s
 ```
 
-小记录：命中后要手工确认响应头是否可控，以及能否造成缓存污染或响应拆分。
+命中后要手工确认响应头是否可控，以及能否造成缓存污染或响应拆分。

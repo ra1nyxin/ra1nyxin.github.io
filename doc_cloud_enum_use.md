@@ -40,4 +40,4 @@ aws s3 ls s3://example-backup --no-sign-request
 curl -I https://example.blob.core.windows.net/
 ```
 
-小记录：云资源枚举要准备品牌名、缩写、项目代号和历史域名。命中公开桶后，先确认列表权限，再看对象读取权限。
+云资源枚举要准备品牌名、缩写、项目代号和历史域名。命中公开桶后，先确认列表权限，再看对象读取权限。

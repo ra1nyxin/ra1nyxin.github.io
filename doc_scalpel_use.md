@@ -18,4 +18,4 @@ grep -n "jpg" /etc/scalpel/scalpel.conf
 ls scalpel-out
 ```
 
-小记录：Scalpel 在文件碎片恢复场景里很实用。比赛里遇到删除文件、压缩碎片和混合镜像时可以先跑一遍。
+Scalpel 在文件碎片恢复场景里很实用。比赛里遇到删除文件、压缩碎片和混合镜像时可以先跑一遍。

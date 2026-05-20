@@ -24,4 +24,4 @@ ruby bucket_finder.rb wordlist.txt > buckets.txt
 aws s3 ls s3://example-backup --no-sign-request
 ```
 
-小记录：老工具结果要手工复核，AWS 的错误响应有时会误导存在性判断。
+老工具结果要手工复核，AWS 的错误响应有时会误导存在性判断。

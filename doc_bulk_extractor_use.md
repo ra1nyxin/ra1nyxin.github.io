@@ -18,4 +18,4 @@ bulk_extractor -o out sample.bin
 ls out
 ```
 
-小记录：bulk_extractor 适合大范围初筛。抽出的邮箱、URL 和关键词常常能直接给出下一步调查方向。
+bulk_extractor 适合大范围初筛。抽出的邮箱、URL 和关键词常常能直接给出下一步调查方向。

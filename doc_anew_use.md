@@ -18,4 +18,4 @@ cat urls.txt | sort | anew all-urls.txt
 cat urls.txt | anew all-urls.txt | httpx -silent
 ```
 
-小记录：anew 很适合持续收集资产。比赛里跑多轮发现器时，用它维护统一的结果文件最方便。
+anew 很适合持续收集资产。比赛里跑多轮发现器时，用它维护统一的结果文件最方便。

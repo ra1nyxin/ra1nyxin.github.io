@@ -24,4 +24,4 @@ newman run collection.json --delay-request 200
 newman run collection.json --folder "Auth"
 ```
 
-小记录：把安全复测用例沉淀成 collection，后续改版验证会轻松很多。
+把安全复测用例沉淀成 collection，后续改版验证会轻松很多。

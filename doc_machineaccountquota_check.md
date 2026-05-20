@@ -24,4 +24,4 @@ ldapsearch -x -H ldap://dc01.domain.local -D "user@domain.local" -w pass -b "DC=
 netexec ldap dc01.domain.local -u user -p pass -M maq
 ```
 
-小记录：MAQ 大于 0 时要结合委派、AD CS 和资源基约束委派一起评估。
+MAQ 大于 0 时要结合委派、AD CS 和资源基约束委派一起评估。

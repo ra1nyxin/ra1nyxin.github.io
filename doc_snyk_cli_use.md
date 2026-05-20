@@ -24,4 +24,4 @@ snyk iac test .
 snyk monitor --project-name app
 ```
 
-小记录：Snyk 结果要看组织策略和项目语言，付费能力开启后结果会更完整。
+Snyk 结果要看组织策略和项目语言，付费能力开启后结果会更完整。

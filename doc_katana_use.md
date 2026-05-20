@@ -18,4 +18,4 @@ katana -list urls.txt -silent -o katana.txt
 katana -u https://example.com -fx -ef png,jpg,css,woff
 ```
 
-小记录：Katana 适合找隐藏路径、JS 引用和接口。输出后可以接 httpx、nuclei 或参数提取工具继续处理。
+Katana 适合找隐藏路径、JS 引用和接口。输出后可以接 httpx、nuclei 或参数提取工具继续处理。

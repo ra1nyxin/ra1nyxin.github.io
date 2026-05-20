@@ -24,4 +24,4 @@ echo "ping" | wscat -c ws://example.local/socket
 wscat -l 9001
 ```
 
-小记录：适合交互式发送消息，复杂协议最好保存样本消息和响应。
+适合交互式发送消息，复杂协议最好保存样本消息和响应。

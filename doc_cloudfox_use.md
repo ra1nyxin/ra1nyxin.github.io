@@ -24,4 +24,4 @@ cloudfox aws instances
 cloudfox aws buckets
 ```
 
-小记录：先跑 whoami 和 inventory，确认账号与 region 后再看高价值模块。
+先跑 whoami 和 inventory，确认账号与 region 后再看高价值模块。

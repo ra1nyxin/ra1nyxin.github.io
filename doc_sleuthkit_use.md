@@ -18,4 +18,4 @@ icat disk.img 1234 > file.bin
 tsk_recover disk.img out/
 ```
 
-小记录：Sleuth Kit 适合离线证据分析。先看分区和文件系统，再找关键文件和时间线。
+Sleuth Kit 适合离线证据分析。先看分区和文件系统，再找关键文件和时间线。

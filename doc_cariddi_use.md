@@ -24,4 +24,4 @@ cariddi -list urls.txt -e
 cariddi -u http://example.local -json
 ```
 
-小记录：适合发现前端路径和泄露线索，结果要继续用 httpx 和手工访问过滤。
+适合发现前端路径和泄露线索，结果要继续用 httpx 和手工访问过滤。

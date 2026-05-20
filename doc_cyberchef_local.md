@@ -40,4 +40,4 @@ cat access.log | cut -d' ' -f7 | sort | uniq -c | sort -nr | head
 cat jwt.txt | cut -d'.' -f2 | base64 -d
 ```
 
-小记录：CyberChef 适合交互式分析，命令行适合批量处理。复杂 recipe 要保存名称和输入样本，方便报告复现。
+CyberChef 适合交互式分析，命令行适合批量处理。复杂 recipe 要保存名称和输入样本，方便报告复现。

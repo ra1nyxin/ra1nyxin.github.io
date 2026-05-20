@@ -24,4 +24,4 @@ sudo mdk4 wlan0mon p
 sudo mdk4 wlan0mon m
 ```
 
-小记录：主动压力测试只适合隔离环境或明确授权窗口，记录信道和目标 BSSID。
+主动压力测试只适合隔离环境或明确授权窗口，记录信道和目标 BSSID。

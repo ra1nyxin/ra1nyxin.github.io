@@ -18,4 +18,4 @@ puredns resolve found.txt --resolvers resolvers.txt --write resolved.txt
 puredns resolve subdomains.txt --resolvers resolvers.txt --wildcard-tests 20
 ```
 
-小记录：PureDNS 对通配解析处理比较好。比赛里先用可靠 resolver，避免因为解析器质量导致漏资产。
+PureDNS 对通配解析处理比较好。比赛里先用可靠 resolver，避免因为解析器质量导致漏资产。

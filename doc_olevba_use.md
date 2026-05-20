@@ -24,4 +24,4 @@ olevba --decode sample.doc
 olevba -r samples/
 ```
 
-小记录：重点看 AutoOpen、CreateObject、Shell、PowerShell 和外部 URL。
+重点看 AutoOpen、CreateObject、Shell、PowerShell 和外部 URL。

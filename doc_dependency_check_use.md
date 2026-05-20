@@ -36,4 +36,4 @@ dependency-check --scan . --failOnCVSS 7
 dependency-check --updateonly
 ```
 
-小记录：依赖扫描报告要结合可达性判断。高 CVSS 的传递依赖如果没有被调用，处理优先级可以和业务团队再确认。
+依赖扫描报告要结合可达性判断。高 CVSS 的传递依赖如果没有被调用，处理优先级可以和业务团队再确认。

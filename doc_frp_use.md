@@ -24,4 +24,4 @@ frpc tcp -s server:7000 -l 22 -r 6000
 frpc status -c frpc.ini
 ```
 
-小记录：配置里避免写真实长期凭据，测试完成后关闭 server 和 client。
+配置里避免写真实长期凭据，测试完成后关闭 server 和 client。

@@ -18,4 +18,4 @@ cat urls.txt | uro | sort -u > cleaned.txt
 cat urls.txt | uro | httpx -silent -status-code
 ```
 
-小记录：uro 适合把重复、冗余、参数混乱的 URL 先收一遍。整理过的 URL 再交给 fuzz 或验证工具会更稳。
+uro 适合把重复、冗余、参数混乱的 URL 先收一遍。整理过的 URL 再交给 fuzz 或验证工具会更稳。

@@ -18,4 +18,4 @@ sshuttle -r user@jump.example.com 0.0.0.0/0
 sshuttle -r user@jump.example.com 10.10.10.0/24 -x 10.10.10.5
 ```
 
-小记录：sshuttle 适合 Linux/macOS 上快速进内网。它依赖 SSH 权限，适合比赛里已有跳板账号的场景。
+sshuttle 适合 Linux/macOS 上快速进内网。它依赖 SSH 权限，适合比赛里已有跳板账号的场景。

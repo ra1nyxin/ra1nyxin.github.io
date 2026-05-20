@@ -24,4 +24,4 @@ sudo sh docker-bench-security.sh -l docker-bench.log
 sudo sh docker-bench-security.sh -x 1.1.1
 ```
 
-小记录：它更适合检查宿主机和 daemon，容器内问题要配合镜像扫描。
+它更适合检查宿主机和 daemon，容器内问题要配合镜像扫描。

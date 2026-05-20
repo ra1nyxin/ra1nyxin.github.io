@@ -24,4 +24,4 @@ atexec.py domain.local/user:pass@192.168.1.10 "ipconfig /all"
 atexec.py -silentcommand domain.local/user:pass@192.168.1.10 whoami
 ```
 
-小记录：任务调度相关事件容易定位，测试后要确认没有残留任务。
+任务调度相关事件容易定位，测试后要确认没有残留任务。

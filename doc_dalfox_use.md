@@ -18,4 +18,4 @@ dalfox url "https://example.com/search?q=test" --proxy http://127.0.0.1:8080
 dalfox file urls.txt --skip-bav
 ```
 
-小记录：Dalfox 适合对已发现参数做验证。先用 gau、katana、Arjun 整理 URL，再丢给 Dalfox 会更有效。
+Dalfox 适合对已发现参数做验证。先用 gau、katana、Arjun 整理 URL，再丢给 Dalfox 会更有效。

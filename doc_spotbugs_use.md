@@ -24,4 +24,4 @@ spotbugs -effort:max -low target/classes
 mvn com.github.spotbugs:spotbugs-maven-plugin:spotbugs
 ```
 
-小记录：Java 项目要结合构建产物扫描，依赖和源码阶段的结果会有差异。
+Java 项目要结合构建产物扫描，依赖和源码阶段的结果会有差异。

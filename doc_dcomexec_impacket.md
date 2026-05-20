@@ -24,4 +24,4 @@ dcomexec.py -hashes LMHASH:NTHASH domain.local/user@192.168.1.10
 dcomexec.py -k -no-pass domain.local/user@host.domain.local
 ```
 
-小记录：DCOM 依赖防火墙和组件配置，失败时先检查 RPC 可达性和权限。
+DCOM 依赖防火墙和组件配置，失败时先检查 RPC 可达性和权限。

@@ -44,4 +44,4 @@ rclone lsf remote:bucket/path --files-only --recursive
 rclone copy remote:bucket/path ./download --include "*.sql" --progress
 ```
 
-小记录：rclone 很强，误操作也很快。涉及生产存储时先用 `ls`、`size`、`--dry-run`，确认路径后再执行复制或同步。
+rclone 很强，误操作也很快。涉及生产存储时先用 `ls`、`size`、`--dry-run`，确认路径后再执行复制或同步。

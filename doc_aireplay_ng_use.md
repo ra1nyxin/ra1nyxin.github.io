@@ -24,4 +24,4 @@ sudo aireplay-ng -3 -b AA:BB:CC:DD:EE:FF wlan0mon
 sudo aireplay-ng -9 wlan0mon
 ```
 
-小记录：主动无线测试会影响连接，执行前要确认授权和测试窗口。
+主动无线测试会影响连接，执行前要确认授权和测试窗口。

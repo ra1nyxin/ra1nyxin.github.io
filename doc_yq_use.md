@@ -24,4 +24,4 @@ yq e -o=json deployment.yaml
 yq e ".spec.replicas = 3" -i deployment.yaml
 ```
 
-小记录：它适合做批量检查和小规模修补，复杂逻辑再交给脚本或策略引擎。
+它适合做批量检查和小规模修补，复杂逻辑再交给脚本或策略引擎。

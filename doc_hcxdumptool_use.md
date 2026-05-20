@@ -24,4 +24,4 @@ sudo hcxdumptool -i wlan0mon --do_rcascan
 sudo hcxdumptool -I
 ```
 
-小记录：采集前先确认网卡驱动和监管域设置，结果要按 BSSID 分类保存。
+采集前先确认网卡驱动和监管域设置，结果要按 BSSID 分类保存。

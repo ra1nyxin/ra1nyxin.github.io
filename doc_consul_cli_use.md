@@ -24,4 +24,4 @@ consul acl token list
 consul operator raft list-peers
 ```
 
-小记录：Consul 风险集中在匿名访问、KV 泄露、服务注册和 ACL 策略过宽。
+Consul 风险集中在匿名访问、KV 泄露、服务注册和 ACL 策略过宽。

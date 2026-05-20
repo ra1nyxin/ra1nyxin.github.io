@@ -36,4 +36,4 @@ cut -d' ' -f1 snmp_hits.txt | sort -u > snmp_hosts.txt
 while read h; do snmpwalk -v2c -c public -On "$h" 1.3.6.1.2.1.1; done < snmp_hosts.txt
 ```
 
-小记录：community 字典别只放 `public`。设备厂商默认值、项目名、区域名和运维习惯词经常能提高命中率。
+community 字典别只放 `public`。设备厂商默认值、项目名、区域名和运维习惯词经常能提高命中率。

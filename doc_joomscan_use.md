@@ -40,4 +40,4 @@ curl -I http://example.local/administrator/
 curl -s http://example.local/administrator/manifests/files/joomla.xml
 ```
 
-小记录：Joomla 的组件版本比核心版本更容易形成风险。扫描结果里看到备份文件、安装目录和可访问后台时，优先手工复核。
+Joomla 的组件版本比核心版本更容易形成风险。扫描结果里看到备份文件、安装目录和可访问后台时，优先手工复核。

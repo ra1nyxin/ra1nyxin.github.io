@@ -44,4 +44,4 @@ az network nsg list --query '[].{name:name,resourceGroup:resourceGroup}' --outpu
 az vm list-ip-addresses --output table
 ```
 
-小记录：Azure 结果要按租户和订阅分开存。存储公开访问、Owner 角色过多、NSG 放开管理端口是常见高优先级问题。
+Azure 结果要按租户和订阅分开存。存储公开访问、Owner 角色过多、NSG 放开管理端口是常见高优先级问题。

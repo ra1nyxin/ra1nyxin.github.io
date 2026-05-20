@@ -24,4 +24,4 @@ python3 -c "from unicorn import *; print(UC_ARCH_X86)"
 python3 trace_shellcode.py
 ```
 
-小记录：适合小段代码仿真，遇到系统调用和外部依赖要自己模拟。
+适合小段代码仿真，遇到系统调用和外部依赖要自己模拟。

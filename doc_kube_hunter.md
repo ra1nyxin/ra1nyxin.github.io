@@ -18,4 +18,4 @@ kube-hunter --quick
 kube-hunter --json
 ```
 
-小记录：kube-hunter 适合找公开暴露的控制面和弱配置。结果需要结合集群结构和权限边界看。
+kube-hunter 适合找公开暴露的控制面和弱配置。结果需要结合集群结构和权限边界看。

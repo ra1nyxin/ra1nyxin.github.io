@@ -24,4 +24,4 @@ yarn npm audit --severity high
 yarn why lodash
 ```
 
-小记录：不同 Yarn 版本命令差异较大，记录时写清项目使用 Yarn classic 还是 Berry。
+不同 Yarn 版本命令差异较大，记录时写清项目使用 Yarn classic 还是 Berry。

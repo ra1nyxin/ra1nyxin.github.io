@@ -24,4 +24,4 @@ hcxpcapngtool -o hashes.22000 -k keylist.txt capture.pcapng
 hashcat -m 22000 hashes.22000 wordlist.txt
 ```
 
-小记录：转换后先看 hash 数量和 ESSID，避免把无效采集送去长时间破解。
+转换后先看 hash 数量和 ESSID，避免把无效采集送去长时间破解。

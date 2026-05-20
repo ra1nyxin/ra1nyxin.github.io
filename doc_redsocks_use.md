@@ -24,4 +24,4 @@ sudo systemctl restart redsocks
 curl --interface lo http://example.com
 ```
 
-小记录：配置前先画清流量路径，避免把系统流量意外转走。
+配置前先画清流量路径，避免把系统流量意外转走。

@@ -18,4 +18,4 @@ k9s -c pod
 k9s -c deploy
 ```
 
-小记录：k9s 适合比赛里快速看 Pod、Deployment 和日志。熟悉 namespace、上下文和资源类型后，排查会快很多。
+k9s 适合比赛里快速看 Pod、Deployment 和日志。熟悉 namespace、上下文和资源类型后，排查会快很多。

@@ -18,4 +18,4 @@ alterx -l subdomains.txt -o alterx.txt -include-subs
 alterx -l subdomains.txt -o alterx.txt | dnsx -silent
 ```
 
-小记录：alterx 偏规则化变体生成，适合在已知命名规律比较明确时使用。输出后最好立刻做解析验证。
+alterx 偏规则化变体生成，适合在已知命名规律比较明确时使用。输出后最好立刻做解析验证。

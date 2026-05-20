@@ -24,4 +24,4 @@ nomad alloc status ALLOC_ID
 nomad acl token self
 ```
 
-小记录：Nomad 任务定义里常见环境变量、镜像和 volume 配置线索，导出后要脱敏。
+Nomad 任务定义里常见环境变量、镜像和 volume 配置线索，导出后要脱敏。

@@ -18,4 +18,4 @@ dirb http://192.168.1.10 /usr/share/wordlists/dirb/common.txt -X .php,.txt,.bak
 dirb http://192.168.1.10 -o dirb.txt
 ```
 
-小记录：DIRB 简单稳定，适合快速摸底。大型目标还是用 feroxbuster、ffuf 或 dirsearch 会更灵活。
+DIRB 简单稳定，适合快速摸底。大型目标还是用 feroxbuster、ffuf 或 dirsearch 会更灵活。

@@ -24,4 +24,4 @@ ropper --file ./libc.so.6 --search "syscall"
 ropper --file ./vuln --nocolor > gadgets.txt
 ```
 
-小记录：找 gadget 前先确认架构和 PIE，地址是否固定直接影响利用方式。
+找 gadget 前先确认架构和 PIE，地址是否固定直接影响利用方式。

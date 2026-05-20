@@ -24,4 +24,4 @@ PurpleKnight.exe /export report.html
 PurpleKnight.exe /help
 ```
 
-小记录：结果适合做治理清单，发现项需要按域、OU、策略和对象逐项复核。
+结果适合做治理清单，发现项需要按域、OU、策略和对象逐项复核。

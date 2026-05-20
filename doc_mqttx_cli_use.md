@@ -24,4 +24,4 @@ mqttx conn -h 192.168.1.10 -p 1883
 mqttx sub --protocol mqtts -h broker.example.com -p 8883 -t "#"
 ```
 
-小记录：适合快速验证 broker 权限，结果要按 topic 和账号区分。
+适合快速验证 broker 权限，结果要按 topic 和账号区分。

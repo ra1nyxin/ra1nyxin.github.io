@@ -24,4 +24,4 @@ helm template app ./chart | kube-score score -
 kube-score score --ignore-test pod-networkpolicy deployment.yaml
 ```
 
-小记录：它适合提交前检查资源限制、探针、镜像标签和安全上下文。
+它适合提交前检查资源限制、探针、镜像标签和安全上下文。

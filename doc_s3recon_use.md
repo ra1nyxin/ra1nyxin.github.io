@@ -24,4 +24,4 @@ s3recon --wordlist buckets.txt --threads 20
 s3recon --wordlist buckets.txt --output s3recon.txt
 ```
 
-小记录：S3 结果要区分存在、可列目录、可读对象和可写对象。
+S3 结果要区分存在、可列目录、可读对象和可写对象。

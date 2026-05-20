@@ -24,4 +24,4 @@ pdf-parser.py -o 5 -f sample.pdf
 pdf-parser.py -o 5 -d stream.bin sample.pdf
 ```
 
-小记录：PDF 分析要按对象编号记录，提取流后再看编码和脚本内容。
+PDF 分析要按对象编号记录，提取流后再看编码和脚本内容。

@@ -24,4 +24,4 @@ LECmd.exe -d C:\Evidence\Links --csv C:\Output --csvf lnk.csv
 TimelineExplorer.exe C:\Output\lnk.csv
 ```
 
-小记录：LNK 能暴露目标路径、卷信息、主机名和访问时间，适合追踪外接设备和文件打开行为。
+LNK 能暴露目标路径、卷信息、主机名和访问时间，适合追踪外接设备和文件打开行为。

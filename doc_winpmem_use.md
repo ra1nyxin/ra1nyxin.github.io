@@ -24,4 +24,4 @@ winpmem_mini_x64.exe --format aff4 -o C:\Temp\mem.aff4
 volatility3 -f mem.raw windows.info
 ```
 
-小记录：内存采集会占用磁盘和时间，采集前确认空间、时间窗口和证据编号。
+内存采集会占用磁盘和时间，采集前确认空间、时间窗口和证据编号。

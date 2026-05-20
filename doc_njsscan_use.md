@@ -44,4 +44,4 @@ njsscan . --missing-controls
 njsscan . --config .njsscan
 ```
 
-小记录：Node 项目里重点看命令执行、模板渲染、路径拼接、反序列化和 SSRF。自动扫描命中后，要回到路由和输入来源确认。
+Node 项目里重点看命令执行、模板渲染、路径拼接、反序列化和 SSRF。自动扫描命中后，要回到路由和输入来源确认。

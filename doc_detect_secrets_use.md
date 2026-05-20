@@ -18,4 +18,4 @@ detect-secrets scan --all-files
 detect-secrets-hook --baseline .secrets.baseline
 ```
 
-小记录：detect-secrets 适合和 gitleaks/trufflehog 互补。结果里要分辨测试值、样例和真实凭据。
+detect-secrets 适合和 gitleaks/trufflehog 互补。结果里要分辨测试值、样例和真实凭据。

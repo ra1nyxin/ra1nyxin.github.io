@@ -24,4 +24,4 @@ nuclei -u http://example.local -t template.yaml -debug
 nuclei -u http://example.local -t template.yaml -var token=abc
 ```
 
-小记录：模板要控制误报，matcher、extractor 和请求条件要写得具体。
+模板要控制误报，matcher、extractor 和请求条件要写得具体。

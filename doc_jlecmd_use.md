@@ -24,4 +24,4 @@ JLECmd.exe -d C:\Evidence\JumpLists --csv C:\Output --csvf jumplists.csv
 TimelineExplorer.exe C:\Output\jumplists.csv
 ```
 
-小记录：Jump List 对用户交互痕迹很有用，适合和 LNK、ShellBags 一起看。
+Jump List 对用户交互痕迹很有用，适合和 LNK、ShellBags 一起看。

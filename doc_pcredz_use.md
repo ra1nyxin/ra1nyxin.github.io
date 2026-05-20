@@ -40,4 +40,4 @@ grep -R "Credential" . -n
 strings capture.pcap | grep -Ei "user|pass|login|authorization"
 ```
 
-小记录：Pcredz 很适合做第一轮筛查。结果里出现的账号、来源 IP、协议和时间点要一起记录，方便回到原始 pcap 复核。
+Pcredz 很适合做第一轮筛查。结果里出现的账号、来源 IP、协议和时间点要一起记录，方便回到原始 pcap 复核。

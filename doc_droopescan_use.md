@@ -40,4 +40,4 @@ droopescan scan drupal -u http://example.local --output json
 droopescan scan drupal -u http://example.local --proxy http://127.0.0.1:8080
 ```
 
-小记录：Droopescan 命中模块后，继续查模块版本和公开漏洞。CMS 类站点还要看备份包、安装脚本、上传目录和后台访问控制。
+Droopescan 命中模块后，继续查模块版本和公开漏洞。CMS 类站点还要看备份包、安装脚本、上传目录和后台访问控制。

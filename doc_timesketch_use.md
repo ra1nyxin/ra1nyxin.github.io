@@ -24,4 +24,4 @@ tsctl search --query "*"
 plaso2timesketch --sketch_id 1 timeline.plaso
 ```
 
-小记录：时间线平台的价值在标注和协作，导入前统一时区和主机名很关键。
+时间线平台的价值在标注和协作，导入前统一时区和主机名很关键。

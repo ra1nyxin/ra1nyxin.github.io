@@ -32,4 +32,4 @@ coercer scan -f targets.txt -u user -p pass -d domain.local --json coercer.json
 coercer scan -t 192.168.1.10 -u user -p pass -d domain.local --filter-method EfsRpcOpenFileRaw
 ```
 
-小记录：Coercer 的结果要和监听端日志一起看。命中接口、目标主机、认证来源和是否签名保护都要写清楚。
+Coercer 的结果要和监听端日志一起看。命中接口、目标主机、认证来源和是否签名保护都要写清楚。

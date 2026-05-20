@@ -24,4 +24,4 @@ azurehound list -o azurehound.json
 azurehound configure
 ```
 
-小记录：适合分析云身份路径，高权限角色、应用权限和同步账号要重点看。
+适合分析云身份路径，高权限角色、应用权限和同步账号要重点看。

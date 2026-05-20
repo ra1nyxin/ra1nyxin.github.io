@@ -36,4 +36,4 @@ codeql query run query.ql --database db-js
 codeql bqrs decode result.bqrs --format=csv
 ```
 
-小记录：CodeQL 适合查复杂调用链。建库命令、语言和构建参数要写进记录，否则后续很难复现同样结果。
+CodeQL 适合查复杂调用链。建库命令、语言和构建参数要写进记录，否则后续很难复现同样结果。

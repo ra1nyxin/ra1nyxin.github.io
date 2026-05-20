@@ -24,4 +24,4 @@ pluto detect-files -d . -o json
 helm template app ./chart | pluto detect -
 ```
 
-小记录：升级 Kubernetes 前先跑一遍，可以提前发现会在新版本失效的 manifest。
+升级 Kubernetes 前先跑一遍，可以提前发现会在新版本失效的 manifest。

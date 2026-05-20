@@ -40,4 +40,4 @@ sqlite3 Cookies.copy "select host_key,name,expires_utc from cookies limit 20;"
 sqlite3 LoginData.copy "select origin_url,username_value from logins limit 20;"
 ```
 
-小记录：Chrome 的敏感数据通常受系统密钥链保护。评估时重点写清能否读取、当前权限级别和数据类型，避免无意义地扩散明文。
+Chrome 的敏感数据通常受系统密钥链保护。评估时重点写清能否读取、当前权限级别和数据类型，避免无意义地扩散明文。

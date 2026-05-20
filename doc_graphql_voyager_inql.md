@@ -36,4 +36,4 @@ python3 inql.py -f schema.json
 curl -s http://example.local/graphql -H 'Content-Type: application/json' --data '{"query":"query{viewer{id email role}}"}'
 ```
 
-小记录：GraphQL 的问题经常在字段级鉴权。拿到 schema 后，按对象和角色对照测试，比盲扫更有效。
+GraphQL 的问题经常在字段级鉴权。拿到 schema 后，按对象和角色对照测试，比盲扫更有效。

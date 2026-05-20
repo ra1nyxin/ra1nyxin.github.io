@@ -24,4 +24,4 @@ nping --tcp -p 443 --flags syn 192.168.1.10
 nping --rate 5 --count 10 --tcp -p 80 192.168.1.10
 ```
 
-小记录：输出比普通 ping 更适合分析过滤策略，记录时写清协议、端口和 flags。
+输出比普通 ping 更适合分析过滤策略，记录时写清协议、端口和 flags。

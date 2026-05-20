@@ -24,4 +24,4 @@ pmd designer
 pmd check -d src -R custom-rules.xml -f text
 ```
 
-小记录：安全规则命中后要结合输入来源，PMD 更适合做初筛和风格基线。
+安全规则命中后要结合输入来源，PMD 更适合做初筛和风格基线。

@@ -24,4 +24,4 @@ pnpm audit --audit-level high
 pnpm why package-name
 ```
 
-小记录：pnpm workspace 里要确认扫描根目录，某些漏洞只影响单个 package。
+pnpm workspace 里要确认扫描根目录，某些漏洞只影响单个 package。

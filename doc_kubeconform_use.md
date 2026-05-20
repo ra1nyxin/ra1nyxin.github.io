@@ -24,4 +24,4 @@ kubeconform -kubernetes-version 1.28.0 k8s/*.yaml
 helm template app ./chart | kubeconform -strict -summary
 ```
 
-小记录：它能提前发现字段拼写和版本不兼容问题，适合放在安全检查前面。
+它能提前发现字段拼写和版本不兼容问题，适合放在安全检查前面。

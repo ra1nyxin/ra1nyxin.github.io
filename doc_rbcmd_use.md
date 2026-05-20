@@ -24,4 +24,4 @@ RBCmd.exe -d C:\Evidence\RecycleBin --csv C:\Output --csvf recycle.csv
 TimelineExplorer.exe C:\Output\recycle.csv
 ```
 
-小记录：回收站记录能补充删除时间、原始路径和文件大小，适合和 MFT 对照。
+回收站记录能补充删除时间、原始路径和文件大小，适合和 MFT 对照。

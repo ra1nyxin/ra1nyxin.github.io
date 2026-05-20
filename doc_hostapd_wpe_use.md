@@ -24,4 +24,4 @@ openssl x509 -in server.pem -text -noout
 iw dev wlan0 set channel 6
 ```
 
-小记录：风险重点在客户端是否校验证书链和服务器名，测试结果要写清 EAP 类型。
+风险重点在客户端是否校验证书链和服务器名，测试结果要写清 EAP 类型。

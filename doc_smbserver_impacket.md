@@ -36,4 +36,4 @@ dir \\\\192.168.1.50\\share
 net use \\\\192.168.1.50\\share /user:user pass
 ```
 
-小记录：Windows 到 Linux 传文件时，SMB 经常比 HTTP 顺手。开启认证能减少误访问，也方便记录哪个账号完成了访问。
+Windows 到 Linux 传文件时，SMB 经常比 HTTP 顺手。开启认证能减少误访问，也方便记录哪个账号完成了访问。

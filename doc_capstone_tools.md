@@ -24,4 +24,4 @@ rasm2 -d 4889e5
 xxd -p shellcode.bin | tr -d "\n"
 ```
 
-小记录：它适合做自动化反汇编，复杂函数分析仍然要用 Ghidra、IDA 或 radare2。
+它适合做自动化反汇编，复杂函数分析仍然要用 Ghidra、IDA 或 radare2。

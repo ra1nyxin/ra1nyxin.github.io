@@ -24,4 +24,4 @@ rbac-police --namespace default
 rbac-police --rules rules.yaml
 ```
 
-小记录：重点看 cluster-admin、secret 读取、pod 创建和 bind/escalate 权限。
+重点看 cluster-admin、secret 读取、pod 创建和 bind/escalate 权限。

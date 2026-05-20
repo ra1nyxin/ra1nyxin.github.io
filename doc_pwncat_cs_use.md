@@ -18,4 +18,4 @@ upload local.txt /tmp/local.txt
 download /etc/passwd passwd.txt
 ```
 
-小记录：pwncat-cs 比普通 nc 更适合长期维护实验 shell。进入会话后先升级交互和记录当前主机信息。
+pwncat-cs 比普通 nc 更适合长期维护实验 shell。进入会话后先升级交互和记录当前主机信息。

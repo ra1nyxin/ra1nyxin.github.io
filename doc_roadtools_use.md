@@ -40,4 +40,4 @@ roadrecon plugin bloodhound
 roadtx listtokens
 ```
 
-小记录：ROADtools 的结果要和 Azure CLI 输出互相印证。重点看高权限角色、应用权限、遗留服务主体和条件访问覆盖范围。
+ROADtools 的结果要和 Azure CLI 输出互相印证。重点看高权限角色、应用权限、遗留服务主体和条件访问覆盖范围。

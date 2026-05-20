@@ -24,4 +24,4 @@ ADExplorer.exe -snapshot "" snapshot.dat -user domain\user -password pass
 strings snapshot.dat | findstr /i admin
 ```
 
-小记录：快照文件含大量敏感目录信息，保存和传输要按高敏感资料处理。
+快照文件含大量敏感目录信息，保存和传输要按高敏感资料处理。

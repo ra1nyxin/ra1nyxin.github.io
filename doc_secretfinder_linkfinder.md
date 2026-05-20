@@ -36,4 +36,4 @@ python3 SecretFinder.py -i js_urls.txt -o cli
 cat live_js.txt | while read u; do python3 linkfinder.py -i "$u" -o cli; done | sort -u
 ```
 
-小记录：前端命中的 token 字段先按环境判断，很多是测试值或公开 key。真正有价值的是可用的接口路径、内部域名和云资源地址。
+前端命中的 token 字段先按环境判断，很多是测试值或公开 key。真正有价值的是可用的接口路径、内部域名和云资源地址。

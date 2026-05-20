@@ -24,4 +24,4 @@ lookupsid.py -maxRid 4000 domain.local/user:pass@192.168.1.10
 lookupsid.py -dc-ip 192.168.1.10 domain.local/user:pass@dc01
 ```
 
-小记录：匿名或低权限能枚举用户时，要记录空会话和 RID 范围。
+匿名或低权限能枚举用户时，要记录空会话和 RID 范围。

@@ -32,4 +32,4 @@ ETCDCTL_API=3 etcdctl --endpoints=https://192.168.1.10:2379 --cacert ca.crt --ce
 ETCDCTL_API=3 etcdctl --endpoints=https://192.168.1.10:2379 --cacert ca.crt --cert client.crt --key client.key snapshot save etcd.db
 ```
 
-小记录：etcd 风险极高，能读 key 基本等于能看到集群核心状态。只读验证也要控制输出，避免泄露 secret 内容。
+etcd 风险极高，能读 key 基本等于能看到集群核心状态。只读验证也要控制输出，避免泄露 secret 内容。

@@ -18,4 +18,4 @@ docker run -t -v "$PWD:/zap/wrk" owasp/zap2docker-stable zap-baseline.py -t http
 docker run -t owasp/zap2docker-stable zap-full-scan.py -t https://example.com
 ```
 
-小记录：Baseline 偏被动和安全，适合比赛里快速拿一份基础报告。命中项仍然要手工确认。
+Baseline 偏被动和安全，适合比赛里快速拿一份基础报告。命中项仍然要手工确认。

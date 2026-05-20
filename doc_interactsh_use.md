@@ -18,4 +18,4 @@ interactsh-client -server interact.sh
 interactsh-client -dns
 ```
 
-小记录：interactsh 适合验证 SSRF、命令执行、模板注入、DNS 回连等场景。URL 一旦被外部触发，日志要及时保存。
+interactsh 适合验证 SSRF、命令执行、模板注入、DNS 回连等场景。URL 一旦被外部触发，日志要及时保存。

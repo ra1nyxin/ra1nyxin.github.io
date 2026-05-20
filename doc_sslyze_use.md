@@ -18,4 +18,4 @@ sslyze --json_out sslyze.json example.com:443
 sslyze --certinfo --tlsv1_2 --tlsv1_3 example.com:443
 ```
 
-小记录：SSLyze 适合结构化 TLS 检查。多目标时把结果输出 JSON，后面用 jq 汇总会方便。
+SSLyze 适合结构化 TLS 检查。多目标时把结果输出 JSON，后面用 jq 汇总会方便。

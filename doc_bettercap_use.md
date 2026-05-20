@@ -40,4 +40,4 @@ sudo bettercap -iface eth0 -caplet http-ui
 sudo bettercap -iface eth0 -eval "net.probe on; ticker on"
 ```
 
-小记录：Bettercap 主动模块影响网络流量，比赛和授权评估里都要控制目标范围。抓到的凭据类信息要回到原始包里复核。
+Bettercap 主动模块影响网络流量，比赛和授权评估里都要控制目标范围。抓到的凭据类信息要回到原始包里复核。

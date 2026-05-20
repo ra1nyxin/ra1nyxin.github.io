@@ -24,4 +24,4 @@ dig tunnel.example.com NS
 tcpdump -i eth0 udp port 53
 ```
 
-小记录：DNS 隧道容易影响监控告警，授权测试要限制域名和时间窗口。
+DNS 隧道容易影响监控告警，授权测试要限制域名和时间窗口。

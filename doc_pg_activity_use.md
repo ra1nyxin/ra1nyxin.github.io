@@ -24,4 +24,4 @@ pg_activity --blocksize 8192 -h 192.168.1.10 -U postgres
 PGPASSWORD=pass pg_activity -h 192.168.1.10 -U app
 ```
 
-小记录：安全排查时重点看异常来源、长事务、锁等待和可疑查询。
+安全排查时重点看异常来源、长事务、锁等待和可疑查询。

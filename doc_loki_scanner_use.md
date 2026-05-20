@@ -24,4 +24,4 @@ python3 loki.py --printall
 python3 loki.py -l loki.log
 ```
 
-小记录：适合应急初筛，命中后要保存样本路径、哈希和上下文。
+适合应急初筛，命中后要保存样本路径、哈希和上下文。

@@ -24,4 +24,4 @@ dive --json dive.json app:latest
 CI=true dive app:latest
 ```
 
-小记录：安全检查时重点看删除过但仍在底层层里的密钥、包缓存和构建产物。
+安全检查时重点看删除过但仍在底层层里的密钥、包缓存和构建产物。

@@ -24,4 +24,4 @@ python3 graphqlmap.py -u http://example.local/graphql --dump
 python3 graphqlmap.py -u http://example.local/graphql --json
 ```
 
-小记录：GraphQL 问题通常在字段级鉴权和查询复杂度，schema 只是入口。
+GraphQL 问题通常在字段级鉴权和查询复杂度，schema 只是入口。

@@ -36,4 +36,4 @@ trivy k8s --report summary cluster
 trivy fs --severity HIGH,CRITICAL --exit-code 1 .
 ```
 
-小记录：Trivy 结果要按漏洞、secret、misconfig 分开处理。配置问题通常能直接修，第三方漏洞需要结合镜像来源和可修复版本。
+Trivy 结果要按漏洞、secret、misconfig 分开处理。配置问题通常能直接修，第三方漏洞需要结合镜像来源和可修复版本。

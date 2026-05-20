@@ -24,4 +24,4 @@ Get-WinEvent -Path .\Security.evtx | Select-Object -First 5
 wevtutil epl Security Security.evtx
 ```
 
-小记录：它适合第一轮事件筛查，后续要回到原始事件 ID 和时间线。
+它适合第一轮事件筛查，后续要回到原始事件 ID 和时间线。
