@@ -1,6 +1,6 @@
 # Windows API 调用笔记：NtResumeProcess
 
-NtResumeProcess 我会放在 NT 进程、线程、Token 和调试对象的底层状态查询 时查。先做最小调用，把返回值、错误码和调用上下文写清楚，再放回具体样本或现场里判断。
+NtResumeProcess 常用于 NT 进程、线程、Token 和调试对象的底层状态查询。建议先做最小调用，记录返回值、错误码和调用上下文，再结合具体样本或现场现象判断。
 
 ## 入口
 

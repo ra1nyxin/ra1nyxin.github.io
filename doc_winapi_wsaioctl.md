@@ -1,6 +1,6 @@
 # Windows API 调用笔记：WSAIoctl
 
-WSAIoctl 我会放在 Winsock 初始化、解析、协议枚举和 Socket 控制 时查。我一般先写一个最小调用，把返回值和错误码跑通，再把它放回具体场景里看。
+WSAIoctl 常用于 Winsock 初始化、解析、协议枚举和 Socket 控制。先写一个最小调用，确认返回值和错误码，再结合具体场景复核。
 
 ## 入口
 
@@ -16,7 +16,7 @@ auto result = WSAIoctl(...);
 dumpbin /exports C:\Windows\System32\ws2_32.dll | findstr /i WSAIoctl
 ```
 
-## 我会记录
+## 记录字段
 
 ```text
 字段: address family, protocol, socket option, ioctl code, WSA error
@@ -26,4 +26,4 @@ dumpbin /exports C:\Windows\System32\ws2_32.dll | findstr /i WSAIoctl
 复核: 网络错误要记录 WSAGetLastError 的值，普通 GetLastError 经常不够
 ```
 
-调用成功只代表入口可达；我会把返回值、错误码、调用身份和目标对象当时的状态放在同一条记录里看。
+调用成功只代表入口可达；返回值、错误码、调用身份和目标对象当时的状态需要放在同一条记录里复核。

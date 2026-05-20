@@ -1,6 +1,6 @@
 # Windows API 调用笔记：NtCreateMutant
 
-NtCreateMutant 我会放在 NT 对象、Section、事件、Mutant、目录对象和符号链接复核 时查。先做最小调用，把返回值、错误码和调用上下文写清楚，再放回具体样本或现场里判断。
+NtCreateMutant 常用于 NT 对象、Section、事件、Mutant、目录对象和符号链接复核。建议先做最小调用，记录返回值、错误码和调用上下文，再结合具体样本或现场现象判断。
 
 ## 入口
 

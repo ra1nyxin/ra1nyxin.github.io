@@ -1,6 +1,6 @@
 # Windows API 调用笔记：IsPwrHibernateAllowed
 
-IsPwrHibernateAllowed 我会放在 电源计划、休眠策略和系统电源能力复核 时查。先做最小调用，把返回值、错误码和调用上下文写清楚，再放回具体样本或现场里判断。
+IsPwrHibernateAllowed 常用于 电源计划、休眠策略和系统电源能力复核。建议先做最小调用，记录返回值、错误码和调用上下文，再结合具体样本或现场现象判断。
 
 ## 入口
 

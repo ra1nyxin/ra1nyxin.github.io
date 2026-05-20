@@ -1,6 +1,6 @@
 # Windows API 调用笔记：NtQueryAttributesFile
 
-NtQueryAttributesFile 我会放在 NT 文件、目录、EA、重命名和链接操作复核 时查。先做最小调用，把返回值、错误码和调用上下文写清楚，再放回具体样本或现场里判断。
+NtQueryAttributesFile 常用于 NT 文件、目录、EA、重命名和链接操作复核。建议先做最小调用，记录返回值、错误码和调用上下文，再结合具体样本或现场现象判断。
 
 ## 入口
 

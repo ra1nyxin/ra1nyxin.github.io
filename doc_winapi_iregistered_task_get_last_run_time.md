@@ -1,6 +1,6 @@
 # Windows API 调用笔记：IRegisteredTask::get::LastRunTime
 
-IRegisteredTask::get::LastRunTime 我会放在 计划任务 COM 接口、触发器、动作和运行账号复核 时查。先做最小调用，把返回值、错误码和调用上下文写清楚，再放回具体样本或现场里判断。
+IRegisteredTask::get::LastRunTime 常用于 计划任务 COM 接口、触发器、动作和运行账号复核。建议先做最小调用，记录返回值、错误码和调用上下文，再结合具体样本或现场现象判断。
 
 ## 入口
 

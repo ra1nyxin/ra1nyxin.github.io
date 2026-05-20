@@ -1,6 +1,6 @@
 # Windows API 调用笔记：NtLockVirtualMemory
 
-NtLockVirtualMemory 我会放在 NT 内存、VAD、Section 和进程地址空间观察 时查。先做最小调用，把返回值、错误码和调用上下文写清楚，再放回具体样本或现场里判断。
+NtLockVirtualMemory 常用于 NT 内存、VAD、Section 和进程地址空间观察。建议先做最小调用，记录返回值、错误码和调用上下文，再结合具体样本或现场现象判断。
 
 ## 入口
 

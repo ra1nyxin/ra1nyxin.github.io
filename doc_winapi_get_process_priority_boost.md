@@ -1,6 +1,6 @@
 # Windows API 调用笔记：GetProcessPriorityBoost
 
-GetProcessPriorityBoost 我会放在 Job 限制、进程亲和性、优先级和资源用量复核 时查。先做最小调用，把返回值、错误码和调用上下文写清楚，再放回具体样本或现场里判断。
+GetProcessPriorityBoost 常用于 Job 限制、进程亲和性、优先级和资源用量复核。建议先做最小调用，记录返回值、错误码和调用上下文，再结合具体样本或现场现象判断。
 
 ## 入口
 

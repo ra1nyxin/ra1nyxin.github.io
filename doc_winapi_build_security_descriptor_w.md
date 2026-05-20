@@ -1,6 +1,6 @@
 # Windows API 调用笔记：BuildSecurityDescriptorW
 
-BuildSecurityDescriptorW 我会放在 安全描述符、SACL/DACL、继承关系和 SDDL 转换 时查。先做最小调用，把返回值、错误码和调用上下文写清楚，再放回具体样本或现场里判断。
+BuildSecurityDescriptorW 常用于 安全描述符、SACL/DACL、继承关系和 SDDL 转换。建议先做最小调用，记录返回值、错误码和调用上下文，再结合具体样本或现场现象判断。
 
 ## 入口
 

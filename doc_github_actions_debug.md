@@ -130,7 +130,7 @@ git ls-files package-lock.json pnpm-lock.yaml yarn.lock
 
 ## 常见处理节奏
 
-我一般先看失败 job 的第一处报错，再回到 workflow 里确认触发条件、工作目录、权限和路径。静态站点最常见的是生成文件没有提交、路径大小写不一致、Pages 权限没开、workflow 只监听了某些路径。
+排查时先看失败 job 的第一处报错，再回到 workflow 里确认触发条件、工作目录、权限和路径。静态站点最常见的是生成文件没有提交、路径大小写不一致、Pages 权限没开、workflow 只监听了某些路径。
 
 ```bash
 gh run view --log-failed

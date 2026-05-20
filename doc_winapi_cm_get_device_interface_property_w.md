@@ -1,6 +1,6 @@
 # Windows API 调用笔记：CM::Get::Device::Interface::PropertyW
 
-CM::Get::Device::Interface::PropertyW 我会放在 PnP 设备树、设备状态和设备接口路径追踪 时查。先做最小调用，把返回值、错误码和调用上下文写清楚，再放回具体样本或现场里判断。
+CM::Get::Device::Interface::PropertyW 常用于 PnP 设备树、设备状态和设备接口路径追踪。建议先做最小调用，记录返回值、错误码和调用上下文，再结合具体样本或现场现象判断。
 
 ## 入口
 

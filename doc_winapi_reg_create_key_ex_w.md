@@ -1,6 +1,6 @@
 # Windows API 调用笔记：RegCreateKeyExW
 
-RegCreateKeyExW 我会放在 注册表项、策略值和配置变化监控 时查。我一般先写一个最小调用，把返回值和错误码跑通，再把它放回具体场景里看。
+RegCreateKeyExW 常用于 注册表项、策略值和配置变化监控。先写一个最小调用，确认返回值和错误码，再结合具体场景复核。
 
 ## 入口
 
@@ -16,7 +16,7 @@ auto result = RegCreateKeyExW(...);
 dumpbin /exports C:\Windows\System32\advapi32.dll | findstr /i RegCreateKeyExW
 ```
 
-## 我会记录
+## 记录字段
 
 ```text
 字段: root key, subkey, value name, type, data length, WOW64 view
@@ -26,4 +26,4 @@ dumpbin /exports C:\Windows\System32\advapi32.dll | findstr /i RegCreateKeyExW
 复核: 注册表要标注 32/64 位视图，很多误差都来自重定向
 ```
 
-调用成功只代表入口可达；我会把返回值、错误码、调用身份和目标对象当时的状态放在同一条记录里看。
+调用成功只代表入口可达；返回值、错误码、调用身份和目标对象当时的状态需要放在同一条记录里复核。

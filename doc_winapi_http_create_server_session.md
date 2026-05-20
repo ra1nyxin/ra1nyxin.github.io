@@ -1,6 +1,6 @@
 # Windows API 调用笔记：HttpCreateServerSession
 
-HttpCreateServerSession 我会放在 HTTP Server API URL 监听、请求队列和内核态 HTTP 配置复核 时查。先做最小调用，把返回值、错误码和调用上下文写清楚，再放回具体样本或现场里判断。
+HttpCreateServerSession 常用于 HTTP Server API URL 监听、请求队列和内核态 HTTP 配置复核。建议先做最小调用，记录返回值、错误码和调用上下文，再结合具体样本或现场现象判断。
 
 ## 入口
 

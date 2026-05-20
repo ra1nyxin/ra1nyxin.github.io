@@ -1,6 +1,6 @@
 # Windows API 调用笔记：AuthzCachedAccessCheck
 
-AuthzCachedAccessCheck 我会放在 AuthZ 资源管理器、访问检查和客户端上下文复核 时查。先做最小调用，把返回值、错误码和调用上下文写清楚，再放回具体样本或现场里判断。
+AuthzCachedAccessCheck 常用于 AuthZ 资源管理器、访问检查和客户端上下文复核。建议先做最小调用，记录返回值、错误码和调用上下文，再结合具体样本或现场现象判断。
 
 ## 入口
 

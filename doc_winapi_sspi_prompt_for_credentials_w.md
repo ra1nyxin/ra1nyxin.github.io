@@ -1,6 +1,6 @@
 # Windows API 调用笔记：SspiPromptForCredentialsW
 
-SspiPromptForCredentialsW 我会放在 SSPI、Schannel、认证包和安全上下文调试 时查。先做最小调用，把返回值、错误码和调用上下文写清楚，再放回具体样本或现场里判断。
+SspiPromptForCredentialsW 常用于 SSPI、Schannel、认证包和安全上下文调试。建议先做最小调用，记录返回值、错误码和调用上下文，再结合具体样本或现场现象判断。
 
 ## 入口
 

@@ -1,6 +1,6 @@
 # Windows API 调用笔记：WTSRegisterSessionNotification
 
-WTSRegisterSessionNotification 我会放在 RDP 会话、控制台会话和登录用户上下文枚举 时查。我一般先写一个最小调用，把返回值和错误码跑通，再把它放回具体场景里看。
+WTSRegisterSessionNotification 常用于 RDP 会话、控制台会话和登录用户上下文枚举。先写一个最小调用，确认返回值和错误码，再结合具体场景复核。
 
 ## 入口
 
@@ -16,7 +16,7 @@ auto result = WTSRegisterSessionNotification(...);
 dumpbin /exports C:\Windows\System32\wtsapi32.dll | findstr /i WTSRegisterSessionNotification
 ```
 
-## 我会记录
+## 记录字段
 
 ```text
 字段: session id, station name, username, domain, connect state, token availability
@@ -26,4 +26,4 @@ dumpbin /exports C:\Windows\System32\wtsapi32.dll | findstr /i WTSRegisterSessio
 复核: 会话信息可能包含隐私字段，记录时保留判断所需的最小字段
 ```
 
-调用成功只代表入口可达；我会把返回值、错误码、调用身份和目标对象当时的状态放在同一条记录里看。
+调用成功只代表入口可达；返回值、错误码、调用身份和目标对象当时的状态需要放在同一条记录里复核。

@@ -1,6 +1,6 @@
 # Windows API 调用笔记：NetApiBufferFree
 
-NetApiBufferFree 我会放在 域、共享、用户、会话和工作站信息枚举 时查。我一般先写一个最小调用，把返回值和错误码跑通，再把它放回具体场景里看。
+NetApiBufferFree 常用于 域、共享、用户、会话和工作站信息枚举。先写一个最小调用，确认返回值和错误码，再结合具体场景复核。
 
 ## 入口
 
@@ -16,7 +16,7 @@ auto result = NetApiBufferFree(...);
 dumpbin /exports C:\Windows\System32\netapi32.dll | findstr /i NetApiBufferFree
 ```
 
-## 我会记录
+## 记录字段
 
 ```text
 字段: server, domain, account, share, session client, resume handle
@@ -26,4 +26,4 @@ dumpbin /exports C:\Windows\System32\netapi32.dll | findstr /i NetApiBufferFree
 复核: NetAPI 的错误码很有解释力，空结果和权限不足要分开写
 ```
 
-调用成功只代表入口可达；我会把返回值、错误码、调用身份和目标对象当时的状态放在同一条记录里看。
+调用成功只代表入口可达；返回值、错误码、调用身份和目标对象当时的状态需要放在同一条记录里复核。

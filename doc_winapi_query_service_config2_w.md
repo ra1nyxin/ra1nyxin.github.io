@@ -1,6 +1,6 @@
 # Windows API 调用笔记：QueryServiceConfig2W
 
-QueryServiceConfig2W 我会放在 服务枚举、服务配置和服务权限复核 时查。我一般先写一个最小调用，把返回值和错误码跑通，再把它放回具体场景里看。
+QueryServiceConfig2W 常用于 服务枚举、服务配置和服务权限复核。先写一个最小调用，确认返回值和错误码，再结合具体场景复核。
 
 ## 入口
 
@@ -16,7 +16,7 @@ auto result = QueryServiceConfig2W(...);
 dumpbin /exports C:\Windows\System32\advapi32.dll | findstr /i QueryServiceConfig2W
 ```
 
-## 我会记录
+## 记录字段
 
 ```text
 字段: service name, binary path, start type, account, DACL, status
@@ -26,4 +26,4 @@ dumpbin /exports C:\Windows\System32\advapi32.dll | findstr /i QueryServiceConfi
 复核: 服务风险通常在 binary path、账号和 DACL，服务名只是索引
 ```
 
-调用成功只代表入口可达；我会把返回值、错误码、调用身份和目标对象当时的状态放在同一条记录里看。
+调用成功只代表入口可达；返回值、错误码、调用身份和目标对象当时的状态需要放在同一条记录里复核。

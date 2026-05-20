@@ -1,6 +1,6 @@
 # Windows API 调用笔记：PSGetPropertyDescription
 
-PSGetPropertyDescription 我会放在 属性系统、文件元数据和 Shell Property Store 读取 时查。先做最小调用，把返回值、错误码和调用上下文写清楚，再放回具体样本或现场里判断。
+PSGetPropertyDescription 常用于 属性系统、文件元数据和 Shell Property Store 读取。建议先做最小调用，记录返回值、错误码和调用上下文，再结合具体样本或现场现象判断。
 
 ## 入口
 

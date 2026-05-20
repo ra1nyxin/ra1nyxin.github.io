@@ -1,6 +1,6 @@
 # Windows API 调用笔记：CertOpenStore
 
-CertOpenStore 我会放在 证书对象、证书链和 DPAPI 用户上下文验证 时查。我一般先写一个最小调用，把返回值和错误码跑通，再把它放回具体场景里看。
+CertOpenStore 常用于 证书对象、证书链和 DPAPI 用户上下文验证。先写一个最小调用，确认返回值和错误码，再结合具体场景复核。
 
 ## 入口
 
@@ -16,7 +16,7 @@ auto result = CertOpenStore(...);
 dumpbin /exports C:\Windows\System32\crypt32.dll | findstr /i CertOpenStore
 ```
 
-## 我会记录
+## 记录字段
 
 ```text
 字段: store, subject, thumbprint, chain status, user context, error code
@@ -26,4 +26,4 @@ dumpbin /exports C:\Windows\System32\crypt32.dll | findstr /i CertOpenStore
 复核: 涉及 DPAPI 时必须写明当前用户、机器上下文和保护描述
 ```
 
-调用成功只代表入口可达；我会把返回值、错误码、调用身份和目标对象当时的状态放在同一条记录里看。
+调用成功只代表入口可达；返回值、错误码、调用身份和目标对象当时的状态需要放在同一条记录里复核。

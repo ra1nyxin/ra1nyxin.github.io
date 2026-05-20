@@ -1,6 +1,6 @@
 # Windows API 调用笔记：SetupDiEnumDeviceInfo
 
-SetupDiEnumDeviceInfo 我会放在 设备枚举、驱动信息、接口路径和硬件 ID 核对 时查。先做最小调用，把返回值、错误码和调用上下文写清楚，再放回具体样本或现场里判断。
+SetupDiEnumDeviceInfo 常用于 设备枚举、驱动信息、接口路径和硬件 ID 核对。建议先做最小调用，记录返回值、错误码和调用上下文，再结合具体样本或现场现象判断。
 
 ## 入口
 

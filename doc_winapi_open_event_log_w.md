@@ -1,6 +1,6 @@
 # Windows API 调用笔记：OpenEventLogW
 
-OpenEventLogW 我会放在 传统 EventLog 读取和事件写入验证 时查。我一般先写一个最小调用，把返回值和错误码跑通，再把它放回具体场景里看。
+OpenEventLogW 常用于 传统 EventLog 读取和事件写入验证。先写一个最小调用，确认返回值和错误码，再结合具体场景复核。
 
 ## 入口
 
@@ -16,7 +16,7 @@ auto result = OpenEventLogW(...);
 dumpbin /exports C:\Windows\System32\advapi32.dll | findstr /i OpenEventLogW
 ```
 
-## 我会记录
+## 记录字段
 
 ```text
 字段: log name, record number, event id, source, event type
@@ -26,4 +26,4 @@ dumpbin /exports C:\Windows\System32\advapi32.dll | findstr /i OpenEventLogW
 复核: 老接口常见于旧服务，现代系统里要和 Wevtapi 结果对照
 ```
 
-调用成功只代表入口可达；我会把返回值、错误码、调用身份和目标对象当时的状态放在同一条记录里看。
+调用成功只代表入口可达；返回值、错误码、调用身份和目标对象当时的状态需要放在同一条记录里复核。

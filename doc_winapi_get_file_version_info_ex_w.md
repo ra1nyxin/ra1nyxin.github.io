@@ -1,6 +1,6 @@
 # Windows API 调用笔记：GetFileVersionInfoExW
 
-GetFileVersionInfoExW 我会放在 文件版本、产品名、公司名和资源字段核对 时查。先做最小调用，把返回值、错误码和调用上下文写清楚，再放回具体样本或现场里判断。
+GetFileVersionInfoExW 常用于 文件版本、产品名、公司名和资源字段核对。建议先做最小调用，记录返回值、错误码和调用上下文，再结合具体样本或现场现象判断。
 
 ## 入口
 

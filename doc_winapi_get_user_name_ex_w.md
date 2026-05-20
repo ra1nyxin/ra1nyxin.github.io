@@ -1,6 +1,6 @@
 # Windows API 调用笔记：GetUserNameExW
 
-GetUserNameExW 我会放在 Token 过滤、受限 Token、模拟和登录会话创建 时查。先做最小调用，把返回值、错误码和调用上下文写清楚，再放回具体样本或现场里判断。
+GetUserNameExW 常用于 Token 过滤、受限 Token、模拟和登录会话创建。建议先做最小调用，记录返回值、错误码和调用上下文，再结合具体样本或现场现象判断。
 
 ## 入口
 

@@ -1,6 +1,6 @@
 # Windows API 调用笔记：AddVectoredContinueHandler
 
-AddVectoredContinueHandler 我会放在 错误码、异常处理、Vectored Handler 和崩溃上下文记录 时查。先做最小调用，把返回值、错误码和调用上下文写清楚，再放回具体样本或现场里判断。
+AddVectoredContinueHandler 常用于 错误码、异常处理、Vectored Handler 和崩溃上下文记录。建议先做最小调用，记录返回值、错误码和调用上下文，再结合具体样本或现场现象判断。
 
 ## 入口
 

@@ -1,6 +1,6 @@
 # Windows API 调用笔记：EnumResourceNamesW
 
-EnumResourceNamesW 我会放在 DLL 加载、搜索路径、导出解析和资源定位 时查。先做最小调用，把返回值、错误码和调用上下文写清楚，再放回具体样本或现场里判断。
+EnumResourceNamesW 常用于 DLL 加载、搜索路径、导出解析和资源定位。建议先做最小调用，记录返回值、错误码和调用上下文，再结合具体样本或现场现象判断。
 
 ## 入口
 
