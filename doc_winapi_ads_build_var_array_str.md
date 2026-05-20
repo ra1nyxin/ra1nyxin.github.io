@@ -1,6 +1,6 @@
 # Windows API 调用笔记：ADsBuildVarArrayStr
 
-ADsBuildVarArrayStr 多见于 ADSI 目录对象绑定和属性访问场景。ADSI 接口用于绑定 Active Directory、LDAP、WinNT provider 或其他目录对象，并读取属性、枚举对象或执行目录操作。记录时保留 ADsPath、绑定身份、认证标志、对象类、属性名和错误扩展信息。
+ADsBuildVarArrayStr 常出现在ADSI 目录对象绑定和属性访问场景。ADSI 接口用于绑定 Active Directory、LDAP、WinNT provider 或其他目录对象，并读取属性、枚举对象或执行目录操作。记录时保留 ADsPath、绑定身份、认证标志、对象类、属性名和错误扩展信息。
 
 ## 入口
 

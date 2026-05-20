@@ -1,6 +1,6 @@
 # Windows API 调用笔记：CryptCATCatalogInfoFromContext
 
-CryptCATCatalogInfoFromContext 多见于 CNG、CryptoAPI 和密钥材料处理场景。这类接口通常处在加密、签名、摘要、密钥派生或密钥存储链路里。排查时不要只写算法名，还要保存 Provider、算法标识、链模式、密钥长度、IV 或 nonce、认证标签、输入输出长度和返回状态。密钥、明文、派生材料、熵值等内容不进入普通文档，只保留长度、摘要和来源。
+CryptCATCatalogInfoFromContext 放到CNG、CryptoAPI 和密钥材料处理场景里看并不罕见。这类接口通常处在加密、签名、摘要、密钥派生或密钥存储链路里。排查时不要只写算法名，还要保存 Provider、算法标识、链模式、密钥长度、IV 或 nonce、认证标签、输入输出长度和返回状态。密钥、明文、派生材料、熵值等内容不进入普通文档，只保留长度、摘要和来源。
 
 ## 入口
 

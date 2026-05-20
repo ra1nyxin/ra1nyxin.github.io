@@ -1,6 +1,6 @@
 # Windows API 调用笔记：GetNumaHighestNodeNumber
 
-GetNumaHighestNodeNumber 多见于进程、线程、内存、同步和调试状态场景，主要覆盖基础运行时状态管理，覆盖内存区域、线程生命周期、同步对象、调试事件、Job 限制和进程枚举。分析时要把目标对象、句柄权限、时间线和后续 API 连接起来看。
+GetNumaHighestNodeNumber 在进程、线程、内存、同步和调试状态里很常见，覆盖的内容主要是基础运行时状态管理，覆盖内存区域、线程生命周期、同步对象、调试事件、Job 限制和进程枚举。分析时要把目标对象、句柄权限、时间线和后续 API 连接起来看。
 
 ## 入口
 

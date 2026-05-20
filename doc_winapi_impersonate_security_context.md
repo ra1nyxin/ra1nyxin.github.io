@@ -1,6 +1,6 @@
 # Windows API 调用笔记：ImpersonateSecurityContext
 
-ImpersonateSecurityContext 多见于 SSPI、Schannel 和认证上下文场景。SSPI 接口处理认证包、凭据句柄、安全上下文、消息保护和模拟。常见落点包括 Kerberos、NTLM、Negotiate、Schannel、RPC、HTTP 认证和自定义客户端服务端协议里。记录时要明确认证包、目标 SPN、上下文属性、缓冲区方向和状态码。
+ImpersonateSecurityContext 在SSPI、Schannel 和认证上下文里出现得很多。SSPI 接口处理认证包、凭据句柄、安全上下文、消息保护和模拟。常见落点包括 Kerberos、NTLM、Negotiate、Schannel、RPC、HTTP 认证和自定义客户端服务端协议里。记录时要明确认证包、目标 SPN、上下文属性、缓冲区方向和状态码。
 
 ## 入口
 

@@ -1,6 +1,6 @@
 # Windows API 调用笔记：EvtSeek
 
-EvtSeek 多见于事件日志、ETW 和 Trace Session 排查场景，主要覆盖订阅、查询、格式化、写入或消费 Windows 事件。它们经常出现在检测工具、审计代理、EDR、诊断组件和系统服务里。关键点是 Provider、Channel、Query、Session 名称、事件 ID、Level、Keyword、ActivityId 和返回位置。
+EvtSeek 在事件日志、ETW 和 Trace Session 排查里很常见，覆盖的内容主要是订阅、查询、格式化、写入或消费 Windows 事件。这类调用常出现在检测工具、审计代理、EDR、诊断组件和系统服务里。关键点是 Provider、Channel、Query、Session 名称、事件 ID、Level、Keyword、ActivityId 和返回位置。
 
 ## 入口
 

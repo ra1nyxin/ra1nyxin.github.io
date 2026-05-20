@@ -1,7 +1,6 @@
 # Windows API 调用笔记：CancelMibChangeNotify2
 
-CancelMibChangeNotify2 多见于设备枚举、驱动、无线和系统能力查询场景，主要覆盖枚举设备、读取设备属性、处理通知、查询无线配置、检查驱动和系统能力。它们常见于资产采集、硬件诊断、终端管控、无线排查和安全代理。
-
+CancelMibChangeNotify2 常见于套接字建立、地址转换、连接控制和数据收发场景。判断时要把协议族、阻塞模式、目标地址和后续 I/O 放在同一条链路里看。
 ## 入口
 
 ```text
@@ -18,13 +17,13 @@ dumpbin /exports C:\Windows\System32\iphlpapi.dll | findstr /i CancelMibChangeNo
 
 ## 参数与上下文
 
-SetupAPI 和 CfgMgr32 要记录设备实例 ID、Class GUID、接口 GUID、属性键、缓冲区长度和返回的 DEVINST。WLAN/RAS/电源相关接口要记录接口 GUID、profile、连接状态、策略 GUID 和调用权限。
+Winsock 接口要记录 socket、地址族、协议、本地/远端地址、缓冲区长度、阻塞模式、事件对象和 OVERLAPPED 上下文。涉及扩展控制码或选项值时，还要保存具体 code、level 和 optname。
 
 这是会改变状态的接口，记录时要保存调用前状态、请求的新状态、调用身份、返回码和回滚路径。安全审计里要把它和前置查询、后续验证放在同一条链路中。
 
 ## 返回与错误
 
-设备类接口经常用 BOOL、CONFIGRET 或 DWORD 状态。枚举函数要记录索引、结束条件和缓冲区不足状态，释放函数要与分配来源配套。
+Winsock 相关接口通常返回 SOCKET、int 或错误状态，并通过 WSAGetLastError() 给出失败原因。非阻塞模式下 WSAEWOULDBLOCK、WSA_IO_PENDING 这类状态要和后续完成路径一起看。
 
 ```cpp
 DWORD err = result ? ERROR_SUCCESS : GetLastError();
@@ -32,4 +31,4 @@ DWORD err = result ? ERROR_SUCCESS : GetLastError();
 
 ## 复核点
 
-复核时保存设备路径、驱动文件、签名状态、硬件 ID、类 GUID、用户权限和系统版本。无线和远程访问接口还要关联 profile 来源、认证方式和连接时间。
+复核时保存本地地址、远端地址、协议、连接状态、缓冲区长度、调用线程和后续收发动作。若接口参与了代理、隧道或监听链路，再把握手阶段与关闭阶段一起核对。

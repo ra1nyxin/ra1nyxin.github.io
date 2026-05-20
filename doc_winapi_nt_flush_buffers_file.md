@@ -1,6 +1,6 @@
 # Windows API 调用笔记：NtFlushBuffersFile
 
-NtFlushBuffersFile 多见于 NTAPI、RTL 和 Loader 低层接口场景。这类接口更接近系统调用、PEB/TEB、对象管理器、Loader 和原生结构体。记录里要写清结构体来源、系统版本和符号来源，避免把某个版本的字段当成通用事实。
+NtFlushBuffersFile 放到NTAPI、RTL 和 Loader 低层接口场景里看并不罕见。它离系统调用、PEB/TEB、对象管理器、Loader 和原生结构体更近。记录时最好写清结构体来源、系统版本和符号来源，避免把某个版本的字段当成通用事实。
 
 ## 入口
 

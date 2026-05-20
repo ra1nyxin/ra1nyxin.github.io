@@ -1,6 +1,6 @@
 # Windows API 调用笔记：AuthzCachedAccessCheck
 
-AuthzCachedAccessCheck 多见于 AuthZ 访问检查和授权上下文场景。AuthZ 接口用于构建授权上下文、执行访问检查、缓存授权结果和处理 claims/SID。它比传统 AccessCheck 更适合复杂服务端授权模型。记录时要保存资源管理器、客户端上下文、SID、claims、请求访问和授予结果。
+AuthzCachedAccessCheck 常出现在AuthZ 访问检查和授权上下文场景。AuthZ 接口用于构建授权上下文、执行访问检查、缓存授权结果和处理 claims/SID。它比传统 AccessCheck 更适合复杂服务端授权模型。记录时要保存资源管理器、客户端上下文、SID、claims、请求访问和授予结果。
 
 ## 入口
 

@@ -1,6 +1,6 @@
 # Windows API 调用笔记：CredUIPromptForWindowsCredentialsW
 
-CredUIPromptForWindowsCredentialsW 多见于 Credential Manager 和凭据交互场景，调用语义主要是读取、枚举、写入或删除 Windows Credential Manager 中的凭据记录。常见落点包括客户端登录、远程连接、企业 SSO、浏览器同步工具。记录时保留 target name、type、persistence、user name、blob size、调用身份和会话上下文，凭据原始内容不能进入普通文档。
+CredUIPromptForWindowsCredentialsW 放到Credential Manager 和凭据交互里看，核心语义就是读取、枚举、写入或删除 Windows Credential Manager 中的凭据记录。常见落点包括客户端登录、远程连接、企业 SSO、浏览器同步工具。记录时保留 target name、type、persistence、user name、blob size、调用身份和会话上下文，凭据原始内容不能进入普通文档。
 
 ## 入口
 

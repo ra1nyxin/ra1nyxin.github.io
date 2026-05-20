@@ -1,19 +1,19 @@
-# Windows API 调用笔记：CoCreateInstance::CUIAutomation
+# Windows API 调用笔记：CoCreateInstance CUIAutomation
 
-CoCreateInstance::CUIAutomation 常见于 COM、WMI、属性系统和自动化对象排查。这类接口通常位于 COM 初始化、对象创建、代理安全、WMI 查询、属性读取和自动化调用链路里。判断时要同时记录 CLSID、IID、ProgID、远程主机、认证级别、模拟级别和调用线程模型。
+CoCreateInstance CUIAutomation 常见于 COM、WMI、属性系统和自动化对象排查。这类接口通常位于 COM 初始化、对象创建、代理安全、WMI 查询、属性读取和自动化调用链路里。判断时要同时记录 CLSID、IID、ProgID、远程主机、认证级别、模拟级别和调用线程模型。
 
 ## 入口
 
 ```text
-DLL: uiautomationcore.dll; Header: uiautomationclient.h
+DLL: ole32.dll; Header: combaseapi.h / objbase.h
 ```
 
 ```cpp
-// COM method: CoCreateInstance::CUIAutomation(...)
+HRESULT hr = CoCreateInstance(CLSID_CUIAutomation, nullptr, CLSCTX_INPROC_SERVER, IID_IUIAutomation, (void**)&automation);
 ```
 
 ```powershell
-oleview.exe
+dumpbin /exports C:\Windows\System32\ole32.dll | findstr /i CoCreateInstance
 ```
 
 ## 参数与上下文

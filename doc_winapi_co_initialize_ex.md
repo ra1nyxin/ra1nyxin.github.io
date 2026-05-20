@@ -1,6 +1,6 @@
 # Windows API 调用笔记：CoInitializeEx
 
-CoInitializeEx 多见于 COM、WMI、属性系统和自动化对象场景。这类接口通常位于 COM 初始化、对象创建、代理安全、WMI 查询、属性读取和自动化调用链路里。判断时要同时记录 CLSID、IID、ProgID、远程主机、认证级别、模拟级别和调用线程模型。
+CoInitializeEx 经常落在COM、WMI、属性系统和自动化对象这类位置。这类接口通常位于 COM 初始化、对象创建、代理安全、WMI 查询、属性读取和自动化调用链路里。判断时要同时记录 CLSID、IID、ProgID、远程主机、认证级别、模拟级别和调用线程模型。
 
 ## 入口
 

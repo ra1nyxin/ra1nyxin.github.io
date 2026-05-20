@@ -1,6 +1,6 @@
 # Windows API 调用笔记：GetProcessWorkingSetSizeEx
 
-GetProcessWorkingSetSizeEx 多见于进程内存、性能计数和资源状态查询场景，主要处理读取进程内存占用、工作集、句柄数量、I/O 计数、时间片和缓解策略等运行状态。它适合性能排查、取证基线、异常进程分析和沙箱行为记录。
+GetProcessWorkingSetSizeEx 常出现在进程内存、性能计数和资源状态查询场景，主要处理读取进程内存占用、工作集、句柄数量、I/O 计数、时间片和缓解策略等运行状态。它适合性能排查、取证基线、异常进程分析和沙箱行为记录。
 
 ## 入口
 

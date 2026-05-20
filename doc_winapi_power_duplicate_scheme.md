@@ -1,7 +1,6 @@
 # Windows API 调用笔记：PowerDuplicateScheme
 
-PowerDuplicateScheme 多见于设备枚举、驱动、无线和系统能力查询场景，实际使用时通常围绕枚举设备、读取设备属性、处理通知、查询无线配置、检查驱动和系统能力。它们常见于资产采集、硬件诊断、终端管控、无线排查和安全代理。
-
+PowerDuplicateScheme 主要出现在电源状态、电源计划、唤醒策略和系统能力查询场景。分析时先分清它拿到的是当前状态、配置值还是通知订阅，再看调用发生在界面进程、服务还是后台代理里。
 ## 入口
 
 ```text
@@ -18,13 +17,13 @@ dumpbin /exports C:\Windows\System32\powrprof.dll | findstr /i PowerDuplicateSch
 
 ## 参数与上下文
 
-SetupAPI 和 CfgMgr32 要记录设备实例 ID、Class GUID、接口 GUID、属性键、缓冲区长度和返回的 DEVINST。WLAN/RAS/电源相关接口要记录接口 GUID、profile、连接状态、策略 GUID 和调用权限。
+电源相关接口通常要记录 POWER_INFORMATION_LEVEL、Scheme GUID、Subgroup GUID、Setting GUID、输入输出缓冲区长度，以及通知回调或窗口句柄。涉及计划写入时，还要保留 AC/DC 两套取值和当前活动方案。
 
 这是建立句柄、上下文、映射或连接的入口，重点记录目标对象、访问掩码、创建标志、命名空间和后续释放接口。句柄生命周期通常比单次返回值更能解释现场问题。
 
 ## 返回与错误
 
-设备类接口经常用 BOOL、CONFIGRET 或 DWORD 状态。枚举函数要记录索引、结束条件和缓冲区不足状态，释放函数要与分配来源配套。
+这组接口常见返回值是 NTSTATUS、DWORD、BOOLEAN 或 Win32 错误码。读取类调用要把返回结构和长度记全，注册通知类调用则要确认后续注销是否闭合。
 
 ```cpp
 DWORD err = result ? ERROR_SUCCESS : GetLastError();
@@ -32,4 +31,4 @@ DWORD err = result ? ERROR_SUCCESS : GetLastError();
 
 ## 复核点
 
-复核时保存设备路径、驱动文件、签名状态、硬件 ID、类 GUID、用户权限和系统版本。无线和远程访问接口还要关联 profile 来源、认证方式和连接时间。
+复核时保存电源方案 GUID、设置 GUID、AC/DC 配置、当前电源状态、调用身份和系统版本。涉及休眠、唤醒、电池或节能策略时，再关联触发时间和前后状态变化。
