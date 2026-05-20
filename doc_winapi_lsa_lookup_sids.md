@@ -1,6 +1,6 @@
 # Windows API 调用笔记：LsaLookupSids
 
-LsaLookupSids 常用于 LSA Policy、账号权限和 SID/name 解析。先写一个最小调用，确认返回值和错误码，再结合具体场景复核。
+LsaLookupSids 用于把一组 SID 批量解析为名称和域信息。相比单个 LookupAccountSidW，它更适合处理 ACL、Token 组列表和大量事件日志中的 SID。
 
 ## 入口
 
@@ -9,21 +9,25 @@ DLL: advapi32.dll; Header: ntsecapi.h
 ```
 
 ```cpp
-auto result = LsaLookupSids(...);
+NTSTATUS st = LsaLookupSids(policy, sidCount, sidArray, &referencedDomains, &names);
 ```
 
 ```powershell
 dumpbin /exports C:\Windows\System32\advapi32.dll | findstr /i LsaLookupSids
 ```
 
-## 记录字段
+## 参数关注
 
-```text
-字段: policy handle, SID, account right, NTSTATUS, lookup domain
+`PolicyHandle` 通常来自 LsaOpenPolicy。`Sids` 是 SID 指针数组，记录时要先转换成字符串形式。返回的 `ReferencedDomains` 和 `Names` 需要一起解析，名称里的域索引指向域列表。
+
+## 返回与错误
+
+可能返回部分成功状态，例如部分 SID 无法解析。不要因为一个 SID 解析失败就丢弃整批结果。返回缓冲区需要 LsaFreeMemory。
+
+```cpp
+ULONG err = LsaNtStatusToWinError(st);
 ```
 
-```text
-复核: LSA 返回 NTSTATUS，先转成 Win32 错误再写进笔记
-```
+## 复核点
 
-调用成功只代表入口可达；返回值、错误码、调用身份和目标对象当时的状态需要放在同一条记录里复核。
+记录 SID 数量、每个 SID 字符串、解析出的名称、域、SID_NAME_USE 和未解析项。跨域、离线主机、删除账号、服务 SID 和 AppContainer SID 都要保留原始 SID。

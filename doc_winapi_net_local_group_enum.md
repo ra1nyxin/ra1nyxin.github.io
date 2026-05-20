@@ -1,29 +1,33 @@
 # Windows API 调用笔记：NetLocalGroupEnum
 
-NetLocalGroupEnum 常用于 域、共享、用户、会话和工作站信息枚举。先写一个最小调用，确认返回值和错误码，再结合具体场景复核。
+NetLocalGroupEnum 用于枚举本机或远程服务器上的本地组。它常用于权限基线、管理员组审计、远程管理面梳理和横向访问风险评估。
 
 ## 入口
 
 ```text
-DLL: netapi32.dll; Header: lm.h / dsgetdc.h
+DLL: netapi32.dll; Header: lmaccess.h
 ```
 
 ```cpp
-auto result = NetLocalGroupEnum(...);
+NET_API_STATUS st = NetLocalGroupEnum(server, 1, (LPBYTE*)&buf, MAX_PREFERRED_LENGTH, &read, &total, &resume);
 ```
 
 ```powershell
 dumpbin /exports C:\Windows\System32\netapi32.dll | findstr /i NetLocalGroupEnum
 ```
 
-## 记录字段
+## 参数关注
 
-```text
-字段: server, domain, account, share, session client, resume handle
+`serverName` 为 null 时枚举本机。`level` 常用 0 或 1，级别 1 会返回描述。远程枚举需要注意防火墙、远程注册表策略、网络登录权限和本地管理员权限。
+
+## 分页与释放
+
+结果可能分页返回，`resume_handle` 需要循环使用。返回缓冲区由 NetAPI 分配，结束后调用 NetApiBufferFree。
+
+```cpp
+NetApiBufferFree(buf);
 ```
 
-```text
-复核: NetAPI 的错误码很有解释力，空结果和权限不足要分开写
-```
+## 复核点
 
-调用成功只代表入口可达；返回值、错误码、调用身份和目标对象当时的状态需要放在同一条记录里复核。
+记录目标服务器、组名、描述、读取数量、总数和调用身份。高价值组包括 Administrators、Remote Desktop Users、Backup Operators、Remote Management Users、Event Log Readers。

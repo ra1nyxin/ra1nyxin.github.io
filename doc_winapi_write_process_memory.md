@@ -1,29 +1,35 @@
 # Windows API 调用笔记：WriteProcessMemory
 
-WriteProcessMemory 常用于 进程线程、文件、内存、同步对象和调试状态的基础系统调用。先写一个最小调用，确认返回值和错误码，再结合具体场景复核。
+WriteProcessMemory 用于向另一个进程的地址空间写入数据。调试器、补丁工具、自动化测试、输入法、辅助功能和安全产品都可能使用它。安全判断的重点是目标进程、写入地址、写入内容类型和后续控制流变化。
 
 ## 入口
 
 ```text
-DLL: kernel32.dll; Header: windows.h
+DLL: kernel32.dll; Header: memoryapi.h
 ```
 
 ```cpp
-auto result = WriteProcessMemory(...);
+BOOL ok = WriteProcessMemory(process, remoteAddress, buffer, size, &written);
 ```
 
 ```powershell
 dumpbin /exports C:\Windows\System32\kernel32.dll | findstr /i WriteProcessMemory
 ```
 
-## 记录字段
+## 参数关注
 
-```text
-字段: handle, access mask, target object, return value, GetLastError
+`hProcess` 一般需要 `PROCESS_VM_WRITE` 和 `PROCESS_VM_OPERATION`。`lpBaseAddress` 要和目标进程内存图对齐，确认它属于堆、栈、映像段、私有内存还是映射文件。`nSize` 与 `lpNumberOfBytesWritten` 都要记录，部分写入会影响后续判断。
+
+写入内容不建议直接混入普通文档。可以保存摘要、长度、熵、文件偏移来源、结构体类型或字符串预览。敏感原始内容应单独隔离。
+
+## 返回与错误
+
+失败常见原因是目标地址不可写、跨页保护不一致、权限不足或目标进程退出。写入成功后仍需复核页面保护和后续执行路径。
+
+```cpp
+DWORD err = ok ? ERROR_SUCCESS : GetLastError();
 ```
 
-```text
-复核: 先记录返回值和错误码，再决定是否继续查对象权限或系统事件
-```
+## 复核点
 
-调用成功只代表入口可达；返回值、错误码、调用身份和目标对象当时的状态需要放在同一条记录里复核。
+记录调用进程、目标进程、目标地址、写入长度、页面保护、内存类型、写入前后哈希和后续 API。若写入后出现 VirtualProtectEx、CreateRemoteThread、QueueUserAPC、SetThreadContext 或 ResumeThread，需要按链路复盘。

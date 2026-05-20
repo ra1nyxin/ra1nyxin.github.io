@@ -1,29 +1,35 @@
 # Windows API 调用笔记：CertGetCertificateChain
 
-CertGetCertificateChain 常用于 证书对象、证书链和 DPAPI 用户上下文验证。先写一个最小调用，确认返回值和错误码，再结合具体场景复核。
+CertGetCertificateChain 用于构建并验证证书链。它常见于 TLS、代码签名、企业证书、智能卡、S/MIME 和内部 PKI 排查。证书存在不代表链可信，链状态、用途、时间和撤销信息都要看。
 
 ## 入口
 
 ```text
-DLL: crypt32.dll; Header: wincrypt.h / dpapi.h
+DLL: crypt32.dll; Header: wincrypt.h
 ```
 
 ```cpp
-auto result = CertGetCertificateChain(...);
+BOOL ok = CertGetCertificateChain(engine, cert, verifyTime, extraStore, &para, flags, nullptr, &chain);
 ```
 
 ```powershell
 dumpbin /exports C:\Windows\System32\crypt32.dll | findstr /i CertGetCertificateChain
 ```
 
-## 记录字段
+## 参数关注
 
-```text
-字段: store, subject, thumbprint, chain status, user context, error code
+`hChainEngine` 为 null 时使用默认链引擎。企业环境里可能需要指定自定义引擎或额外证书库。`pTime` 决定按当前时间还是历史时间验证，代码签名和时间戳场景尤其重要。
+
+`CERT_CHAIN_PARA` 里可以指定用途、策略和附加约束。`dwFlags` 会影响缓存、撤销检查、网络访问和弱签名处理。记录时要写明是否允许联网查询 CRL/OCSP。
+
+## 返回与释放
+
+成功返回链上下文，使用后需要 CertFreeCertificateChain。链构建成功不代表链完全可信，必须继续查看 `TrustStatus`。
+
+```cpp
+DWORD status = chain->TrustStatus.dwErrorStatus;
 ```
 
-```text
-复核: 涉及 DPAPI 时必须写明当前用户、机器上下文和保护描述
-```
+## 复核点
 
-调用成功只代表入口可达；返回值、错误码、调用身份和目标对象当时的状态需要放在同一条记录里复核。
+记录主题、颁发者、指纹、用途、根证书、链元素数量、错误状态、信息状态、验证时间和撤销策略。对内网 CA、过期证书、自签证书和交叉签名链，要保存证书库来源和机器策略。

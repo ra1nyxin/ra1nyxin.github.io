@@ -1,6 +1,6 @@
 # Windows API 调用笔记：LsaGetLogonSessionData
 
-LsaGetLogonSessionData 常用于 登录会话和认证包信息复核。先写一个最小调用，确认返回值和错误码，再结合具体场景复核。
+LsaGetLogonSessionData 用于根据登录会话 LUID 读取会话详情。它常和 LsaEnumerateLogonSessions 配套，用于确认用户、域、认证包、登录类型、登录时间和会话 SID。
 
 ## 入口
 
@@ -9,21 +9,25 @@ DLL: secur32.dll; Header: ntsecapi.h
 ```
 
 ```cpp
-auto result = LsaGetLogonSessionData(...);
+NTSTATUS st = LsaGetLogonSessionData(&luid, &data);
 ```
 
 ```powershell
 dumpbin /exports C:\Windows\System32\secur32.dll | findstr /i LsaGetLogonSessionData
 ```
 
-## 记录字段
+## 字段关注
 
-```text
-字段: logon id, auth package, logon type, user, domain, session
+常用字段包括 `UserName`、`LogonDomain`、`AuthenticationPackage`、`LogonType`、`Session`、`Sid`、`LogonTime`、`LogonServer`、`DnsDomainName`、`Upn`。UNICODE_STRING 字段需要按长度读取。
+
+## 返回与释放
+
+成功后返回缓冲区使用 LsaFreeReturnBuffer 释放。部分字段为空不代表会话无效，可能和登录类型、权限、系统版本有关。
+
+```cpp
+LsaFreeReturnBuffer(data);
 ```
 
-```text
-复核: 只做会话画像时不需要扩散原始敏感字段，保留时间线和登录类型更有用
-```
+## 复核点
 
-调用成功只代表入口可达；返回值、错误码、调用身份和目标对象当时的状态需要放在同一条记录里复核。
+记录 LUID、用户名、域、认证包、登录类型、会话 ID、SID、登录时间和来源服务器。分析横向登录、服务启动、RDP、网络访问时，要把该信息和 4624、4648、4672 等事件对齐。

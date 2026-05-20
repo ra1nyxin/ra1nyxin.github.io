@@ -1,6 +1,6 @@
 # Windows API 调用笔记：LsaEnumerateLogonSessions
 
-LsaEnumerateLogonSessions 常用于 登录会话和认证包信息复核。先写一个最小调用，确认返回值和错误码，再结合具体场景复核。
+LsaEnumerateLogonSessions 用于枚举本机当前已知的登录会话 LUID。它适合做会话清单、交互登录排查、服务登录分析和取证时间线整理。
 
 ## 入口
 
@@ -9,21 +9,25 @@ DLL: secur32.dll; Header: ntsecapi.h
 ```
 
 ```cpp
-auto result = LsaEnumerateLogonSessions(...);
+NTSTATUS st = LsaEnumerateLogonSessions(&count, &luidList);
 ```
 
 ```powershell
 dumpbin /exports C:\Windows\System32\secur32.dll | findstr /i LsaEnumerateLogonSessions
 ```
 
-## 记录字段
+## 返回内容
 
-```text
-字段: logon id, auth package, logon type, user, domain, session
+返回的是 LUID 列表，单独看没有用户名、域名和登录类型。通常需要继续调用 LsaGetLogonSessionData。返回缓冲区使用 LsaFreeReturnBuffer 释放。
+
+```cpp
+LsaFreeReturnBuffer(luidList);
 ```
 
-```text
-复核: 只做会话画像时不需要扩散原始敏感字段，保留时间线和登录类型更有用
-```
+## 权限与边界
 
-调用成功只代表入口可达；返回值、错误码、调用身份和目标对象当时的状态需要放在同一条记录里复核。
+不同系统版本和权限下可见信息可能不同。普通进程可枚举的会话和受保护会话信息要分开记录，避免把缺失字段误判成不存在。
+
+## 复核点
+
+记录会话数量、枚举时间、调用身份、系统版本和后续每个 LUID 的详细信息。对远程桌面、计划任务、服务账号、网络登录，需要结合安全事件日志和 WTS 会话信息核对。

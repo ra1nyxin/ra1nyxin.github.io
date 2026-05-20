@@ -1,29 +1,33 @@
 # Windows API 调用笔记：LookupAccountSidW
 
-LookupAccountSidW 常用于 Token、SID、权限、ACL 和访问判定复核。先写一个最小调用，确认返回值和错误码，再结合具体场景复核。
+LookupAccountSidW 用于把 SID 解析成账户名、域名和账户类型。它常见于权限审计、ACL 展示、Token 分析和事件日志归一化。解析结果受本机、域控制器、信任关系和缓存状态影响。
 
 ## 入口
 
 ```text
-DLL: advapi32.dll; Header: securitybaseapi.h / aclapi.h / sddl.h / authz.h
+DLL: advapi32.dll; Header: winbase.h
 ```
 
 ```cpp
-auto result = LookupAccountSidW(...);
+BOOL ok = LookupAccountSidW(systemName, sid, name, &nameLen, domain, &domainLen, &use);
 ```
 
 ```powershell
 dumpbin /exports C:\Windows\System32\advapi32.dll | findstr /i LookupAccountSidW
 ```
 
-## 记录字段
+## 参数关注
 
-```text
-字段: SID, token type, integrity level, privilege, access mask, DACL
+`lpSystemName` 为 null 时使用本机解析。域 SID、外部信任 SID、已删除账号和服务 SID 可能无法解析成人类可读名称。`SID_NAME_USE` 要保存，它能区分用户、组、域、别名、服务账号等类型。
+
+## 返回与缓冲区
+
+常见模式是先调用一次获取所需长度，再分配缓冲区。`ERROR_NONE_MAPPED` 表示未映射到名称，仍然要保留原始 SID 字符串。
+
+```cpp
+BOOL ok = LookupAccountSidW(nullptr, sid, nullptr, &nameLen, nullptr, &domainLen, &use);
 ```
 
-```text
-复核: 权限判断要把 token、DACL、完整性级别和 UAC 过滤状态放一起看
-```
+## 复核点
 
-调用成功只代表入口可达；返回值、错误码、调用身份和目标对象当时的状态需要放在同一条记录里复核。
+记录原始 SID、解析主机、域名、账户名、SID 类型和错误码。安全文档里建议同时保存 SID 字符串和解析结果，因为名称可能随时间变化。

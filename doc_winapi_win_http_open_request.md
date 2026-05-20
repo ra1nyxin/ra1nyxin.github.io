@@ -1,6 +1,6 @@
 # Windows API 调用笔记：WinHttpOpenRequest
 
-WinHttpOpenRequest 常用于 服务端风格 HTTP 请求、代理和 TLS 行为排查。先写一个最小调用，确认返回值和错误码，再结合具体场景复核。
+WinHttpOpenRequest 用于创建具体 HTTP 请求句柄。它决定方法、路径、HTTP 版本、引用页、可接受类型和安全标志。目标主机来自 WinHttpConnect。
 
 ## 入口
 
@@ -9,21 +9,25 @@ DLL: winhttp.dll; Header: winhttp.h
 ```
 
 ```cpp
-auto result = WinHttpOpenRequest(...);
+HINTERNET req = WinHttpOpenRequest(conn, L"GET", L"/api/status", nullptr, WINHTTP_NO_REFERER, WINHTTP_DEFAULT_ACCEPT_TYPES, WINHTTP_FLAG_SECURE);
 ```
 
 ```powershell
 dumpbin /exports C:\Windows\System32\winhttp.dll | findstr /i WinHttpOpenRequest
 ```
 
-## 记录字段
+## 参数关注
 
-```text
-字段: session, proxy, host, path, status code, response headers
+`pwszVerb` 是方法，`pwszObjectName` 是路径和查询串，`dwFlags` 中的 `WINHTTP_FLAG_SECURE` 表示 HTTPS。HTTP 方法异常、路径包含令牌、Referer 伪造、非默认 Accept 类型都值得记录。
+
+## 返回与错误
+
+成功返回请求句柄，后续通过 WinHttpSendRequest、WinHttpReceiveResponse、WinHttpReadData 完成通信。失败通常是句柄或参数问题。
+
+```cpp
+DWORD err = req ? ERROR_SUCCESS : GetLastError();
 ```
 
-```text
-复核: WinHTTP 和 WinINet 代理来源不同，测试时要写清使用哪套栈
-```
+## 复核点
 
-调用成功只代表入口可达；返回值、错误码、调用身份和目标对象当时的状态需要放在同一条记录里复核。
+记录方法、路径、HTTPS 标志、Host、端口、User-Agent、代理模式和后续请求头。敏感查询参数只保存字段名和摘要。

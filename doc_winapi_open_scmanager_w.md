@@ -1,6 +1,6 @@
 # Windows API 调用笔记：OpenSCManagerW
 
-OpenSCManagerW 常用于 服务枚举、服务配置和服务权限复核。先写一个最小调用，确认返回值和错误码，再结合具体场景复核。
+OpenSCManagerW 用于打开服务控制管理器。它是服务查询、创建、修改、启动和删除等操作的入口。分析服务相关事件时，先看这个调用请求了什么权限，再看后续服务操作。
 
 ## 入口
 
@@ -9,21 +9,25 @@ DLL: advapi32.dll; Header: winsvc.h
 ```
 
 ```cpp
-auto result = OpenSCManagerW(...);
+SC_HANDLE scm = OpenSCManagerW(machineName, databaseName, SC_MANAGER_CONNECT);
 ```
 
 ```powershell
 dumpbin /exports C:\Windows\System32\advapi32.dll | findstr /i OpenSCManagerW
 ```
 
-## 记录字段
+## 参数关注
 
-```text
-字段: service name, binary path, start type, account, DACL, status
+`lpMachineName` 为 null 表示本机，远程机器名需要记录网络路径和调用凭据。`lpDatabaseName` 通常是 `ServicesActive`。`dwDesiredAccess` 是重点，查询只需要连接权限，创建服务需要 `SC_MANAGER_CREATE_SERVICE`，枚举需要 `SC_MANAGER_ENUMERATE_SERVICE`。
+
+## 返回与错误
+
+失败常见于权限不足、远程服务不可达、防火墙拦截、RPC 问题或服务控制管理器不可用。返回的句柄使用后需要 CloseServiceHandle。
+
+```cpp
+DWORD err = scm ? ERROR_SUCCESS : GetLastError();
 ```
 
-```text
-复核: 服务风险通常在 binary path、账号和 DACL，服务名只是索引
-```
+## 复核点
 
-调用成功只代表入口可达；返回值、错误码、调用身份和目标对象当时的状态需要放在同一条记录里复核。
+记录目标主机、数据库名、访问掩码、调用身份、登录类型、源进程和后续 CreateServiceW、OpenServiceW、ChangeServiceConfigW、StartServiceW、DeleteService 调用。远程服务管理需要和网络连接、认证日志一起看。

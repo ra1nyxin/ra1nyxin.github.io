@@ -1,31 +1,33 @@
 # Windows API 调用笔记：select
 
-select 常用于 Socket 生命周期、选项、地址转换和异步网络事件。建议先做最小调用，记录返回值、错误码和调用上下文，再结合具体样本或现场现象判断。
+select 用于等待一组套接字的可读、可写或异常状态。它常见于非阻塞网络程序、小型代理和跨平台代码。排查 CPU 空转、连接超时、半开连接时，需要关注 select 的超时和集合变化。
 
 ## 入口
 
 ```text
-DLL: ws2_32.dll; Header: winsock2.h / ws2tcpip.h
+DLL: ws2_32.dll; Header: winsock2.h
 ```
 
 ```cpp
-auto result = select(...);
+int rc = select(0, &readSet, &writeSet, &exceptSet, &timeout);
 ```
 
 ```powershell
 dumpbin /exports C:\Windows\System32\ws2_32.dll | findstr /i select
 ```
 
-## 记录字段
+## 参数关注
 
-```text
-socket, address, port, flags, option level, WSA error
+Windows 下第一个参数 `nfds` 会被忽略。`fd_set` 在返回后只保留就绪 socket，原始集合需要调用方自己保存。`timeval` 为 null 表示无限等待，为 0 表示轮询。
+
+## 返回与错误
+
+返回正数表示就绪 socket 数量，0 表示超时，`SOCKET_ERROR` 表示失败。错误码使用 WSAGetLastError。
+
+```cpp
+int err = rc == SOCKET_ERROR ? WSAGetLastError() : 0;
 ```
 
 ## 复核点
 
-```text
-Socket 调试要把 address family、protocol 和 WSA 错误码写全
-```
-
-调用笔记只保留能复现判断的内容：输入、输出、错误码、调用身份、系统版本和目标对象状态。敏感原始值单独存放，不混进普通文档。
+记录等待集合大小、超时时间、返回值、就绪方向和后续 send/recv。性能问题排查时，重点看是否用零超时循环轮询导致 CPU 占用升高。

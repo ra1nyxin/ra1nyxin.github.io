@@ -1,29 +1,33 @@
 # Windows API 调用笔记：GetTokenInformation
 
-GetTokenInformation 常用于 Token、SID、权限、ACL 和访问判定复核。先写一个最小调用，确认返回值和错误码，再结合具体场景复核。
+GetTokenInformation 用于读取访问令牌的详细属性。排查权限、UAC、服务账号、模拟令牌、AppContainer、远程会话时，这个接口比只看用户名可靠得多。
 
 ## 入口
 
 ```text
-DLL: advapi32.dll; Header: securitybaseapi.h / aclapi.h / sddl.h / authz.h
+DLL: advapi32.dll; Header: securitybaseapi.h
 ```
 
 ```cpp
-auto result = GetTokenInformation(...);
+BOOL ok = GetTokenInformation(token, TokenUser, buffer, bufferSize, &needed);
 ```
 
 ```powershell
 dumpbin /exports C:\Windows\System32\advapi32.dll | findstr /i GetTokenInformation
 ```
 
-## 记录字段
+## 参数关注
 
-```text
-字段: SID, token type, integrity level, privilege, access mask, DACL
+`TokenInformationClass` 决定返回结构。常查字段包括 `TokenUser`、`TokenGroups`、`TokenPrivileges`、`TokenOwner`、`TokenPrimaryGroup`、`TokenElevationType`、`TokenLinkedToken`、`TokenIntegrityLevel`、`TokenSessionId`。每个字段的结构和长度不同，缓冲区不足时会返回所需大小。
+
+## 读取方式
+
+通常先传空缓冲区获取 `ReturnLength`，再分配缓冲区读取。失败时保留错误码，`ERROR_INSUFFICIENT_BUFFER` 在第一阶段属于正常结果。
+
+```cpp
+BOOL ok = GetTokenInformation(token, TokenIntegrityLevel, nullptr, 0, &needed);
 ```
 
-```text
-复核: 权限判断要把 token、DACL、完整性级别和 UAC 过滤状态放一起看
-```
+## 复核点
 
-调用成功只代表入口可达；返回值、错误码、调用身份和目标对象当时的状态需要放在同一条记录里复核。
+记录令牌类型、用户 SID、组 SID、完整性级别、提升状态、权限列表、会话 ID 和登录来源。分析权限问题时，把令牌字段和进程完整路径、父进程、服务账号、UAC 状态一起保存。

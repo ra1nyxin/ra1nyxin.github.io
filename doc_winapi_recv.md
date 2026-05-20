@@ -1,31 +1,33 @@
 # Windows API 调用笔记：recv
 
-recv 常用于 Socket 生命周期、选项、地址转换和异步网络事件。建议先做最小调用，记录返回值、错误码和调用上下文，再结合具体样本或现场现象判断。
+recv 用于从已连接套接字接收数据。它常用于客户端响应、服务端请求处理、代理转发和协议解析。排查网络程序卡住、断连和协议异常时，这个接口很关键。
 
 ## 入口
 
 ```text
-DLL: ws2_32.dll; Header: winsock2.h / ws2tcpip.h
+DLL: ws2_32.dll; Header: winsock2.h
 ```
 
 ```cpp
-auto result = recv(...);
+int n = recv(sock, buffer, length, flags);
 ```
 
 ```powershell
 dumpbin /exports C:\Windows\System32\ws2_32.dll | findstr /i recv
 ```
 
-## 记录字段
+## 参数关注
 
-```text
-socket, address, port, flags, option level, WSA error
+返回值大于 0 表示收到字节数，返回 0 表示连接被有序关闭。返回长度可能小于协议消息长度，应用层需要自己拼包。`flags` 影响接收行为，`MSG_PEEK` 会查看数据但不移除缓冲区内容。
+
+## 返回与错误
+
+`SOCKET_ERROR` 时读取 WSAGetLastError。非阻塞模式下 `WSAEWOULDBLOCK` 需要结合 select、WSAPoll 或事件通知处理。
+
+```cpp
+int err = n == SOCKET_ERROR ? WSAGetLastError() : 0;
 ```
 
 ## 复核点
 
-```text
-Socket 调试要把 address family、protocol 和 WSA 错误码写全
-```
-
-调用笔记只保留能复现判断的内容：输入、输出、错误码、调用身份、系统版本和目标对象状态。敏感原始值单独存放，不混进普通文档。
+记录连接五元组、接收长度、返回值、错误码、调用时间和协议状态。TLS 或自定义加密协议下，普通 recv 内容可能已经是密文，需要从更高层解析。

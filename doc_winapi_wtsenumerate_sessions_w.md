@@ -1,6 +1,6 @@
 # Windows API 调用笔记：WTSEnumerateSessionsW
 
-WTSEnumerateSessionsW 常用于 RDP 会话、控制台会话和登录用户上下文枚举。先写一个最小调用，确认返回值和错误码，再结合具体场景复核。
+WTSEnumerateSessionsW 用于枚举终端服务会话。它适合确认本机或远程主机上的控制台、RDP、断开会话和活动用户状态。
 
 ## 入口
 
@@ -9,21 +9,25 @@ DLL: wtsapi32.dll; Header: wtsapi32.h
 ```
 
 ```cpp
-auto result = WTSEnumerateSessionsW(...);
+BOOL ok = WTSEnumerateSessionsW(server, 0, 1, &sessions, &count);
 ```
 
 ```powershell
 dumpbin /exports C:\Windows\System32\wtsapi32.dll | findstr /i WTSEnumerateSessionsW
 ```
 
-## 记录字段
+## 参数关注
 
-```text
-字段: session id, station name, username, domain, connect state, token availability
+`hServer` 可为 `WTS_CURRENT_SERVER_HANDLE`，也可来自 WTSOpenServerW。返回的每个会话包含 SessionId、WinStationName 和 State。会话状态要结合用户信息进一步查询。
+
+## 返回与释放
+
+成功后返回数组使用 WTSFreeMemory 释放。远程枚举失败时检查远程桌面服务、权限、防火墙和目标系统版本。
+
+```cpp
+WTSFreeMemory(sessions);
 ```
 
-```text
-复核: 会话信息可能包含隐私字段，记录时保留判断所需的最小字段
-```
+## 复核点
 
-调用成功只代表入口可达；返回值、错误码、调用身份和目标对象当时的状态需要放在同一条记录里复核。
+记录服务器、会话 ID、会话名、状态、枚举时间和调用身份。分析 RDP、控制台登录、断开会话残留时，继续用 WTSQuerySessionInformationW 读取用户、域、客户端地址和登录时间。

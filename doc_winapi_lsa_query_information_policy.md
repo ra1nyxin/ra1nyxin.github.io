@@ -1,6 +1,6 @@
 # Windows API 调用笔记：LsaQueryInformationPolicy
 
-LsaQueryInformationPolicy 常用于 LSA Policy、账号权限和 SID/name 解析。先写一个最小调用，确认返回值和错误码，再结合具体场景复核。
+LsaQueryInformationPolicy 用于从 LSA Policy 读取系统安全信息。它可以查询域信息、审计事件、主域信息、DNS 域信息等内容，常用于资产归属、域加入状态和策略核查。
 
 ## 入口
 
@@ -9,21 +9,25 @@ DLL: advapi32.dll; Header: ntsecapi.h
 ```
 
 ```cpp
-auto result = LsaQueryInformationPolicy(...);
+NTSTATUS st = LsaQueryInformationPolicy(policy, PolicyDnsDomainInformation, (PVOID*)&info);
 ```
 
 ```powershell
 dumpbin /exports C:\Windows\System32\advapi32.dll | findstr /i LsaQueryInformationPolicy
 ```
 
-## 记录字段
+## 参数关注
 
-```text
-字段: policy handle, SID, account right, NTSTATUS, lookup domain
+`PolicyHandle` 来自 LsaOpenPolicy。`InformationClass` 决定返回结构，常见值包括 `PolicyAccountDomainInformation`、`PolicyPrimaryDomainInformation`、`PolicyDnsDomainInformation`、`PolicyAuditEventsInformation`。
+
+## 返回与释放
+
+成功后返回缓冲区由 LSA 分配，使用 LsaFreeMemory 释放。结构体内的 UNICODE_STRING 长度按字节计算，解析时不要按 null 结尾字符串处理。
+
+```cpp
+LsaFreeMemory(info);
 ```
 
-```text
-复核: LSA 返回 NTSTATUS，先转成 Win32 错误再写进笔记
-```
+## 复核点
 
-调用成功只代表入口可达；返回值、错误码、调用身份和目标对象当时的状态需要放在同一条记录里复核。
+记录信息类别、域名、域 SID、DNS 域名、森林名、GUID、返回状态和目标主机。域环境排查时，把这里的结果和 NetGetJoinInformation、DsGetDcNameW、注册表域信息交叉验证。

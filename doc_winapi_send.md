@@ -1,31 +1,33 @@
 # Windows API 调用笔记：send
 
-send 常用于 Socket 生命周期、选项、地址转换和异步网络事件。建议先做最小调用，记录返回值、错误码和调用上下文，再结合具体样本或现场现象判断。
+send 用于通过已连接套接字发送数据。它常出现在 TCP 客户端和服务端通信中。分析时不要只看调用次数，更要看目标连接、发送长度、数据类型和错误返回。
 
 ## 入口
 
 ```text
-DLL: ws2_32.dll; Header: winsock2.h / ws2tcpip.h
+DLL: ws2_32.dll; Header: winsock2.h
 ```
 
 ```cpp
-auto result = send(...);
+int sent = send(sock, buffer, length, flags);
 ```
 
 ```powershell
 dumpbin /exports C:\Windows\System32\ws2_32.dll | findstr /i send
 ```
 
-## 记录字段
+## 参数关注
 
-```text
-socket, address, port, flags, option level, WSA error
+`len` 是本次尝试发送的字节数，返回值可能小于请求长度。`flags` 常见为 0，也可能出现 `MSG_OOB`、`MSG_DONTROUTE`。TLS 场景下 send 看到的是加密后的记录层数据。
+
+## 返回与错误
+
+返回 `SOCKET_ERROR` 时读取 WSAGetLastError。非阻塞套接字出现 `WSAEWOULDBLOCK` 时，调用方通常会等待可写事件后重试。
+
+```cpp
+int err = sent == SOCKET_ERROR ? WSAGetLastError() : 0;
 ```
 
 ## 复核点
 
-```text
-Socket 调试要把 address family、protocol 和 WSA 错误码写全
-```
-
-调用笔记只保留能复现判断的内容：输入、输出、错误码、调用身份、系统版本和目标对象状态。敏感原始值单独存放，不混进普通文档。
+记录连接五元组、发送长度、返回长度、调用时间、调用线程和数据摘要。涉及敏感信息时，只保存协议类型、长度、方向和摘要，不把原始载荷放进普通文档。

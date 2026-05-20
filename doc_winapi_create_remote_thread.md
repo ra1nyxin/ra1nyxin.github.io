@@ -1,31 +1,35 @@
 # Windows API 调用笔记：CreateRemoteThread
 
-CreateRemoteThread 常用于 线程创建、线程池、APC、等待链和运行状态排查。建议先做最小调用，记录返回值、错误码和调用上下文，再结合具体样本或现场现象判断。
+CreateRemoteThread 用于在指定进程中创建线程。调试器、注入式测试工具、兼容层和部分管理软件可能使用它。安全分析里它通常需要与跨进程内存申请、写入、改保护等事件放在一起判断。
 
 ## 入口
 
 ```text
-DLL: kernel32.dll; Header: processthreadsapi.h / synchapi.h
+DLL: kernel32.dll; Header: processthreadsapi.h
 ```
 
 ```cpp
-auto result = CreateRemoteThread(...);
+HANDLE thread = CreateRemoteThread(process, nullptr, 0, startAddress, parameter, 0, &threadId);
 ```
 
 ```powershell
 dumpbin /exports C:\Windows\System32\kernel32.dll | findstr /i CreateRemoteThread
 ```
 
-## 记录字段
+## 参数关注
 
-```text
-thread handle, start address, stack size, wait reason, APC target, last error
+`hProcess` 通常需要 `PROCESS_CREATE_THREAD`、`PROCESS_QUERY_INFORMATION`、`PROCESS_VM_OPERATION`、`PROCESS_VM_WRITE`、`PROCESS_VM_READ` 中的一部分。权限组合要和前置调用一致。
+
+`lpStartAddress` 是最关键字段。它可能指向目标进程已有模块导出函数、私有内存、映射段或 JIT 区域。需要把地址解析到模块、段、页面保护和内存类型。`lpParameter` 也要记录来源和长度。
+
+## 返回与错误
+
+成功返回线程句柄，不代表线程逻辑一定执行完成。后续通常需要 WaitForSingleObject、GetExitCodeThread 或线程事件来判断执行结果。
+
+```cpp
+DWORD err = thread ? ERROR_SUCCESS : GetLastError();
 ```
 
 ## 复核点
 
-```text
-线程相关结果要和进程、模块、栈和时间点对齐，单独一个 TID 意义有限
-```
-
-调用笔记只保留能复现判断的内容：输入、输出、错误码、调用身份、系统版本和目标对象状态。敏感原始值单独存放，不混进普通文档。
+记录调用进程、目标进程、线程起始地址、参数地址、页面保护、关联模块、线程 ID 和后续退出码。若起始地址位于私有可执行内存，或前面有跨进程写入行为，需要完整保存时间线。

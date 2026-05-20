@@ -1,29 +1,33 @@
 # Windows API 调用笔记：LookupAccountNameW
 
-LookupAccountNameW 常用于 Token、SID、权限、ACL 和访问判定复核。先写一个最小调用，确认返回值和错误码，再结合具体场景复核。
+LookupAccountNameW 用于把账户名解析为 SID。它适合确认配置文件中的账号、服务运行账户、ACL 输入项和域账户引用。账户名解析依赖上下文，短名、UPN、域前缀、本机名前缀得到的结果可能不同。
 
 ## 入口
 
 ```text
-DLL: advapi32.dll; Header: securitybaseapi.h / aclapi.h / sddl.h / authz.h
+DLL: advapi32.dll; Header: winbase.h
 ```
 
 ```cpp
-auto result = LookupAccountNameW(...);
+BOOL ok = LookupAccountNameW(systemName, accountName, sid, &sidLen, domain, &domainLen, &use);
 ```
 
 ```powershell
 dumpbin /exports C:\Windows\System32\advapi32.dll | findstr /i LookupAccountNameW
 ```
 
-## 记录字段
+## 参数关注
 
-```text
-字段: SID, token type, integrity level, privilege, access mask, DACL
+`lpAccountName` 要保存原始输入。`DOMAIN\User`、`User@domain`、`NT SERVICE\Name`、`BUILTIN\Administrators` 都可能进入这里。`lpSystemName` 会影响本机账号和域账号解析优先级。
+
+## 返回与错误
+
+`ERROR_INSUFFICIENT_BUFFER` 常用于获取 SID 和域名缓冲区大小。`ERROR_NONE_MAPPED` 表示找不到对应 SID，排查时要确认域连接状态和输入格式。
+
+```cpp
+BOOL ok = LookupAccountNameW(nullptr, name, nullptr, &sidLen, nullptr, &domainLen, &use);
 ```
 
-```text
-复核: 权限判断要把 token、DACL、完整性级别和 UAC 过滤状态放一起看
-```
+## 复核点
 
-调用成功只代表入口可达；返回值、错误码、调用身份和目标对象当时的状态需要放在同一条记录里复核。
+记录输入账户名、解析主机、输出 SID、域名、账户类型和错误码。涉及权限配置时，最终判断以 SID 为准，显示名只作为辅助信息。

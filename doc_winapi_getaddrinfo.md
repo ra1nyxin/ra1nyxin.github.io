@@ -1,29 +1,33 @@
 # Windows API 调用笔记：getaddrinfo
 
-getaddrinfo 常用于 Winsock 初始化、解析、协议枚举和 Socket 控制。先写一个最小调用，确认返回值和错误码，再结合具体场景复核。
+getaddrinfo 用于把主机名和服务名解析成可连接地址列表。它常见于网络客户端、代理、同步工具和服务探测程序。分析外联时，域名解析结果要和后续 connect 的目标地址对应起来。
 
 ## 入口
 
 ```text
-DLL: ws2_32.dll; Header: winsock2.h / ws2tcpip.h
+DLL: ws2_32.dll; Header: ws2tcpip.h
 ```
 
 ```cpp
-auto result = getaddrinfo(...);
+int rc = getaddrinfo(host, service, &hints, &result);
 ```
 
 ```powershell
 dumpbin /exports C:\Windows\System32\ws2_32.dll | findstr /i getaddrinfo
 ```
 
-## 记录字段
+## 参数关注
 
-```text
-字段: address family, protocol, socket option, ioctl code, WSA error
+`node` 是主机名或 IP，`service` 可以是端口或服务名。`hints` 控制地址族、socket 类型、协议和标志。`AI_ADDRCONFIG`、`AI_PASSIVE`、`AI_NUMERICHOST` 会影响结果。
+
+## 返回与释放
+
+成功后返回链表，使用 freeaddrinfo 释放。错误码来自返回值，可用 gai_strerrorA 辅助显示。
+
+```cpp
+freeaddrinfo(result);
 ```
 
-```text
-复核: 网络错误要记录 WSAGetLastError 的值，普通 GetLastError 经常不够
-```
+## 复核点
 
-调用成功只代表入口可达；返回值、错误码、调用身份和目标对象当时的状态需要放在同一条记录里复核。
+记录输入域名、服务名、hints、返回地址列表、地址顺序和调用时间。若程序使用自带 DNS、DoH、代理或缓存，getaddrinfo 结果可能无法覆盖全部解析路径。
