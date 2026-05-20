@@ -1,6 +1,6 @@
 # Windows API 调用笔记：TdhQueryProviderFieldInformation
 
-TdhQueryProviderFieldInformation 常用于 ETW 事件属性、Map 信息和 Provider Manifest 元数据解析。建议先做最小调用，记录返回值、错误码和调用上下文，再结合具体样本或现场现象判断。
+TdhQueryProviderFieldInformation 多见于事件日志、ETW 和 Trace Session 排查场景，实际使用时通常围绕订阅、查询、格式化、写入或消费 Windows 事件。它们经常出现在检测工具、审计代理、EDR、诊断组件和系统服务里。关键点是 Provider、Channel、Query、Session 名称、事件 ID、Level、Keyword、ActivityId 和返回位置。
 
 ## 入口
 
@@ -16,16 +16,20 @@ auto result = TdhQueryProviderFieldInformation(...);
 dumpbin /exports C:\Windows\System32\tdh.dll | findstr /i TdhQueryProviderFieldInformation
 ```
 
-## 记录字段
+## 参数与上下文
 
-```text
-provider GUID, event descriptor, property name, in type, out type, map name
+事件接口的参数通常包含句柄、查询字符串、渲染模式、缓冲区和回调。查询类接口要保留 XPath 或 structured query；订阅类接口要写清起点、书签和回调线程；ETW 控制类接口要记录 session name、provider GUID、enable flags、level 和 match any/all keyword。
+
+看到这类接口时，别只记成功或失败。查询对象、输出结构、ReturnLength、错误码和二次调用结果都要放在一起看。
+
+## 返回与错误
+
+Evt* 接口多用 GetLastError，TDH 接口常返回 Win32 错误码，ETW 控制接口也有自己的状态语义。缓冲区不足是正常流程的一部分，不应被当成最终失败。
+
+```cpp
+DWORD err = result ? ERROR_SUCCESS : GetLastError();
 ```
 
 ## 复核点
 
-```text
-TDH 解析适合把原始 ETW 字段转成人能读的结构，原始事件也要保留
-```
-
-调用笔记只保留能复现判断的内容：输入、输出、错误码、调用身份、系统版本和目标对象状态。敏感原始值单独存放，不混进普通文档。
+复查时，把事件来源、订阅范围、过滤条件、时间窗口和权限放在同一条记录里。涉及安全日志、Sysmon、自定义 Provider 或实时 Trace 时，还要保存丢事件、权限不足和 Provider 未启用的证据。

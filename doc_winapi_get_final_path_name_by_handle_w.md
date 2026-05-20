@@ -1,6 +1,6 @@
 # Windows API 调用笔记：GetFinalPathNameByHandleW
 
-GetFinalPathNameByHandleW 常用于 进程线程、文件、内存、同步对象和调试状态的基础系统调用。先写一个最小调用，确认返回值和错误码，再结合具体场景复核。
+GetFinalPathNameByHandleW 多见于模块加载、PE 映像、符号和信任辅助场景，主要覆盖 DLL 加载、导出解析、搜索路径控制、PE 映像处理、符号解析、栈回溯和信任辅助检查。记录时保留模块路径、搜索目录、加载标志、导出名、基址、签名状态和符号路径。
 
 ## 入口
 
@@ -16,14 +16,20 @@ auto result = GetFinalPathNameByHandleW(...);
 dumpbin /exports C:\Windows\System32\kernel32.dll | findstr /i GetFinalPathNameByHandleW
 ```
 
-## 记录字段
+## 参数与上下文
 
-```text
-字段: handle, access mask, target object, return value, GetLastError
+Loader 接口要记录 DLL 名称、完整路径、LoadLibraryEx flags、搜索路径和调用线程。映像/符号接口要记录文件句柄、映射基址、模块基址、PDB 路径、符号服务器和回溯上下文。
+
+查询类调用的重点在信息类别和缓冲区处理。先记录请求了什么，再记录实际返回了多少数据，以及状态码是否符合预期。
+
+## 返回与错误
+
+Loader 多返回模块句柄或 BOOL，DbgHelp/ImageHlp 接口错误信息依赖 GetLastError。符号接口受全局进程状态影响，同一进程内初始化和清理顺序要写清楚。
+
+```cpp
+DWORD err = result ? ERROR_SUCCESS : GetLastError();
 ```
 
-```text
-复核: 先记录返回值和错误码，再决定是否继续查对象权限或系统事件
-```
+## 复核点
 
-调用成功只代表入口可达；返回值、错误码、调用身份和目标对象当时的状态需要放在同一条记录里复核。
+复查时，把模块来源、签名、哈希、加载顺序、搜索路径、导出函数和调用栈关联。DLL 劫持、旁加载、插件加载和崩溃分析都依赖这些字段。

@@ -1,6 +1,6 @@
 # Windows API 调用笔记：MiniDumpWriteDump
 
-MiniDumpWriteDump 常用于 符号加载、栈回溯、MiniDump 和 PE 辅助分析。建议先做最小调用，记录返回值、错误码和调用上下文，再结合具体样本或现场现象判断。
+MiniDumpWriteDump 多见于进程、线程、内存、同步和调试状态场景，主要处理基础运行时状态管理，覆盖内存区域、线程生命周期、同步对象、调试事件、Job 限制和进程枚举。分析时要把目标对象、句柄权限、时间线和后续 API 连接起来看。
 
 ## 入口
 
@@ -16,16 +16,20 @@ auto result = MiniDumpWriteDump(...);
 dumpbin /exports C:\Windows\System32\dbghelp.dll | findstr /i MiniDumpWriteDump
 ```
 
-## 记录字段
+## 参数与上下文
 
-```text
-process handle, symbol path, module base, address, dump type, error code
+内存接口要记录基址、大小、状态、类型、保护属性和目标进程。线程接口要记录线程 ID、起始地址、参数、栈、优先级和等待对象。同步对象要记录名称、命名空间、初始状态、超时和返回码。
+
+这是会改变状态的接口，记录时要保存调用前状态、请求的新状态、调用身份、返回码和回滚路径。安全审计里要把它和前置查询、后续验证放在同一条链路中。
+
+## 返回与错误
+
+Kernel32 接口通常用 GetLastError；Toolhelp 枚举要处理 first/next 的结束状态；等待函数要区分 WAIT_OBJECT_0、WAIT_TIMEOUT、WAIT_FAILED 和 WAIT_ABANDONED。
+
+```cpp
+DWORD err = result ? ERROR_SUCCESS : GetLastError();
 ```
 
 ## 复核点
 
-```text
-符号分析要保存 symbol path 和模块基址，否则同样地址下次可能解析成别的结果
-```
-
-调用笔记只保留能复现判断的内容：输入、输出、错误码、调用身份、系统版本和目标对象状态。敏感原始值单独存放，不混进普通文档。
+回看记录时，把申请、写入、改保护、线程创建、等待和释放放到同一条时间线里。调试和异常相关接口需要关联目标进程、权限、调试对象和事件序列。

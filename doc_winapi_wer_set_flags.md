@@ -1,6 +1,6 @@
 # Windows API 调用笔记：WerSetFlags
 
-WerSetFlags 常用于 错误码、异常处理、Vectored Handler 和崩溃上下文记录。建议先做最小调用，记录返回值、错误码和调用上下文，再结合具体样本或现场现象判断。
+WerSetFlags 多见于错误码、环境块、用户配置文件和版本信息场景，主要处理解释错误、处理用户配置文件、构造环境块、读取版本资源或确认应用身份。它们经常是排查链路里的辅助证据，但会直接影响最终结论。
 
 ## 入口
 
@@ -16,16 +16,20 @@ auto result = WerSetFlags(...);
 dumpbin /exports C:\Windows\System32\kernel32.dll | findstr /i WerSetFlags
 ```
 
-## 记录字段
+## 参数与上下文
 
-```text
-error code, NTSTATUS, exception code, handler order, thread id
+错误码接口要记录原始错误值、来源 API 和转换方式。环境与配置文件接口要记录用户 token、profile path、环境变量来源、加载状态和卸载结果。版本接口要记录文件路径、语言代码页和资源字段。
+
+这是会改变状态的接口，记录时要保存调用前状态、请求的新状态、调用身份、返回码和回滚路径。安全审计里要把它和前置查询、后续验证放在同一条链路中。
+
+## 返回与错误
+
+错误处理接口本身也可能失败，不能覆盖原始错误。Profile/Userenv 接口常需要特定权限和正确的 token 类型。
+
+```cpp
+DWORD err = result ? ERROR_SUCCESS : GetLastError();
 ```
 
 ## 复核点
 
-```text
-错误处理记录要保留原始错误码，过早转成文本会丢上下文
-```
-
-调用笔记只保留能复现判断的内容：输入、输出、错误码、调用身份、系统版本和目标对象状态。敏感原始值单独存放，不混进普通文档。
+回看记录时，把错误码、调用 API、用户上下文、系统版本、文件版本和环境变量放在一起。服务进程和交互用户进程的环境差异尤其容易造成误判。

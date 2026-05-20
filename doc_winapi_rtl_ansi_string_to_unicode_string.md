@@ -1,6 +1,6 @@
 # Windows API 调用笔记：RtlAnsiStringToUnicodeString
 
-RtlAnsiStringToUnicodeString 常用于 RTL 字符串、路径、SID、堆和版本辅助函数复核。建议先做最小调用，记录返回值、错误码和调用上下文，再结合具体样本或现场现象判断。
+RtlAnsiStringToUnicodeString 多见于 NTAPI、RTL 和 Loader 低层接口场景。这类接口更接近系统调用、PEB/TEB、对象管理器、Loader 和原生结构体。记录里要写清结构体来源、系统版本和符号来源，避免把某个版本的字段当成通用事实。
 
 ## 入口
 
@@ -16,16 +16,20 @@ auto result = RtlAnsiStringToUnicodeString(...);
 dumpbin /exports C:\Windows\System32\ntdll.dll | findstr /i RtlAnsiStringToUnicodeString
 ```
 
-## 记录字段
+## 参数与上下文
 
-```text
-UNICODE_STRING, NT path, heap handle, flags, status, converted value
+NTAPI 参数经常包含 UNICODE_STRING、OBJECT_ATTRIBUTES、CLIENT_ID、IO_STATUS_BLOCK、SECTION、TOKEN、KEY、FILE 信息类等结构。记录时要保存信息类、访问掩码、对象名、RootDirectory、Attributes 和 NTSTATUS。
+
+这类记录按生命周期写最清楚：先看对象如何取得，再看执行了什么操作，最后看清理和错误码是否闭合。
+
+## 返回与错误
+
+主要返回 NTSTATUS。需要保留原始十六进制状态，可再转换成 Win32 错误辅助阅读。输出缓冲区和 ReturnLength 是很多查询接口的关键字段。
+
+```cpp
+NTSTATUS status = result;
 ```
 
 ## 复核点
 
-```text
-RTL 辅助函数常见于逆向和底层工具，输入输出结构要比返回值更重要
-```
-
-调用笔记只保留能复现判断的内容：输入、输出、错误码、调用身份、系统版本和目标对象状态。敏感原始值单独存放，不混进普通文档。
+复查时，把 ntdll 导出、系统版本、结构体定义、调用身份、对象命名空间和 Win32 等价接口放在一起对照。低层接口差异大，跨版本结论要保守。

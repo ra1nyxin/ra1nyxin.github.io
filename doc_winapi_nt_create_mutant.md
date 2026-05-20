@@ -1,6 +1,6 @@
 # Windows API 调用笔记：NtCreateMutant
 
-NtCreateMutant 常用于 NT 对象、Section、事件、Mutant、目录对象和符号链接复核。建议先做最小调用，记录返回值、错误码和调用上下文，再结合具体样本或现场现象判断。
+NtCreateMutant 多见于 NTAPI、RTL 和 Loader 低层接口场景。这类接口更接近系统调用、PEB/TEB、对象管理器、Loader 和原生结构体。记录里要写清结构体来源、系统版本和符号来源，避免把某个版本的字段当成通用事实。
 
 ## 入口
 
@@ -16,16 +16,20 @@ auto result = NtCreateMutant(...);
 dumpbin /exports C:\Windows\System32\ntdll.dll | findstr /i NtCreateMutant
 ```
 
-## 记录字段
+## 参数与上下文
 
-```text
-NTSTATUS, object attributes, object name, desired access, handle, information class
+NTAPI 参数经常包含 UNICODE_STRING、OBJECT_ATTRIBUTES、CLIENT_ID、IO_STATUS_BLOCK、SECTION、TOKEN、KEY、FILE 信息类等结构。记录时要保存信息类、访问掩码、对象名、RootDirectory、Attributes 和 NTSTATUS。
+
+这是建立句柄、上下文、映射或连接的入口，重点记录目标对象、访问掩码、创建标志、命名空间和后续释放接口。句柄生命周期通常比单次返回值更能解释现场问题。
+
+## 返回与错误
+
+主要返回 NTSTATUS。需要保留原始十六进制状态，可再转换成 Win32 错误辅助阅读。输出缓冲区和 ReturnLength 是很多查询接口的关键字段。
+
+```cpp
+NTSTATUS status = result;
 ```
 
 ## 复核点
 
-```text
-NT 对象名要按原始 NT 路径保存，转成 DOS 路径后会丢命名空间信息
-```
-
-调用笔记只保留能复现判断的内容：输入、输出、错误码、调用身份、系统版本和目标对象状态。敏感原始值单独存放，不混进普通文档。
+复查时，把 ntdll 导出、系统版本、结构体定义、调用身份、对象命名空间和 Win32 等价接口放在一起对照。低层接口差异大，跨版本结论要保守。

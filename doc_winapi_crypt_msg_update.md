@@ -1,6 +1,6 @@
 # Windows API 调用笔记：CryptMsgUpdate
 
-CryptMsgUpdate 常用于 证书库、编码对象、OID、CRL 和签名消息复核。建议先做最小调用，记录返回值、错误码和调用上下文，再结合具体样本或现场现象判断。
+CryptMsgUpdate 多见于 CNG、CryptoAPI 和密钥材料处理场景。这类接口通常处在加密、签名、摘要、密钥派生或密钥存储链路里。排查时不要只写算法名，还要保存 Provider、算法标识、链模式、密钥长度、IV 或 nonce、认证标签、输入输出长度和返回状态。密钥、明文、派生材料、熵值等内容不进入普通文档，只保留长度、摘要和来源。
 
 ## 入口
 
@@ -16,16 +16,20 @@ auto result = CryptMsgUpdate(...);
 dumpbin /exports C:\Windows\System32\crypt32.dll | findstr /i CryptMsgUpdate
 ```
 
-## 记录字段
+## 参数与上下文
 
-```text
-store name, encoding type, subject, issuer, thumbprint, chain status, last error
+参数里最容易漏掉的是缓冲区长度和属性名称。CNG 很多接口会先查询所需长度，再分配缓冲区读取；CryptoAPI 还要区分旧 CSP、证书库和消息对象。涉及持久化密钥时，需要记录 KSP 名称、密钥名、导出策略、机器范围或用户范围。
+
+这是状态修改类接口，重点记录调用前状态、请求的新状态、调用身份、目标对象和返回码。审计时要把前置查询、修改调用和后续验证放在同一条链路里。
+
+## 返回与错误
+
+CNG 常返回 NTSTATUS，CryptoAPI 多数通过 BOOL 配合 GetLastError。两套错误体系不要混写，记录时保留原始状态值和转换后的可读含义。
+
+```cpp
+NTSTATUS status = result;
 ```
 
 ## 复核点
 
-```text
-证书相关记录要区分存储位置、链验证结果和用途，不能只写证书存在
-```
-
-调用笔记只保留能复现判断的内容：输入、输出、错误码、调用身份、系统版本和目标对象状态。敏感原始值单独存放，不混进普通文档。
+复核时，将算法、模式、密钥来源、调用身份、系统版本和数据流向放在一起看。遇到签名、证书、DPAPI、密钥导入导出相关接口，要额外记录证书链状态、用途、时间戳和私钥访问边界。

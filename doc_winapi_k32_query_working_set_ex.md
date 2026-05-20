@@ -1,6 +1,6 @@
 # Windows API 调用笔记：K32QueryWorkingSetEx
 
-K32QueryWorkingSetEx 常用于 模块、设备驱动、进程快照和映像路径交叉验证。建议先做最小调用，记录返回值、错误码和调用上下文，再结合具体样本或现场现象判断。
+K32QueryWorkingSetEx 多见于进程内存、性能计数和资源状态查询场景，主要覆盖读取进程内存占用、工作集、句柄数量、I/O 计数、时间片和缓解策略等运行状态。它适合性能排查、取证基线、异常进程分析和沙箱行为记录。
 
 ## 入口
 
@@ -16,16 +16,20 @@ auto result = K32QueryWorkingSetEx(...);
 dumpbin /exports C:\Windows\System32\psapi.dll | findstr /i K32QueryWorkingSetEx
 ```
 
-## 记录字段
+## 参数与上下文
 
-```text
-pid, module base, module size, driver base, image path, snapshot flags
+查询类接口要记录目标进程句柄、请求的信息类别、结构体版本、输入缓冲区长度、输出长度和采样时间。进程状态变化很快，记录时要保存 PID、创建时间和镜像路径，避免 PID 复用造成误判。
+
+查询类调用的重点在信息类别和缓冲区处理。先记录请求了什么，再记录实际返回了多少数据，以及状态码是否符合预期。
+
+## 返回与错误
+
+这些接口通常返回 BOOL 或 DWORD 状态，失败时读取 GetLastError。结构体大小不匹配、权限不足、目标进程退出和系统版本差异是常见失败原因。
+
+```cpp
+DWORD err = result ? ERROR_SUCCESS : GetLastError();
 ```
 
 ## 复核点
 
-```text
-模块枚举要注意 32/64 位差异，必要时用多套接口互相印证
-```
-
-调用笔记只保留能复现判断的内容：输入、输出、错误码、调用身份、系统版本和目标对象状态。敏感原始值单独存放，不混进普通文档。
+复核时，将内存、句柄、线程、I/O、CPU 时间和 Job 限制一起看。单个数值只能说明某个采样点，连续采样和事件时间线更有参考价值。

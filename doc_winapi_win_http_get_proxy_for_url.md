@@ -1,6 +1,6 @@
 # Windows API 调用笔记：WinHttpGetProxyForUrl
 
-WinHttpGetProxyForUrl 用于根据 WinHTTP 自动代理配置为指定 URL 计算代理。它常见于企业代理、PAC、WPAD、系统服务外联和更新器网络排查。
+WinHttpGetProxyForUrl 用于根据 WinHTTP 自动代理配置为指定 URL 计算代理。常见落点包括企业代理、PAC、WPAD、系统服务外联和更新器网络排查。
 
 ## 入口
 

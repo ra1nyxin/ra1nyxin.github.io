@@ -1,6 +1,6 @@
 # Windows API 调用笔记：LsaOpenPolicy
 
-LsaOpenPolicy 用于打开本机或远程系统的 LSA Policy 句柄。它常见于账号权限、审计策略、域信息、SID 查询和安全配置核查。LSA 接口返回 NTSTATUS，需要按 LSA 规则处理。
+LsaOpenPolicy 用于打开本机或远程系统的 LSA Policy 句柄。常见落点包括账号权限、审计策略、域信息、SID 查询和安全配置核查。LSA 接口返回 NTSTATUS，需要按 LSA 规则处理。
 
 ## 入口
 

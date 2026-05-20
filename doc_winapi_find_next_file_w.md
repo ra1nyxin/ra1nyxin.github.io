@@ -1,6 +1,6 @@
 # Windows API 调用笔记：FindNextFileW
 
-FindNextFileW 常用于 进程线程、文件、内存、同步对象和调试状态的基础系统调用。先写一个最小调用，确认返回值和错误码，再结合具体场景复核。
+FindNextFileW 多见于 Shell、路径规范化、URL 和资源解析场景。这类调用常用来路径拼接、Shell 对象解析、文件关联、URL 处理、资源加载和桌面集成。排查时需要保留用户输入、规范化结果、最终路径和对象类型，避免被符号链接、短路径、UNC、重解析点或转义差异误导。
 
 ## 入口
 
@@ -16,14 +16,20 @@ auto result = FindNextFileW(...);
 dumpbin /exports C:\Windows\System32\kernel32.dll | findstr /i FindNextFileW
 ```
 
-## 记录字段
+## 参数与上下文
 
-```text
-字段: handle, access mask, target object, return value, GetLastError
+路径函数要记录输入长度、输出缓冲区、是否允许长路径、是否保留尾随反斜杠和是否解析根目录。Shell 接口要记录 PIDL、绑定对象、解析标志、窗口句柄和 COM 初始化状态。URL 接口要区分编码、解码、组合和 canonicalize 的顺序。
+
+这是枚举或迭代类接口，重点记录枚举范围、过滤条件、游标位置、返回数量和结束状态。分页或批量返回时，要保留每批结果的顺序，方便后续和日志时间线对齐。
+
+## 返回与错误
+
+Shell 和 PathCch 多数使用 HRESULT，旧 Path API 可能返回 BOOL 或指针。返回成功后仍要确认输出字符串长度和截断状态。
+
+```cpp
+HRESULT hr = result;
 ```
 
-```text
-复核: 先记录返回值和错误码，再决定是否继续查对象权限或系统事件
-```
+## 复核点
 
-调用成功只代表入口可达；返回值、错误码、调用身份和目标对象当时的状态需要放在同一条记录里复核。
+复查时，把原始输入、规范化输出、最终对象、调用身份和当前目录放在一起保存。涉及文件关联、协议处理器或 ShellExecute 的链路，还要记录打开方式和注册表来源。

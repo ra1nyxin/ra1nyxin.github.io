@@ -1,6 +1,6 @@
 # Windows API 调用笔记：WTSQueryUserConfigW
 
-WTSQueryUserConfigW 常用于 终端服务、会话消息、远程控制和会话变化复核。建议先做最小调用，记录返回值、错误码和调用上下文，再结合具体样本或现场现象判断。
+WTSQueryUserConfigW 多见于服务控制、目录服务、SAM、NetAPI 和会话管理场景。这类调用常用来服务管理、账号枚举、域信息查询、会话读取和远程管理。判断时要明确目标主机、调用身份、访问掩码、分页状态和返回结构级别。
 
 ## 入口
 
@@ -16,16 +16,20 @@ auto result = WTSQueryUserConfigW(...);
 dumpbin /exports C:\Windows\System32\wtsapi32.dll | findstr /i WTSQueryUserConfigW
 ```
 
-## 记录字段
+## 参数与上下文
 
-```text
-server handle, session id, user, state, message result, process id
+服务接口要记录服务名、显示名、二进制路径、启动类型、运行账号和 SCM 访问掩码。NetAPI/SAM/DS/WTS 接口要记录服务器名、信息级别、resume handle、返回数量、域 SID、会话 ID 和成员类型。
+
+看到这类接口时，别只记成功或失败。查询对象、输出结构、ReturnLength、错误码和二次调用结果都要放在一起看。
+
+## 返回与错误
+
+NetAPI 返回 NET_API_STATUS，LSA/SAM 多用 NTSTATUS，WTS 和服务控制多用 BOOL/GetLastError。返回缓冲区要按对应 API 用 NetApiBufferFree、LsaFreeMemory、SamFreeMemory 或 WTSFreeMemory 释放。
+
+```cpp
+DWORD err = result ? ERROR_SUCCESS : GetLastError();
 ```
 
 ## 复核点
 
-```text
-终端服务接口要写 session id 和 server handle，本机和远程服务器结果不同
-```
-
-调用笔记只保留能复现判断的内容：输入、输出、错误码、调用身份、系统版本和目标对象状态。敏感原始值单独存放，不混进普通文档。
+最后核对时，把远程主机、认证来源、管理员权限、网络连接、事件日志和对象字段一起保存。账号、组、共享、会话和服务变更应放在同一条管理行为时间线里。

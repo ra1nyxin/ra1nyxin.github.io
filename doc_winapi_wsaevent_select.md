@@ -1,6 +1,6 @@
 # Windows API 调用笔记：WSAEventSelect
 
-WSAEventSelect 常用于 Socket 生命周期、选项、地址转换和异步网络事件。建议先做最小调用，记录返回值、错误码和调用上下文，再结合具体样本或现场现象判断。
+WSAEventSelect 多见于设备枚举、驱动、无线和系统能力查询场景，主要覆盖枚举设备、读取设备属性、处理通知、查询无线配置、检查驱动和系统能力。它们常见于资产采集、硬件诊断、终端管控、无线排查和安全代理。
 
 ## 入口
 
@@ -16,16 +16,20 @@ auto result = WSAEventSelect(...);
 dumpbin /exports C:\Windows\System32\ws2_32.dll | findstr /i WSAEventSelect
 ```
 
-## 记录字段
+## 参数与上下文
 
-```text
-socket, address, port, flags, option level, WSA error
+SetupAPI 和 CfgMgr32 要记录设备实例 ID、Class GUID、接口 GUID、属性键、缓冲区长度和返回的 DEVINST。WLAN/RAS/电源相关接口要记录接口 GUID、profile、连接状态、策略 GUID 和调用权限。
+
+这类记录按生命周期写最清楚：先看对象如何取得，再看执行了什么操作，最后看清理和错误码是否闭合。
+
+## 返回与错误
+
+设备类接口经常用 BOOL、CONFIGRET 或 DWORD 状态。枚举函数要记录索引、结束条件和缓冲区不足状态，释放函数要与分配来源配套。
+
+```cpp
+int err = result == SOCKET_ERROR ? WSAGetLastError() : 0;
 ```
 
 ## 复核点
 
-```text
-Socket 调试要把 address family、protocol 和 WSA 错误码写全
-```
-
-调用笔记只保留能复现判断的内容：输入、输出、错误码、调用身份、系统版本和目标对象状态。敏感原始值单独存放，不混进普通文档。
+复核时保存设备路径、驱动文件、签名状态、硬件 ID、类 GUID、用户权限和系统版本。无线和远程访问接口还要关联 profile 来源、认证方式和连接时间。

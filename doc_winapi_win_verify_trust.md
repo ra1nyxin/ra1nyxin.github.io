@@ -20,7 +20,7 @@ dumpbin /exports C:\Windows\System32\wintrust.dll | findstr /i WinVerifyTrust
 
 常见策略是 `WINTRUST_ACTION_GENERIC_VERIFY_V2`。`WINTRUST_DATA` 里的 UI 选项、撤销检查、状态动作、文件信息和策略标志都要保存。验证结束后需要用 `WTD_STATEACTION_CLOSE` 关闭状态数据。
 
-签名验证不是只看返回零。还要确认签名者、证书链、EKU、时间戳、目录签名、文件哈希和撤销检查策略。离线环境可能拿不到撤销信息，需要在结果里写明。
+签名验证需要同时确认签名者、证书链、EKU、时间戳、目录签名、文件哈希和撤销检查策略，返回零只说明当前策略下验证通过。离线环境可能拿不到撤销信息，需要在结果里写明。
 
 ## 返回与错误
 

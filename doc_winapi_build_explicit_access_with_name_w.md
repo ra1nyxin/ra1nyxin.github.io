@@ -1,6 +1,6 @@
 # Windows API 调用笔记：BuildExplicitAccessWithNameW
 
-BuildExplicitAccessWithNameW 常用于 进程线程、文件、内存、同步对象和调试状态的基础系统调用。先写一个最小调用，确认返回值和错误码，再结合具体场景复核。
+BuildExplicitAccessWithNameW 多见于注册表、ACL、SID 和安全描述符处理场景。这类接口多用于配置读取、权限判断、持久化排查、策略核查和对象安全边界分析。注册表与安全描述符都要保留原始输入和解析结果，单独的显示名或字符串路径不足以支撑结论。
 
 ## 入口
 
@@ -16,14 +16,20 @@ auto result = BuildExplicitAccessWithNameW(...);
 dumpbin /exports C:\Windows\System32\kernel32.dll | findstr /i BuildExplicitAccessWithNameW
 ```
 
-## 记录字段
+## 参数与上下文
 
-```text
-字段: handle, access mask, target object, return value, GetLastError
+注册表接口要记录根键、子键、WOW64 视图、访问掩码、值类型和数据长度。ACL/SID/SDDL 接口要记录 owner、group、DACL、SACL、ACE 顺序、继承标志和 SID_NAME_USE。涉及转换函数时，需要保存转换前后的字符串和二进制长度。
+
+上下文比单次调用更重要。记录对象来源、访问权限、返回状态和后续 API，后面复盘时才不容易断线。
+
+## 返回与错误
+
+注册表 API 常返回 LSTATUS，安全描述符相关 API 多用 BOOL 和 GetLastError。读取类接口遇到缓冲区不足时要再次读取，枚举类接口要记录索引和结束状态。
+
+```cpp
+DWORD err = result ? ERROR_SUCCESS : GetLastError();
 ```
 
-```text
-复核: 先记录返回值和错误码，再决定是否继续查对象权限或系统事件
-```
+## 复核点
 
-调用成功只代表入口可达；返回值、错误码、调用身份和目标对象当时的状态需要放在同一条记录里复核。
+复核时关注 Run、Services、Winlogon、IFEO、COM、Policies、Shell Extension 等敏感位置，同时核对 NTFS ACL、服务权限、完整性级别和调用身份。

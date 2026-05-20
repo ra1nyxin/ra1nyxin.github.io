@@ -1,6 +1,6 @@
 # Windows API 调用笔记：WTSUnRegisterSessionNotification
 
-WTSUnRegisterSessionNotification 常用于 RDP 会话、控制台会话和登录用户上下文枚举。先写一个最小调用，确认返回值和错误码，再结合具体场景复核。
+WTSUnRegisterSessionNotification 多见于服务控制、目录服务、SAM、NetAPI 和会话管理场景。这类调用常用来服务管理、账号枚举、域信息查询、会话读取和远程管理。判断时要明确目标主机、调用身份、访问掩码、分页状态和返回结构级别。
 
 ## 入口
 
@@ -16,14 +16,20 @@ auto result = WTSUnRegisterSessionNotification(...);
 dumpbin /exports C:\Windows\System32\wtsapi32.dll | findstr /i WTSUnRegisterSessionNotification
 ```
 
-## 记录字段
+## 参数与上下文
 
-```text
-字段: session id, station name, username, domain, connect state, token availability
+服务接口要记录服务名、显示名、二进制路径、启动类型、运行账号和 SCM 访问掩码。NetAPI/SAM/DS/WTS 接口要记录服务器名、信息级别、resume handle、返回数量、域 SID、会话 ID 和成员类型。
+
+这是建立句柄、连接、映射或上下文的入口，重点记录目标对象、访问掩码、创建标志、命名空间和后续释放接口。句柄生命周期经常比单次返回值更能解释问题。
+
+## 返回与错误
+
+NetAPI 返回 NET_API_STATUS，LSA/SAM 多用 NTSTATUS，WTS 和服务控制多用 BOOL/GetLastError。返回缓冲区要按对应 API 用 NetApiBufferFree、LsaFreeMemory、SamFreeMemory 或 WTSFreeMemory 释放。
+
+```cpp
+LSTATUS status = result;
 ```
 
-```text
-复核: 会话信息可能包含隐私字段，记录时保留判断所需的最小字段
-```
+## 复核点
 
-调用成功只代表入口可达；返回值、错误码、调用身份和目标对象当时的状态需要放在同一条记录里复核。
+复查时，把远程主机、认证来源、管理员权限、网络连接、事件日志和对象字段一起保存。账号、组、共享、会话和服务变更应放在同一条管理行为时间线里。

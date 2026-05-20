@@ -1,6 +1,6 @@
 # Windows API 调用笔记：NtQueryDefaultUILanguage
 
-NtQueryDefaultUILanguage 常用于 NT 系统状态、性能、时间和系统环境查询。建议先做最小调用，记录返回值、错误码和调用上下文，再结合具体样本或现场现象判断。
+NtQueryDefaultUILanguage 多见于 NTAPI、RTL 和 Loader 低层接口场景。这类接口更接近系统调用、PEB/TEB、对象管理器、Loader 和原生结构体。记录里要写清结构体来源、系统版本和符号来源，避免把某个版本的字段当成通用事实。
 
 ## 入口
 
@@ -16,16 +16,20 @@ auto result = NtQueryDefaultUILanguage(...);
 dumpbin /exports C:\Windows\System32\ntdll.dll | findstr /i NtQueryDefaultUILanguage
 ```
 
-## 记录字段
+## 参数与上下文
 
-```text
-system information class, buffer length, NTSTATUS, timestamp, counter value
+NTAPI 参数经常包含 UNICODE_STRING、OBJECT_ATTRIBUTES、CLIENT_ID、IO_STATUS_BLOCK、SECTION、TOKEN、KEY、FILE 信息类等结构。记录时要保存信息类、访问掩码、对象名、RootDirectory、Attributes 和 NTSTATUS。
+
+这类调用经常会先拿长度再取数据，缓冲区不足不一定是异常。记录最终成功读取的内容和前面的探测过程更有价值。
+
+## 返回与错误
+
+主要返回 NTSTATUS。需要保留原始十六进制状态，可再转换成 Win32 错误辅助阅读。输出缓冲区和 ReturnLength 是很多查询接口的关键字段。
+
+```cpp
+NTSTATUS status = result;
 ```
 
 ## 复核点
 
-```text
-系统信息类要写编号和结构名，网上资料很多会随 Windows 版本漂移
-```
-
-调用笔记只保留能复现判断的内容：输入、输出、错误码、调用身份、系统版本和目标对象状态。敏感原始值单独存放，不混进普通文档。
+整理证据时，把 ntdll 导出、系统版本、结构体定义、调用身份、对象命名空间和 Win32 等价接口放在一起对照。低层接口差异大，跨版本结论要保守。

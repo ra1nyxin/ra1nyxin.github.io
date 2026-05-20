@@ -1,6 +1,6 @@
 # Windows API 调用笔记：DnsFlushResolverCache
 
-DnsFlushResolverCache 用于清空本机 DNS 解析器缓存。它常见于网络修复工具、安装器、VPN 客户端、代理软件和排障脚本。调用后会影响后续域名解析结果。
+DnsFlushResolverCache 用于清空本机 DNS 解析器缓存。常见落点包括网络修复工具、安装器、VPN 客户端、代理软件和排障脚本。调用后会影响后续域名解析结果。
 
 ## 入口
 

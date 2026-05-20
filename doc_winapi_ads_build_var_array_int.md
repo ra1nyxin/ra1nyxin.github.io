@@ -1,6 +1,6 @@
 # Windows API 调用笔记：ADsBuildVarArrayInt
 
-ADsBuildVarArrayInt 常用于 ADSI 对象绑定、目录对象属性和组关系复核。建议先做最小调用，记录返回值、错误码和调用上下文，再结合具体样本或现场现象判断。
+ADsBuildVarArrayInt 多见于 ADSI 目录对象绑定和属性访问场景。ADSI 接口用于绑定 Active Directory、LDAP、WinNT provider 或其他目录对象，并读取属性、枚举对象或执行目录操作。记录时保留 ADsPath、绑定身份、认证标志、对象类、属性名和错误扩展信息。
 
 ## 入口
 
@@ -16,16 +16,20 @@ auto result = ADsBuildVarArrayInt(...);
 dumpbin /exports C:\Windows\System32\activeds.dll | findstr /i ADsBuildVarArrayInt
 ```
 
-## 记录字段
+## 参数与上下文
 
-```text
-ADsPath, object class, property name, HRESULT, variant type
+绑定类接口要记录路径、用户名形式、认证标志和 provider。枚举类接口要记录枚举器来源、批次大小和结束状态。内存辅助函数要确认分配和释放来源一致。
+
+上下文比单次调用更重要。记录对象来源、访问权限、返回状态和后续 API，后面复盘时才不容易断线。
+
+## 返回与错误
+
+ADSI 大量接口返回 HRESULT，扩展错误可通过 ADsGetLastError 获取。HRESULT 只能说明 COM/ADSI 层状态，目录服务返回码也要保存。
+
+```cpp
+HRESULT hr = result;
 ```
 
 ## 复核点
 
-```text
-ADSI 适合做管理型查询，记录 ADsPath 和属性名比记录显示名更稳定
-```
-
-调用笔记只保留能复现判断的内容：输入、输出、错误码、调用身份、系统版本和目标对象状态。敏感原始值单独存放，不混进普通文档。
+复核时，将 ADsPath、域控、LDAP 查询、绑定身份、对象 DN、属性列表和网络连接对齐。涉及跨域或信任关系时，记录域名解析和 DC 选择结果。

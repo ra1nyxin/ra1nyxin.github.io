@@ -1,6 +1,6 @@
 # Windows API 调用笔记：SetupDiGetDeviceRegistryPropertyW
 
-SetupDiGetDeviceRegistryPropertyW 常用于 设备枚举、驱动信息、接口路径和硬件 ID 核对。建议先做最小调用，记录返回值、错误码和调用上下文，再结合具体样本或现场现象判断。
+SetupDiGetDeviceRegistryPropertyW 多见于注册表、ACL、SID 和安全描述符处理场景。这类接口多用于配置读取、权限判断、持久化排查、策略核查和对象安全边界分析。注册表与安全描述符都要保留原始输入和解析结果，单独的显示名或字符串路径不足以支撑结论。
 
 ## 入口
 
@@ -16,16 +16,20 @@ auto result = SetupDiGetDeviceRegistryPropertyW(...);
 dumpbin /exports C:\Windows\System32\setupapi.dll | findstr /i SetupDiGetDeviceRegistryPropertyW
 ```
 
-## 记录字段
+## 参数与上下文
 
-```text
-device instance id, class GUID, interface path, hardware id, error code
+注册表接口要记录根键、子键、WOW64 视图、访问掩码、值类型和数据长度。ACL/SID/SDDL 接口要记录 owner、group、DACL、SACL、ACE 顺序、继承标志和 SID_NAME_USE。涉及转换函数时，需要保存转换前后的字符串和二进制长度。
+
+这是会改变状态的接口，记录时要保存调用前状态、请求的新状态、调用身份、返回码和回滚路径。安全审计里要把它和前置查询、后续验证放在同一条链路中。
+
+## 返回与错误
+
+注册表 API 常返回 LSTATUS，安全描述符相关 API 多用 BOOL 和 GetLastError。读取类接口遇到缓冲区不足时要再次读取，枚举类接口要记录索引和结束状态。
+
+```cpp
+LSTATUS status = result;
 ```
 
 ## 复核点
 
-```text
-设备枚举要写 class GUID 和 interface path，显示名经常不足以定位设备
-```
-
-调用笔记只保留能复现判断的内容：输入、输出、错误码、调用身份、系统版本和目标对象状态。敏感原始值单独存放，不混进普通文档。
+复核时关注 Run、Services、Winlogon、IFEO、COM、Policies、Shell Extension 等敏感位置，同时核对 NTFS ACL、服务权限、完整性级别和调用身份。

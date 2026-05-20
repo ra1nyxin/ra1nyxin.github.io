@@ -1,6 +1,6 @@
 # Windows API 调用笔记：ldap::sslinitW
 
-ldap::sslinitW 常用于 LDAP 连接、绑定、搜索和目录属性读取。建议先做最小调用，记录返回值、错误码和调用上下文，再结合具体样本或现场现象判断。
+ldap::sslinitW 常见于 设备枚举、驱动、无线和系统能力查询排查。这类调用主要覆盖枚举设备、读取设备属性、处理通知、查询无线配置、检查驱动和系统能力。它们常见于资产采集、硬件诊断、终端管控、无线排查和安全代理。
 
 ## 入口
 
@@ -16,16 +16,20 @@ DLL: wldap32.dll; Header: winldap.h
 oleview.exe
 ```
 
-## 记录字段
+## 参数与上下文
 
-```text
-server, base DN, filter, scope, attribute list, result code
+SetupAPI 和 CfgMgr32 要记录设备实例 ID、Class GUID、接口 GUID、属性键、缓冲区长度和返回的 DEVINST。WLAN/RAS/电源相关接口要记录接口 GUID、profile、连接状态、策略 GUID 和调用权限。
+
+这类记录按生命周期写最清楚：先看对象如何取得，再看执行了什么操作，最后看清理和错误码是否闭合。
+
+## 返回与错误
+
+设备类接口经常用 BOOL、CONFIGRET 或 DWORD 状态。枚举函数要记录索引、结束条件和缓冲区不足状态，释放函数要与分配来源配套。
+
+```cpp
+HRESULT hr = result;
 ```
 
 ## 复核点
 
-```text
-LDAP 查询必须保存 base DN、filter 和 scope，结果条数本身没有上下文意义
-```
-
-调用笔记只保留能复现判断的内容：输入、输出、错误码、调用身份、系统版本和目标对象状态。敏感原始值单独存放，不混进普通文档。
+复核时保存设备路径、驱动文件、签名状态、硬件 ID、类 GUID、用户权限和系统版本。无线和远程访问接口还要关联 profile 来源、认证方式和连接时间。

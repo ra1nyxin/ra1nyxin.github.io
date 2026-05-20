@@ -1,6 +1,6 @@
 # Windows API 调用笔记：ConvertSecurityDescriptorToStringSecurityDescriptorW
 
-ConvertSecurityDescriptorToStringSecurityDescriptorW 常用于 安全描述符、SACL/DACL、继承关系和 SDDL 转换。建议先做最小调用，记录返回值、错误码和调用上下文，再结合具体样本或现场现象判断。
+ConvertSecurityDescriptorToStringSecurityDescriptorW 多见于注册表、ACL、SID 和安全描述符处理场景。这类接口多用于配置读取、权限判断、持久化排查、策略核查和对象安全边界分析。注册表与安全描述符都要保留原始输入和解析结果，单独的显示名或字符串路径不足以支撑结论。
 
 ## 入口
 
@@ -16,16 +16,20 @@ auto result = ConvertSecurityDescriptorToStringSecurityDescriptorW(...);
 dumpbin /exports C:\Windows\System32\advapi32.dll | findstr /i ConvertSecurityDescriptorToStringSecurityDescriptorW
 ```
 
-## 记录字段
+## 参数与上下文
 
-```text
-object type, SDDL, owner, group, DACL present, inheritance flags
+注册表接口要记录根键、子键、WOW64 视图、访问掩码、值类型和数据长度。ACL/SID/SDDL 接口要记录 owner、group、DACL、SACL、ACE 顺序、继承标志和 SID_NAME_USE。涉及转换函数时，需要保存转换前后的字符串和二进制长度。
+
+调用链最好按阶段拆开看：句柄从哪里来、对象是否被修改、返回值有没有被继续使用，都要留在同一条记录里。
+
+## 返回与错误
+
+注册表 API 常返回 LSTATUS，安全描述符相关 API 多用 BOOL 和 GetLastError。读取类接口遇到缓冲区不足时要再次读取，枚举类接口要记录索引和结束状态。
+
+```cpp
+DWORD err = result ? ERROR_SUCCESS : GetLastError();
 ```
 
 ## 复核点
 
-```text
-ACL 记录要保留对象类型和继承标志，单个 ACE 很难解释最终访问结果
-```
-
-调用笔记只保留能复现判断的内容：输入、输出、错误码、调用身份、系统版本和目标对象状态。敏感原始值单独存放，不混进普通文档。
+复核时关注 Run、Services、Winlogon、IFEO、COM、Policies、Shell Extension 等敏感位置，同时核对 NTFS ACL、服务权限、完整性级别和调用身份。

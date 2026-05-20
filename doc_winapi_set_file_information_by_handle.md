@@ -1,6 +1,6 @@
 # Windows API 调用笔记：SetFileInformationByHandle
 
-SetFileInformationByHandle 常用于 进程线程、文件、内存、同步对象和调试状态的基础系统调用。先写一个最小调用，确认返回值和错误码，再结合具体场景复核。
+SetFileInformationByHandle 多见于文件、目录、异步 I/O、完成端口和命名管道场景。这类接口覆盖文件系统对象、目录操作、文件属性、异步 I/O、完成端口和命名管道通信。记录时保留原始路径、最终对象、句柄访问掩码、共享模式、重解析点、OVERLAPPED 状态和管道端点身份。
 
 ## 入口
 
@@ -16,14 +16,20 @@ auto result = SetFileInformationByHandle(...);
 dumpbin /exports C:\Windows\System32\kernel32.dll | findstr /i SetFileInformationByHandle
 ```
 
-## 记录字段
+## 参数与上下文
 
-```text
-字段: handle, access mask, target object, return value, GetLastError
+文件路径类接口要记录输入路径、规范化路径、目标路径和属性标志。异步 I/O 要记录 OVERLAPPED 指针、事件、pending 状态和完成字节数。命名管道要记录 pipe name、服务端进程、客户端进程、管道模式和消息边界。
+
+这是会改变状态的接口，记录时要保存调用前状态、请求的新状态、调用身份、返回码和回滚路径。安全审计里要把它和前置查询、后续验证放在同一条链路中。
+
+## 返回与错误
+
+文件接口多用 BOOL/HANDLE 和 GetLastError，异步请求中的 ERROR_IO_PENDING 是已提交状态。完成端口接口要区分超时、失败和成功取出完成包。
+
+```cpp
+DWORD err = result ? ERROR_SUCCESS : GetLastError();
 ```
 
-```text
-复核: 先记录返回值和错误码，再决定是否继续查对象权限或系统事件
-```
+## 复核点
 
-调用成功只代表入口可达；返回值、错误码、调用身份和目标对象当时的状态需要放在同一条记录里复核。
+整理证据时，把路径、句柄来源、对象 ID、调用身份、I/O 大小和完成结果放在一起。管道通信还要关联客户端 PID、服务端 PID 和连接时间。

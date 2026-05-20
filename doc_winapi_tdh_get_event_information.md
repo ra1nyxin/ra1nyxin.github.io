@@ -1,6 +1,6 @@
 # Windows API 调用笔记：TdhGetEventInformation
 
-TdhGetEventInformation 常用于 ETW 元数据、Provider 和事件字段解析。先写一个最小调用，确认返回值和错误码，再结合具体场景复核。
+TdhGetEventInformation 多见于事件日志、ETW 和 Trace Session 排查场景，主要处理订阅、查询、格式化、写入或消费 Windows 事件。它们经常出现在检测工具、审计代理、EDR、诊断组件和系统服务里。关键点是 Provider、Channel、Query、Session 名称、事件 ID、Level、Keyword、ActivityId 和返回位置。
 
 ## 入口
 
@@ -16,14 +16,20 @@ auto result = TdhGetEventInformation(...);
 dumpbin /exports C:\Windows\System32\tdh.dll | findstr /i TdhGetEventInformation
 ```
 
-## 记录字段
+## 参数与上下文
 
-```text
-字段: provider GUID, event descriptor, property count, status, map info
+事件接口的参数通常包含句柄、查询字符串、渲染模式、缓冲区和回调。查询类接口要保留 XPath 或 structured query；订阅类接口要写清起点、书签和回调线程；ETW 控制类接口要记录 session name、provider GUID、enable flags、level 和 match any/all keyword。
+
+这类查询接口要把目标对象、信息类别、输入输出长度、返回结构和状态码写完整。第一次因为缓冲区不足返回，通常只是探测长度，最终结论以后续读取结果为准。
+
+## 返回与错误
+
+Evt* 接口多用 GetLastError，TDH 接口常返回 Win32 错误码，ETW 控制接口也有自己的状态语义。缓冲区不足是正常流程的一部分，不应被当成最终失败。
+
+```cpp
+DWORD err = result ? ERROR_SUCCESS : GetLastError();
 ```
 
-```text
-复核: TDH 结果适合解释 ETW 字段含义，最好和原始事件一起保存
-```
+## 复核点
 
-调用成功只代表入口可达；返回值、错误码、调用身份和目标对象当时的状态需要放在同一条记录里复核。
+复核时，将事件来源、订阅范围、过滤条件、时间窗口和权限放在同一条记录里。涉及安全日志、Sysmon、自定义 Provider 或实时 Trace 时，还要保存丢事件、权限不足和 Provider 未启用的证据。

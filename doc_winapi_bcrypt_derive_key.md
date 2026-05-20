@@ -1,6 +1,6 @@
 # Windows API 调用笔记：BCryptDeriveKey
 
-BCryptDeriveKey 常用于 CNG 原语、算法属性、对称加密和密钥派生复核。建议先做最小调用，记录返回值、错误码和调用上下文，再结合具体样本或现场现象判断。
+BCryptDeriveKey 多见于 CNG、CryptoAPI 和密钥材料处理场景。这类接口通常处在加密、签名、摘要、密钥派生或密钥存储链路里。排查时不要只写算法名，还要保存 Provider、算法标识、链模式、密钥长度、IV 或 nonce、认证标签、输入输出长度和返回状态。密钥、明文、派生材料、熵值等内容不进入普通文档，只保留长度、摘要和来源。
 
 ## 入口
 
@@ -16,16 +16,20 @@ auto result = BCryptDeriveKey(...);
 dumpbin /exports C:\Windows\System32\bcrypt.dll | findstr /i BCryptDeriveKey
 ```
 
-## 记录字段
+## 参数与上下文
 
-```text
-algorithm id, chaining mode, key length, IV length, NTSTATUS, property name
+参数里最容易漏掉的是缓冲区长度和属性名称。CNG 很多接口会先查询所需长度，再分配缓冲区读取；CryptoAPI 还要区分旧 CSP、证书库和消息对象。涉及持久化密钥时，需要记录 KSP 名称、密钥名、导出策略、机器范围或用户范围。
+
+如果接口处在准备、查询、修改或清理链路中，记录时把阶段写明，避免只剩一个孤立的函数名。
+
+## 返回与错误
+
+CNG 常返回 NTSTATUS，CryptoAPI 多数通过 BOOL 配合 GetLastError。两套错误体系不要混写，记录时保留原始状态值和转换后的可读含义。
+
+```cpp
+NTSTATUS status = result;
 ```
 
 ## 复核点
 
-```text
-算法接口要把模式、IV、认证标签和输入长度写清楚，避免只留下算法名
-```
-
-调用笔记只保留能复现判断的内容：输入、输出、错误码、调用身份、系统版本和目标对象状态。敏感原始值单独存放，不混进普通文档。
+整理证据时，把算法、模式、密钥来源、调用身份、系统版本和数据流向放在一起看。遇到签名、证书、DPAPI、密钥导入导出相关接口，要额外记录证书链状态、用途、时间戳和私钥访问边界。

@@ -1,6 +1,6 @@
 # Windows API 调用笔记：CryptUnprotectData
 
-CryptUnprotectData 用于解开 DPAPI 保护的数据。它常见于正常软件读取配置，也会出现在取证、迁移、备份恢复和安全审计中。能否解密取决于用户或机器上下文、可选熵、配置文件状态和 DPAPI 主密钥。
+CryptUnprotectData 用于解开 DPAPI 保护的数据。常见落点包括正常软件读取配置，也会出现在取证、迁移、备份恢复和安全审计中。能否解密取决于用户或机器上下文、可选熵、配置文件状态和 DPAPI 主密钥。
 
 ## 入口
 

@@ -1,6 +1,6 @@
 # Windows API 调用笔记：GetProcessTimes
 
-GetProcessTimes 常用于 进程线程、文件、内存、同步对象和调试状态的基础系统调用。先写一个最小调用，确认返回值和错误码，再结合具体场景复核。
+GetProcessTimes 多见于进程内存、性能计数和资源状态查询场景，实际使用时通常围绕读取进程内存占用、工作集、句柄数量、I/O 计数、时间片和缓解策略等运行状态。它适合性能排查、取证基线、异常进程分析和沙箱行为记录。
 
 ## 入口
 
@@ -16,14 +16,20 @@ auto result = GetProcessTimes(...);
 dumpbin /exports C:\Windows\System32\kernel32.dll | findstr /i GetProcessTimes
 ```
 
-## 记录字段
+## 参数与上下文
 
-```text
-字段: handle, access mask, target object, return value, GetLastError
+查询类接口要记录目标进程句柄、请求的信息类别、结构体版本、输入缓冲区长度、输出长度和采样时间。进程状态变化很快，记录时要保存 PID、创建时间和镜像路径，避免 PID 复用造成误判。
+
+看到这类接口时，别只记成功或失败。查询对象、输出结构、ReturnLength、错误码和二次调用结果都要放在一起看。
+
+## 返回与错误
+
+这些接口通常返回 BOOL 或 DWORD 状态，失败时读取 GetLastError。结构体大小不匹配、权限不足、目标进程退出和系统版本差异是常见失败原因。
+
+```cpp
+DWORD err = result ? ERROR_SUCCESS : GetLastError();
 ```
 
-```text
-复核: 先记录返回值和错误码，再决定是否继续查对象权限或系统事件
-```
+## 复核点
 
-调用成功只代表入口可达；返回值、错误码、调用身份和目标对象当时的状态需要放在同一条记录里复核。
+整理证据时，把内存、句柄、线程、I/O、CPU 时间和 Job 限制一起看。单个数值只能说明某个采样点，连续采样和事件时间线更有参考价值。

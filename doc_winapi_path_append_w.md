@@ -1,6 +1,6 @@
 # Windows API 调用笔记：PathAppendW
 
-PathAppendW 常用于 路径拼接、URL 解析、注册表辅助和字符串规范化。建议先做最小调用，记录返回值、错误码和调用上下文，再结合具体样本或现场现象判断。
+PathAppendW 多见于 Shell、路径规范化、URL 和资源解析场景。这类调用常用来路径拼接、Shell 对象解析、文件关联、URL 处理、资源加载和桌面集成。排查时需要保留用户输入、规范化结果、最终路径和对象类型，避免被符号链接、短路径、UNC、重解析点或转义差异误导。
 
 ## 入口
 
@@ -16,16 +16,20 @@ auto result = PathAppendW(...);
 dumpbin /exports C:\Windows\System32\shlwapi.dll | findstr /i PathAppendW
 ```
 
-## 记录字段
+## 参数与上下文
 
-```text
-input path, output path, URL component, flags, buffer length, HRESULT
+路径函数要记录输入长度、输出缓冲区、是否允许长路径、是否保留尾随反斜杠和是否解析根目录。Shell 接口要记录 PIDL、绑定对象、解析标志、窗口句柄和 COM 初始化状态。URL 接口要区分编码、解码、组合和 canonicalize 的顺序。
+
+如果接口处在准备、查询、修改或清理链路中，记录时把阶段写明，避免只剩一个孤立的函数名。
+
+## 返回与错误
+
+Shell 和 PathCch 多数使用 HRESULT，旧 Path API 可能返回 BOOL 或指针。返回成功后仍要确认输出字符串长度和截断状态。
+
+```cpp
+HRESULT hr = result;
 ```
 
 ## 复核点
 
-```text
-路径辅助函数要保存输入和输出两份，安全判断不能只看处理后的字符串
-```
-
-调用笔记只保留能复现判断的内容：输入、输出、错误码、调用身份、系统版本和目标对象状态。敏感原始值单独存放，不混进普通文档。
+最后核对时，把原始输入、规范化输出、最终对象、调用身份和当前目录放在一起保存。涉及文件关联、协议处理器或 ShellExecute 的链路，还要记录打开方式和注册表来源。

@@ -1,6 +1,6 @@
 # Windows API 调用笔记：K32EnumProcesses
 
-K32EnumProcesses 常用于 模块、设备驱动、进程快照和映像路径交叉验证。建议先做最小调用，记录返回值、错误码和调用上下文，再结合具体样本或现场现象判断。
+K32EnumProcesses 多见于进程、线程、内存、同步和调试状态场景，主要覆盖基础运行时状态管理，覆盖内存区域、线程生命周期、同步对象、调试事件、Job 限制和进程枚举。分析时要把目标对象、句柄权限、时间线和后续 API 连接起来看。
 
 ## 入口
 
@@ -16,16 +16,20 @@ auto result = K32EnumProcesses(...);
 dumpbin /exports C:\Windows\System32\psapi.dll | findstr /i K32EnumProcesses
 ```
 
-## 记录字段
+## 参数与上下文
 
-```text
-pid, module base, module size, driver base, image path, snapshot flags
+内存接口要记录基址、大小、状态、类型、保护属性和目标进程。线程接口要记录线程 ID、起始地址、参数、栈、优先级和等待对象。同步对象要记录名称、命名空间、初始状态、超时和返回码。
+
+这是枚举或迭代类接口，重点记录枚举范围、过滤条件、游标位置、返回数量和结束状态。分页或批量返回时，要保留每批结果的顺序，方便后续和日志时间线对齐。
+
+## 返回与错误
+
+Kernel32 接口通常用 GetLastError；Toolhelp 枚举要处理 first/next 的结束状态；等待函数要区分 WAIT_OBJECT_0、WAIT_TIMEOUT、WAIT_FAILED 和 WAIT_ABANDONED。
+
+```cpp
+DWORD err = result ? ERROR_SUCCESS : GetLastError();
 ```
 
 ## 复核点
 
-```text
-模块枚举要注意 32/64 位差异，必要时用多套接口互相印证
-```
-
-调用笔记只保留能复现判断的内容：输入、输出、错误码、调用身份、系统版本和目标对象状态。敏感原始值单独存放，不混进普通文档。
+复核时，将申请、写入、改保护、线程创建、等待和释放放到同一条时间线里。调试和异常相关接口需要关联目标进程、权限、调试对象和事件序列。

@@ -1,6 +1,6 @@
 # Windows API 调用笔记：CertOpenStore
 
-CertOpenStore 常用于 证书对象、证书链和 DPAPI 用户上下文验证。先写一个最小调用，确认返回值和错误码，再结合具体场景复核。
+CertOpenStore 多见于证书库、证书链和信任验证场景，主要处理打开证书库、枚举证书、构建证书链、验证吊销状态或解析证书名称。常见落点包括 TLS、代码签名、企业根证书、S/MIME、驱动验证和安装程序。证书存在不等于可信，链状态、用途、时间、根证书和撤销信息都要一起看。
 
 ## 入口
 
@@ -16,14 +16,20 @@ auto result = CertOpenStore(...);
 dumpbin /exports C:\Windows\System32\crypt32.dll | findstr /i CertOpenStore
 ```
 
-## 记录字段
+## 参数与上下文
 
-```text
-字段: store, subject, thumbprint, chain status, user context, error code
+证书接口要记录 store scope、store name、encoding type、subject、issuer、thumbprint、EKU、验证时间、chain flags 和 revocation flags。名称转换接口要保存输入格式和输出长度，证书上下文复制与释放也要成对记录。
+
+这是建立句柄、上下文、映射或连接的入口，重点记录目标对象、访问掩码、创建标志、命名空间和后续释放接口。句柄生命周期通常比单次返回值更能解释现场问题。
+
+## 返回与错误
+
+Cert* 接口通常返回 BOOL、句柄或上下文指针，并通过 GetLastError 或链状态结构补充原因。链构建成功只说明有链结果，是否可信要继续看 TrustStatus。
+
+```cpp
+NTSTATUS status = result;
 ```
 
-```text
-复核: 涉及 DPAPI 时必须写明当前用户、机器上下文和保护描述
-```
+## 复核点
 
-调用成功只代表入口可达；返回值、错误码、调用身份和目标对象当时的状态需要放在同一条记录里复核。
+复核时，将证书指纹、链元素、根证书、策略 OID、时间戳、撤销状态和文件来源放在一起。企业内网 CA、自签证书和交叉签名链要写明证书库来源。

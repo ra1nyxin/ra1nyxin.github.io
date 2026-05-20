@@ -1,6 +1,6 @@
 # Windows API 调用笔记：GetGPOListW
 
-GetGPOListW 常用于 组策略、环境块和用户策略刷新观察。建议先做最小调用，记录返回值、错误码和调用上下文，再结合具体样本或现场现象判断。
+GetGPOListW 多见于服务控制、目录服务、SAM、NetAPI 和会话管理场景。这类调用常用来服务管理、账号枚举、域信息查询、会话读取和远程管理。判断时要明确目标主机、调用身份、访问掩码、分页状态和返回结构级别。
 
 ## 入口
 
@@ -16,16 +16,20 @@ auto result = GetGPOListW(...);
 dumpbin /exports C:\Windows\System32\userenv.dll | findstr /i GetGPOListW
 ```
 
-## 记录字段
+## 参数与上下文
 
-```text
-token, environment block, policy flags, profile path, HRESULT
+服务接口要记录服务名、显示名、二进制路径、启动类型、运行账号和 SCM 访问掩码。NetAPI/SAM/DS/WTS 接口要记录服务器名、信息级别、resume handle、返回数量、域 SID、会话 ID 和成员类型。
+
+这是枚举或迭代类接口，重点记录枚举范围、过滤条件、游标位置、返回数量和结束状态。分页或批量返回时，要保留每批结果的顺序，方便后续和日志时间线对齐。
+
+## 返回与错误
+
+NetAPI 返回 NET_API_STATUS，LSA/SAM 多用 NTSTATUS，WTS 和服务控制多用 BOOL/GetLastError。返回缓冲区要按对应 API 用 NetApiBufferFree、LsaFreeMemory、SamFreeMemory 或 WTSFreeMemory 释放。
+
+```cpp
+DWORD err = result ? ERROR_SUCCESS : GetLastError();
 ```
 
 ## 复核点
 
-```text
-策略相关接口要记录调用用户和计算机上下文，用户策略和机器策略结果不同
-```
-
-调用笔记只保留能复现判断的内容：输入、输出、错误码、调用身份、系统版本和目标对象状态。敏感原始值单独存放，不混进普通文档。
+复核时，将远程主机、认证来源、管理员权限、网络连接、事件日志和对象字段一起保存。账号、组、共享、会话和服务变更应放在同一条管理行为时间线里。

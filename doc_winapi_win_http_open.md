@@ -1,6 +1,6 @@
 # Windows API 调用笔记：WinHttpOpen
 
-WinHttpOpen 用于初始化 WinHTTP 会话。它常见于系统服务、更新器、代理感知客户端、企业软件和无界面网络组件。它只是会话起点，具体目标要看后续 WinHttpConnect 和 WinHttpOpenRequest。
+WinHttpOpen 用于初始化 WinHTTP 会话。常见落点包括系统服务、更新器、代理感知客户端、企业软件和无界面网络组件。它只是会话起点，具体目标要看后续 WinHttpConnect 和 WinHttpOpenRequest。
 
 ## 入口
 

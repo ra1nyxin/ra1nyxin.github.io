@@ -1,6 +1,6 @@
 # Windows API 调用笔记：LookupAccountSidW
 
-LookupAccountSidW 用于把 SID 解析成账户名、域名和账户类型。它常见于权限审计、ACL 展示、Token 分析和事件日志归一化。解析结果受本机、域控制器、信任关系和缓存状态影响。
+LookupAccountSidW 用于把 SID 解析成账户名、域名和账户类型。常见落点包括权限审计、ACL 展示、Token 分析和事件日志归一化。解析结果受本机、域控制器、信任关系和缓存状态影响。
 
 ## 入口
 

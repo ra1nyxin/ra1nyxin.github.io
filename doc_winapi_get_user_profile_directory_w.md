@@ -1,6 +1,6 @@
 # Windows API 调用笔记：GetUserProfileDirectoryW
 
-GetUserProfileDirectoryW 常用于 用户配置文件、环境块和 AppContainer 边界检查。先写一个最小调用，确认返回值和错误码，再结合具体场景复核。
+GetUserProfileDirectoryW 多见于服务控制、目录服务、SAM、NetAPI 和会话管理场景。这类调用常用来服务管理、账号枚举、域信息查询、会话读取和远程管理。判断时要明确目标主机、调用身份、访问掩码、分页状态和返回结构级别。
 
 ## 入口
 
@@ -16,14 +16,20 @@ auto result = GetUserProfileDirectoryW(...);
 dumpbin /exports C:\Windows\System32\userenv.dll | findstr /i GetUserProfileDirectoryW
 ```
 
-## 记录字段
+## 参数与上下文
 
-```text
-字段: user token, profile path, environment size, AppContainer SID, HRESULT
+服务接口要记录服务名、显示名、二进制路径、启动类型、运行账号和 SCM 访问掩码。NetAPI/SAM/DS/WTS 接口要记录服务器名、信息级别、resume handle、返回数量、域 SID、会话 ID 和成员类型。
+
+查询类调用的重点在信息类别和缓冲区处理。先记录请求了什么，再记录实际返回了多少数据，以及状态码是否符合预期。
+
+## 返回与错误
+
+NetAPI 返回 NET_API_STATUS，LSA/SAM 多用 NTSTATUS，WTS 和服务控制多用 BOOL/GetLastError。返回缓冲区要按对应 API 用 NetApiBufferFree、LsaFreeMemory、SamFreeMemory 或 WTSFreeMemory 释放。
+
+```cpp
+DWORD err = result ? ERROR_SUCCESS : GetLastError();
 ```
 
-```text
-复核: 这类接口受用户上下文影响很明显，必须记录调用 token
-```
+## 复核点
 
-调用成功只代表入口可达；返回值、错误码、调用身份和目标对象当时的状态需要放在同一条记录里复核。
+复查时，把远程主机、认证来源、管理员权限、网络连接、事件日志和对象字段一起保存。账号、组、共享、会话和服务变更应放在同一条管理行为时间线里。
