@@ -1,149 +1,93 @@
-# GitHub Actions 排错
+# GitHub Actions 排错笔记
 
-这篇记录 GitHub Actions 出问题时常用的排查方式。静态站点、自动生成文件、部署 GitHub Pages、跑测试，都经常会碰到路径、权限、触发条件和缓存问题。
+GitHub Actions 出问题时，先别急着改 workflow。最有效的是抓住失败 run 的 ID、失败 job、第一处真正报错，然后再回到 YAML 里看触发条件、权限、工作目录、缓存和产物路径。很多问题表面像 action 坏了，最后其实是分支条件、路径大小写、token 权限或生成文件没提交。
 
-## 先看触发条件
-
-查看本地 workflow 文件。
+先确认本地有哪些 workflow。GitHub 只会识别 `.github/workflows/` 下面的 YAML 文件。
 
 ```bash
-git ls-files ".github/workflows/*.yml"
+git ls-files ".github/workflows/*.yml" ".github/workflows/*.yaml"
+git status --short .github/workflows
 ```
 
-确认最近一次提交改了哪些文件。
+看最近一次提交改了什么，确认 workflow 文件、生成脚本或站点文件是否真的进入提交。
 
 ```bash
 git show --stat --oneline HEAD
-```
-
-查看最近几次提交。
-
-```bash
+git diff --name-status HEAD~1..HEAD
 git log --oneline -5
 ```
 
-## 用 gh 查看运行记录
-
-列出最近的 workflow run。
+用 GitHub CLI 看运行记录最方便。先列 run，再看失败日志。`--log-failed` 比完整日志短，适合第一轮定位。
 
 ```bash
 gh run list
-```
-
-查看某次运行详情。
-
-```bash
 gh run view RUN_ID
-```
-
-查看失败日志。
-
-```bash
 gh run view RUN_ID --log-failed
 ```
 
-重新运行失败任务。
+需要重新跑时，优先只重跑失败任务，避免无意义消耗时间。
 
 ```bash
 gh run rerun RUN_ID --failed
 ```
 
-## 本地先做轻量检查
-
-检查 YAML 文件是否能被 git 跟踪到。
+触发条件是常见坑。workflow 可能只监听 `main`，或者只在某些路径变化时触发。路径过滤写得太窄时，提交已经推了但 workflow 不跑。
 
 ```bash
-git status --short .github/workflows
+git grep -n "on:" .github/workflows
+git grep -n "branches\\|paths\\|paths-ignore" .github/workflows
 ```
 
-检查仓库当前分支。
-
-```bash
-git branch --show-current
-```
-
-确认远端地址。
-
-```bash
-git remote -v
-```
-
-查看当前提交是否已经推到远端。
-
-```bash
-git status -sb
-```
-
-## Pages 部署相关
-
-确认 Pages workflow 里是否使用了正确分支。
-
-```bash
-git grep -n "branches" .github/workflows
-```
-
-确认是否引用了 GitHub Pages 相关 action。
-
-```bash
-git grep -n "configure-pages\\|upload-pages-artifact\\|deploy-pages" .github/workflows
-```
-
-查看是否有权限配置。
+权限问题在 Pages、release、comment、security upload 里很常见。默认 token 权限不够时，日志会出现 403 或 resource not accessible。
 
 ```bash
 git grep -n "permissions" .github/workflows
+git grep -n "contents:\\|pages:\\|id-token:\\|actions:" .github/workflows
 ```
 
-## 路径和文件生成问题
+GitHub Pages 相关 workflow 要看三件事：是否 configure pages，是否 upload artifact，是否 deploy pages，以及 permissions 是否包含 `pages: write` 和 `id-token: write`。
 
-确认图片数据文件是否存在。
+```bash
+git grep -n "configure-pages\\|upload-pages-artifact\\|deploy-pages" .github/workflows
+git grep -n "pages: write\\|id-token: write" .github/workflows
+```
+
+静态站点常见问题是构建产物路径不对。比如生成到了 `dist/`，上传却写了 `public/`；或者生成文件存在于工作区但没有被提交到仓库。
 
 ```bash
 git ls-files gallery_data.js
-```
-
-确认图片目录里有哪些文件被 git 跟踪。
-
-```bash
 git ls-files img
+git grep -n "path:" .github/workflows
+git grep -n "upload-pages-artifact" -n .github/workflows
 ```
 
-看某个生成脚本最近有没有改动。
+Node、Python、Go 这类项目要看 lockfile 和缓存键。缓存命中不一定是好事，坏缓存会把旧依赖带回来。
 
 ```bash
-git log --oneline -- generate_gallery_data.py
+git ls-files package-lock.json pnpm-lock.yaml yarn.lock requirements.txt poetry.lock go.sum
+git grep -n "cache\\|actions/cache" .github/workflows
 ```
 
-## 缓存问题
-
-查看 workflow 里是否用了 cache。
+工作目录也经常出错。单仓库根目录没问题，monorepo 或静态站生成脚本放在子目录时，要确认每一步的 `working-directory`。
 
 ```bash
-git grep -n "cache" .github/workflows
+git grep -n "working-directory" .github/workflows
+git grep -n "run:" .github/workflows
 ```
 
-排查 npm 缓存时先看 lock 文件是否存在。
+本地复现时，先跑 workflow 里同一条命令，不要凭印象跑另一个命令。尤其是大小写敏感路径，Windows 本地能过，Linux runner 可能失败。
 
 ```bash
-git ls-files package-lock.json pnpm-lock.yaml yarn.lock
+git status -sb
+git branch --show-current
+git remote -v
 ```
 
-## 常见处理节奏
-
-排查时先看失败 job 的第一处报错，再回到 workflow 里确认触发条件、工作目录、权限和路径。静态站点最常见的是生成文件没有提交、路径大小写不一致、Pages 权限没开、workflow 只监听了某些路径。
+如果 workflow 依赖 secrets，本地无法直接复现，但可以确认变量名是否一致。日志里 secrets 会被 mask，看到 `***` 不代表值一定正确。
 
 ```bash
-gh run view --log-failed
+git grep -n "secrets\\." .github/workflows
+git grep -n "vars\\." .github/workflows
 ```
 
-```bash
-git diff --name-status HEAD~1..HEAD
-```
-
-```bash
-git grep -n "working-directory\\|path\\|permissions\\|branches" .github/workflows
-```
-
-## 备注
-
-Actions 排错要保留失败 run 的 ID、失败 job 名称和第一段报错。很多问题看起来像 action 本身异常，最后会落到仓库路径、权限、分支条件或生成文件没有进入提交。
+我排 Actions 的顺序是：先看失败 run 的第一处错误，再看触发条件和分支，再看 permissions，然后看工作目录、路径和缓存。不要一看到红叉就升级 action 版本，升级可能只是把原问题藏到另一个地方。
