@@ -192,7 +192,7 @@ const pageContents = {
     settings: `
         <div class="container">
             <h1>设置</h1>
-            <p>调整星空、布局、透明度和动效，保存后会记录在当前浏览器。</p>
+            <p>调整背景、布局、透明度和动效，保存后会记录在当前浏览器。</p>
             <section class="card settings-panel">
                 <div class="settings-header">
                     <h2>自定义外观</h2>
@@ -256,7 +256,7 @@ const pageMeta = {
     },
     settings: {
         title: '设置 - Owo',
-        description: 'Owo 设置页支持用户自定义星空背景、界面宽度、字号、透明度、模糊强度、圆角和动效速度。'
+        description: 'Owo 设置页支持切换星空或 Neural Noise 背景，并自定义界面宽度、字号、透明度、模糊强度、圆角和动效速度。'
     }
 };
 
@@ -268,7 +268,7 @@ const PULSE_GATE_BEST_KEY = 'pulse-gate-best';
 const PHASE_SHIFT_BEST_KEY = 'phase-shift-best';
 const ECHO_BLOOM_BEST_KEY = 'echo-bloom-best';
 let cleanupCurrentPage = null;
-let starfieldController = null;
+let backgroundController = null;
 let musicPlayer = null;
 let hasRedirectedForDevtools = false;
 
@@ -283,6 +283,7 @@ const musicTracks = [
 ];
 
 const defaultSiteSettings = {
+    backgroundMode: 'starfield',
     starCount: 200,
     minRadius: 0.4,
     maxRadius: 1.2,
@@ -310,12 +311,36 @@ const defaultSiteSettings = {
     panelBlur: 8,
     navbarBlur: 10,
     shadowStrength: 1,
-    motionScale: 1
+    motionScale: 1,
+    neuralHue: 344,
+    neuralSaturation: 78,
+    neuralLightness: 51,
+    neuralOpacity: 0.9,
+    neuralSpeed: 0.001
 };
 
 const settingsGroups = [
     {
-        title: '星空背景',
+        title: '背景效果',
+        controls: [
+            {
+                key: 'backgroundMode',
+                label: '背景样式',
+                type: 'select',
+                options: [
+                    { value: 'starfield', label: '星空' },
+                    { value: 'neural-noise', label: 'Neural Noise' }
+                ]
+            },
+            { key: 'neuralHue', label: 'Neural Noise 色相', min: 0, max: 360, step: 1 },
+            { key: 'neuralSaturation', label: 'Neural Noise 饱和度', min: 0, max: 100, step: 1 },
+            { key: 'neuralLightness', label: 'Neural Noise 亮度', min: 0, max: 100, step: 1 },
+            { key: 'neuralOpacity', label: 'Neural Noise 强度', min: 0, max: 1, step: 0.01 },
+            { key: 'neuralSpeed', label: 'Neural Noise 速度', min: 0, max: 0.004, step: 0.0001 }
+        ]
+    },
+    {
+        title: '星空参数',
         controls: [
             { key: 'starCount', label: '星星数量', min: 0, max: 600, step: 1 },
             { key: 'minRadius', label: '最小半径', min: 0, max: 4, step: 0.1 },
@@ -411,7 +436,7 @@ function saveSiteSettings(settings) {
 }
 
 function applySiteSettings(settings) {
-    const normalizedSettings = normalizeStarSettings(settings);
+    const normalizedSettings = normalizeSiteSettings(settings);
     const rootStyle = document.documentElement.style;
     rootStyle.setProperty('--accent-hue', String(normalizedSettings.accentHue));
     rootStyle.setProperty('--content-max-width', `${normalizedSettings.contentWidth}px`);
@@ -434,19 +459,21 @@ function applySiteSettings(settings) {
     rootStyle.setProperty('--starfield-saturation', `${normalizedSettings.backgroundSaturation}%`);
     rootStyle.setProperty('--starfield-lightness', `${normalizedSettings.backgroundLightness}%`);
 
-    if (starfieldController) {
-        starfieldController.applySettings(normalizedSettings);
+    if (backgroundController) {
+        backgroundController.applySettings(normalizedSettings);
     }
 }
 
-function normalizeStarSettings(settings) {
+function normalizeSiteSettings(settings) {
     const nextSettings = { ...defaultSiteSettings, ...settings };
 
     Object.keys(defaultSiteSettings).forEach(key => {
+        if (key === 'backgroundMode') return;
         const numericValue = Number(nextSettings[key]);
         nextSettings[key] = Number.isNaN(numericValue) ? defaultSiteSettings[key] : numericValue;
     });
 
+    nextSettings.backgroundMode = nextSettings.backgroundMode === 'neural-noise' ? 'neural-noise' : 'starfield';
     nextSettings.starCount = Math.max(0, Math.floor(nextSettings.starCount));
     if (nextSettings.maxRadius < nextSettings.minRadius) {
         [nextSettings.minRadius, nextSettings.maxRadius] = [nextSettings.maxRadius, nextSettings.minRadius];
@@ -474,14 +501,24 @@ function initSettingsPage() {
     const readForm = () => {
         const nextSettings = {};
         settingsControls.forEach(control => {
+            if (control.type === 'select') {
+                const select = grid.querySelector(`[data-setting-select="${control.key}"]`);
+                nextSettings[control.key] = select ? select.value : defaultSiteSettings[control.key];
+                return;
+            }
             const input = grid.querySelector(`[data-setting-number="${control.key}"]`);
             nextSettings[control.key] = input ? Number(input.value) : defaultSiteSettings[control.key];
         });
-        return normalizeStarSettings(nextSettings);
+        return normalizeSiteSettings(nextSettings);
     };
 
     const syncControls = settings => {
         settingsControls.forEach(control => {
+            if (control.type === 'select') {
+                const select = grid.querySelector(`[data-setting-select="${control.key}"]`);
+                if (select) select.value = settings[control.key];
+                return;
+            }
             const range = grid.querySelector(`[data-setting-range="${control.key}"]`);
             const input = grid.querySelector(`[data-setting-number="${control.key}"]`);
             const value = settings[control.key];
@@ -500,9 +537,12 @@ function initSettingsPage() {
             ${group.controls.map(control => `
                 <label class="setting-control">
                     <span>${control.label}</span>
-                    <div class="setting-inputs">
-                        <input type="range" min="${control.min}" max="${control.max}" step="${control.step}" data-setting-range="${control.key}">
-                        <input type="number" step="${control.step}" data-setting-number="${control.key}">
+                    <div class="setting-inputs${control.type === 'select' ? ' setting-inputs--select' : ''}">
+                        ${control.type === 'select'
+                            ? `<select data-setting-select="${control.key}">${control.options.map(option => `<option value="${option.value}">${option.label}</option>`).join('')}</select>`
+                            : `<input type="range" min="${control.min}" max="${control.max}" step="${control.step}" data-setting-range="${control.key}">
+                               <input type="number" step="${control.step}" data-setting-number="${control.key}">`
+                        }
                     </div>
                 </label>
             `).join('')}
@@ -536,6 +576,13 @@ function initSettingsPage() {
     grid.querySelectorAll('[data-setting-number]').forEach(input => {
         input.addEventListener('input', handleNumberInput);
     });
+    grid.querySelectorAll('[data-setting-select]').forEach(select => {
+        select.addEventListener('change', () => {
+            currentSettings = readForm();
+            applySiteSettings(currentSettings);
+            showStatus('预览中，点击保存后生效记录。');
+        });
+    });
 
     const handleSave = () => {
         currentSettings = readForm();
@@ -556,7 +603,7 @@ function initSettingsPage() {
     saveButton.addEventListener('click', handleSave);
     resetButton.addEventListener('click', handleReset);
 
-    currentSettings = normalizeStarSettings(currentSettings);
+    currentSettings = normalizeSiteSettings(currentSettings);
     syncControls(currentSettings);
     applySiteSettings(currentSettings);
 
@@ -2347,7 +2394,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initScrollAnimations();
     applySiteSettings(loadSiteSettings());
     loadContent(getInitialPage(), { updateUrl: false });
-    initStarfield();
+    initBackgroundController();
     scheduleMusicPlayerInit();
 });
 
@@ -2502,13 +2549,36 @@ function sanitizeId(fileName) {
     return fileName.replace(/[^a-z0-9]/gi, '-').toLowerCase();
 }
 
+function initBackgroundController() {
+    const starfield = initStarfield();
+    const neuralNoise = initNeuralNoise();
+    if (!starfield || !neuralNoise) return;
+
+    backgroundController = {
+        applySettings(nextSettings) {
+            const settings = normalizeSiteSettings(nextSettings);
+            starfield.applySettings(settings);
+            neuralNoise.applySettings(settings);
+
+            if (settings.backgroundMode === 'neural-noise' && neuralNoise.setActive(true)) {
+                starfield.setActive(false);
+                return;
+            }
+
+            neuralNoise.setActive(false);
+            starfield.setActive(true);
+        }
+    };
+
+    backgroundController.applySettings(loadSiteSettings());
+}
+
 function initStarfield() {
     const canvas = document.getElementById('starfield');
-    if (!canvas) return;
+    const ctx = canvas && canvas.getContext('2d');
+    if (!canvas || !ctx) return null;
 
-    const ctx = canvas.getContext('2d');
-    let stars = [];
-    let settings = normalizeStarSettings(loadSiteSettings());
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
     const lightChart = {
         background: '#f4f7fb',
         star: 'rgba(72, 91, 118, 0.58)',
@@ -2516,31 +2586,35 @@ function initStarfield() {
         maxLineDistance: 142,
         maxLinkedStars: 260
     };
+    let animationFrameId = null;
+    let isActive = false;
+    let stars = [];
+    let settings = normalizeSiteSettings(loadSiteSettings());
+
+    function shouldAnimate() {
+        return isActive && !document.hidden && !reducedMotion.matches;
+    }
+
+    function createStars() {
+        stars = Array.from({ length: settings.starCount }, () => ({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            radius: settings.minRadius + Math.random() * (settings.maxRadius - settings.minRadius),
+            alpha: Math.random(),
+            twinkleSpeed: settings.twinkleMinSpeed + Math.random() * (settings.twinkleMaxSpeed - settings.twinkleMinSpeed)
+        }));
+    }
 
     function resizeCanvas() {
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
         createStars();
-    }
-
-    function createStars() {
-        stars = [];
-        for (let i = 0; i < settings.starCount; i++) {
-            stars.push({
-                x: Math.random() * canvas.width,
-                y: Math.random() * canvas.height,
-                radius: settings.minRadius + Math.random() * (settings.maxRadius - settings.minRadius),
-                alpha: Math.random(),
-                twinkleSpeed: settings.twinkleMinSpeed + Math.random() * (settings.twinkleMaxSpeed - settings.twinkleMinSpeed)
-            });
-        }
+        render();
     }
 
     function updateStarTwinkle(star) {
         star.alpha += star.twinkleSpeed;
-        if (star.alpha >= 1 || star.alpha <= settings.minAlpha) {
-            star.twinkleSpeed = -star.twinkleSpeed;
-        }
+        if (star.alpha >= 1 || star.alpha <= settings.minAlpha) star.twinkleSpeed = -star.twinkleSpeed;
     }
 
     function drawDarkStarfield() {
@@ -2554,15 +2628,12 @@ function initStarfield() {
             star.x += settings.movementSpeed * 0.016;
             if (star.x > canvas.width + star.radius) star.x = -star.radius;
             if (star.x < -star.radius) star.x = canvas.width + star.radius;
-
             ctx.globalAlpha = star.alpha;
             ctx.beginPath();
             ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
             ctx.fill();
-
             updateStarTwinkle(star);
         });
-
         ctx.globalAlpha = 1;
     }
 
@@ -2577,13 +2648,9 @@ function initStarfield() {
         linkedStars.forEach((star, index) => {
             for (let nextIndex = index + 1; nextIndex < linkedStars.length; nextIndex++) {
                 const nextStar = linkedStars[nextIndex];
-                const distanceX = star.x - nextStar.x;
-                const distanceY = star.y - nextStar.y;
-                const distance = Math.hypot(distanceX, distanceY);
+                const distance = Math.hypot(star.x - nextStar.x, star.y - nextStar.y);
                 if (distance > lightChart.maxLineDistance) continue;
-
-                const opacity = (1 - distance / lightChart.maxLineDistance) * 0.9;
-                ctx.globalAlpha = opacity;
+                ctx.globalAlpha = (1 - distance / lightChart.maxLineDistance) * 0.9;
                 ctx.strokeStyle = lightChart.line;
                 ctx.beginPath();
                 ctx.moveTo(star.x, star.y);
@@ -2597,45 +2664,256 @@ function initStarfield() {
             star.x += settings.movementSpeed * 0.006;
             if (star.x > canvas.width + star.radius) star.x = -star.radius;
             if (star.x < -star.radius) star.x = canvas.width + star.radius;
-
             ctx.globalAlpha = Math.max(settings.minAlpha, star.alpha) * 0.42;
             ctx.beginPath();
             ctx.arc(star.x, star.y, Math.max(0.55, star.radius * 0.82), 0, Math.PI * 2);
             ctx.fill();
-
             updateStarTwinkle(star);
         });
-
         ctx.globalAlpha = 1;
     }
 
-    function drawStars() {
-        if (document.documentElement.dataset.theme === 'light') {
-            drawLightChart();
-        } else {
-            drawDarkStarfield();
+    function render() {
+        if (animationFrameId) {
+            cancelAnimationFrame(animationFrameId);
+            animationFrameId = null;
         }
-        requestAnimationFrame(drawStars);
+        if (!isActive) return;
+        if (document.documentElement.dataset.theme === 'light') drawLightChart();
+        else drawDarkStarfield();
+        if (shouldAnimate()) animationFrameId = requestAnimationFrame(render);
     }
 
     window.addEventListener('resize', resizeCanvas);
+    document.addEventListener('visibilitychange', render);
+    reducedMotion.addEventListener('change', render);
     resizeCanvas();
-    drawStars();
 
-    starfieldController = {
+    return {
         applySettings(nextSettings) {
-            const normalizedSettings = normalizeStarSettings(nextSettings);
+            const normalizedSettings = normalizeSiteSettings(nextSettings);
             const shouldRecreateStars =
                 normalizedSettings.starCount !== settings.starCount ||
                 normalizedSettings.minRadius !== settings.minRadius ||
                 normalizedSettings.maxRadius !== settings.maxRadius ||
                 normalizedSettings.twinkleMinSpeed !== settings.twinkleMinSpeed ||
                 normalizedSettings.twinkleMaxSpeed !== settings.twinkleMaxSpeed;
-
             settings = normalizedSettings;
-            if (shouldRecreateStars) {
-                createStars();
+            if (shouldRecreateStars) createStars();
+            render();
+        },
+        setActive(active) {
+            isActive = Boolean(active);
+            canvas.hidden = !isActive;
+            render();
+            return true;
+        }
+    };
+}
+
+function initNeuralNoise() {
+    const canvas = document.getElementById('neural-noise');
+    if (!canvas) return null;
+
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const pointer = { x: window.innerWidth / 2, y: window.innerHeight / 2, targetX: window.innerWidth / 2, targetY: window.innerHeight / 2 };
+    let animationFrameId = null;
+    let gl = null;
+    let uniforms = null;
+    let isActive = false;
+    let settings = normalizeSiteSettings(loadSiteSettings());
+
+    const vertexSource = `
+        precision mediump float;
+        varying vec2 vUv;
+        attribute vec2 a_position;
+        void main() {
+            vUv = 0.5 * (a_position + 1.0);
+            gl_Position = vec4(a_position, 0.0, 1.0);
+        }
+    `;
+    const fragmentSource = `
+        precision mediump float;
+        varying vec2 vUv;
+        uniform float u_time;
+        uniform float u_ratio;
+        uniform vec2 u_pointer_position;
+        uniform vec3 u_color;
+        uniform float u_speed;
+        uniform float u_opacity;
+        vec2 rotate(vec2 uv, float th) {
+            return mat2(cos(th), sin(th), -sin(th), cos(th)) * uv;
+        }
+        float neuro_shape(vec2 uv, float t, float p) {
+            vec2 sine_acc = vec2(0.0);
+            vec2 res = vec2(0.0);
+            float scale = 8.0;
+            for (int j = 0; j < 15; j++) {
+                uv = rotate(uv, 1.0);
+                sine_acc = rotate(sine_acc, 1.0);
+                vec2 layer = uv * scale + float(j) + sine_acc - t;
+                sine_acc += sin(layer) + 2.4 * p;
+                res += (0.5 + 0.5 * cos(layer)) / scale;
+                scale *= 1.2;
             }
+            return res.x + res.y;
+        }
+        void main() {
+            vec2 uv = 0.5 * vUv;
+            uv.x *= u_ratio;
+            vec2 pointer = vUv - u_pointer_position;
+            pointer.x *= u_ratio;
+            float p = clamp(length(pointer), 0.0, 1.0);
+            p = 0.5 * pow(1.0 - p, 2.0);
+            float noise = neuro_shape(uv, u_speed * u_time, p);
+            noise = 1.2 * pow(noise, 3.0);
+            noise += pow(noise, 10.0);
+            noise = max(0.0, noise - 0.5);
+            noise *= (1.0 - length(vUv - 0.5));
+            float alpha = noise * u_opacity;
+            gl_FragColor = vec4(u_color * alpha, alpha);
+        }
+    `;
+
+    function createShader(source, type) {
+        const shader = gl.createShader(type);
+        gl.shaderSource(shader, source);
+        gl.compileShader(shader);
+        if (gl.getShaderParameter(shader, gl.COMPILE_STATUS)) return shader;
+        console.error('Neural Noise shader compile error:', gl.getShaderInfoLog(shader));
+        gl.deleteShader(shader);
+        return null;
+    }
+
+    function initShader() {
+        gl = canvas.getContext('webgl', { alpha: true, antialias: false, powerPreference: 'low-power' })
+            || canvas.getContext('experimental-webgl');
+        if (!gl) return false;
+
+        const vertexShader = createShader(vertexSource, gl.VERTEX_SHADER);
+        const fragmentShader = createShader(fragmentSource, gl.FRAGMENT_SHADER);
+        if (!vertexShader || !fragmentShader) return false;
+
+        const program = gl.createProgram();
+        gl.attachShader(program, vertexShader);
+        gl.attachShader(program, fragmentShader);
+        gl.linkProgram(program);
+        if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+            console.error('Neural Noise program link error:', gl.getProgramInfoLog(program));
+            return false;
+        }
+
+        uniforms = {
+            time: gl.getUniformLocation(program, 'u_time'),
+            ratio: gl.getUniformLocation(program, 'u_ratio'),
+            pointer: gl.getUniformLocation(program, 'u_pointer_position'),
+            color: gl.getUniformLocation(program, 'u_color'),
+            speed: gl.getUniformLocation(program, 'u_speed'),
+            opacity: gl.getUniformLocation(program, 'u_opacity')
+        };
+        const vertices = new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]);
+        const buffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+        gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW);
+        gl.useProgram(program);
+        const position = gl.getAttribLocation(program, 'a_position');
+        gl.enableVertexAttribArray(position);
+        gl.vertexAttribPointer(position, 2, gl.FLOAT, false, 0, 0);
+        gl.clearColor(0, 0, 0, 0);
+        resizeCanvas();
+        applyUniforms();
+        return true;
+    }
+
+    function hslToRgb(hue, saturation, lightness) {
+        const h = ((hue % 360) + 360) % 360 / 360;
+        const s = saturation / 100;
+        const l = lightness / 100;
+        if (s === 0) return [l, l, l];
+        const hueToRgb = (p, q, t) => {
+            const value = (t + 1) % 1;
+            if (value < 1 / 6) return p + (q - p) * 6 * value;
+            if (value < 1 / 2) return q;
+            if (value < 2 / 3) return p + (q - p) * (2 / 3 - value) * 6;
+            return p;
+        };
+        const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+        const p = 2 * l - q;
+        return [hueToRgb(p, q, h + 1 / 3), hueToRgb(p, q, h), hueToRgb(p, q, h - 1 / 3)];
+    }
+
+    function applyUniforms() {
+        if (!gl || !uniforms) return;
+        const [red, green, blue] = hslToRgb(settings.neuralHue, settings.neuralSaturation, settings.neuralLightness);
+        gl.uniform3f(uniforms.color, red, green, blue);
+        gl.uniform1f(uniforms.speed, settings.neuralSpeed * settings.motionScale);
+        gl.uniform1f(uniforms.opacity, settings.neuralOpacity);
+    }
+
+    function resizeCanvas() {
+        if (!gl) return;
+        const maxPixelRatio = window.innerWidth < 768 ? 1 : 1.5;
+        const pixelRatio = Math.min(window.devicePixelRatio || 1, maxPixelRatio);
+        canvas.width = Math.max(1, Math.round(window.innerWidth * pixelRatio));
+        canvas.height = Math.max(1, Math.round(window.innerHeight * pixelRatio));
+        gl.viewport(0, 0, canvas.width, canvas.height);
+        gl.uniform1f(uniforms.ratio, canvas.width / canvas.height);
+        render();
+    }
+
+    function shouldAnimate() {
+        return isActive && !document.hidden && !reducedMotion.matches;
+    }
+
+    function render() {
+        if (animationFrameId) {
+            cancelAnimationFrame(animationFrameId);
+            animationFrameId = null;
+        }
+        if (!isActive || !gl) return;
+        pointer.x += (pointer.targetX - pointer.x) * 0.2;
+        pointer.y += (pointer.targetY - pointer.y) * 0.2;
+        gl.clear(gl.COLOR_BUFFER_BIT);
+        gl.uniform1f(uniforms.time, performance.now());
+        gl.uniform2f(uniforms.pointer, pointer.x / Math.max(1, window.innerWidth), 1 - pointer.y / Math.max(1, window.innerHeight));
+        gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+        if (shouldAnimate()) animationFrameId = requestAnimationFrame(render);
+    }
+
+    function updatePointer(event) {
+        pointer.targetX = event.clientX;
+        pointer.targetY = event.clientY;
+        if (!animationFrameId) render();
+    }
+
+    window.addEventListener('resize', resizeCanvas);
+    window.addEventListener('pointermove', updatePointer, { passive: true });
+    window.addEventListener('pointerdown', updatePointer, { passive: true });
+    document.addEventListener('visibilitychange', render);
+    reducedMotion.addEventListener('change', render);
+
+    return {
+        applySettings(nextSettings) {
+            settings = normalizeSiteSettings(nextSettings);
+            applyUniforms();
+            render();
+        },
+        setActive(active) {
+            if (!active) {
+                isActive = false;
+                canvas.hidden = true;
+                render();
+                return true;
+            }
+            if (!gl && !initShader()) {
+                canvas.hidden = true;
+                return false;
+            }
+            isActive = true;
+            canvas.hidden = false;
+            applyUniforms();
+            render();
+            return true;
         }
     };
 }

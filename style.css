@@ -75,7 +75,7 @@ body {
     transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease;
 }
 
-#starfield {
+.background-canvas {
     position: fixed;
     top: 0;
     left: 0;
@@ -84,6 +84,10 @@ body {
     z-index: -1;
     background-color: var(--starfield-bg);
     transition: background-color var(--transition-speed) ease;
+}
+
+.background-canvas[hidden] {
+    display: none;
 }
 
 .container {
@@ -899,6 +903,21 @@ body {
 }
 
 .setting-inputs input[type="number"] {
+    width: 100%;
+    box-sizing: border-box;
+    background-color: var(--input-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--control-radius);
+    color: var(--text-color);
+    padding: 8px 10px;
+    outline: none;
+}
+
+.setting-inputs--select {
+    grid-template-columns: minmax(0, 1fr);
+}
+
+.setting-inputs select {
     width: 100%;
     box-sizing: border-box;
     background-color: var(--input-bg);
