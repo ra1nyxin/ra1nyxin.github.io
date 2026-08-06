@@ -1,0 +1,16 @@
+* text=auto eol=lf
+
+*.md linguist-detectable=true -linguist-documentation -linguist-vendored -linguist-generated
+*.svg linguist-detectable=true -linguist-documentation -linguist-vendored -linguist-generated
+
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.mp4 binary
+*.zip binary
+*.ico binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.eot binary
