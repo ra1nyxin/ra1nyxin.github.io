@@ -83,7 +83,7 @@ body {
     height: 100vh;
     z-index: -1;
     background-color: var(--starfield-bg);
-    transition: background-color var(--transition-speed) ease;
+    transition: background-color var(--transition-speed) ease, opacity 0.24s ease;
 }
 
 .background-canvas[hidden] {
@@ -805,6 +805,26 @@ body {
     color: var(--text-color);
     padding: 8px 10px;
     outline: none;
+}
+
+.setting-inputs--color {
+    grid-template-columns: 52px minmax(0, 1fr);
+}
+
+.setting-inputs input[type="color"] {
+    width: 52px;
+    height: 36px;
+    padding: 3px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--control-radius);
+    background-color: var(--input-bg);
+    cursor: pointer;
+}
+
+.setting-inputs output {
+    color: var(--muted-color);
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+    font-size: 13px;
 }
 
 .settings-status {

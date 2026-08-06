@@ -241,8 +241,22 @@ const defaultSiteSettings = {
     neuralSaturation: 78,
     neuralLightness: 51,
     neuralOpacity: 0.9,
-    neuralSpeed: 0.001
+    neuralSpeed: 0.001,
+    tubesColor1: '#5e72e4',
+    tubesColor2: '#8965e0',
+    tubesColor3: '#f5365c',
+    tubesLightColor1: '#21d4fd',
+    tubesLightColor2: '#b721ff',
+    tubesLightColor3: '#f4d03f',
+    tubesLightColor4: '#11cdef',
+    tubesLightIntensity: 200
 };
+
+const tubesColorSettingKeys = [
+    'tubesColor1', 'tubesColor2', 'tubesColor3',
+    'tubesLightColor1', 'tubesLightColor2', 'tubesLightColor3', 'tubesLightColor4'
+];
+const TUBES_CURSOR_MODULE_URL = 'https://cdn.jsdelivr.net/npm/threejs-components@0.0.19/build/cursors/tubes1.min.js';
 
 const settingsGroups = [
     {
@@ -254,7 +268,8 @@ const settingsGroups = [
                 type: 'select',
                 options: [
                     { value: 'starfield', label: '星空' },
-                    { value: 'neural-noise', label: 'Neural Noise' }
+                    { value: 'neural-noise', label: 'Neural Noise' },
+                    { value: 'tubes-cursor', label: 'Tubes Cursor' }
                 ]
             },
             { key: 'neuralHue', label: 'Neural Noise 色相', min: 0, max: 360, step: 1 },
@@ -262,6 +277,19 @@ const settingsGroups = [
             { key: 'neuralLightness', label: 'Neural Noise 亮度', min: 0, max: 100, step: 1 },
             { key: 'neuralOpacity', label: 'Neural Noise 强度', min: 0, max: 1, step: 0.01 },
             { key: 'neuralSpeed', label: 'Neural Noise 速度', min: 0, max: 0.004, step: 0.0001 }
+        ]
+    },
+    {
+        title: 'Tubes Cursor 参数',
+        controls: [
+            { key: 'tubesColor1', label: '管道颜色 1', type: 'color' },
+            { key: 'tubesColor2', label: '管道颜色 2', type: 'color' },
+            { key: 'tubesColor3', label: '管道颜色 3', type: 'color' },
+            { key: 'tubesLightColor1', label: '光源颜色 1', type: 'color' },
+            { key: 'tubesLightColor2', label: '光源颜色 2', type: 'color' },
+            { key: 'tubesLightColor3', label: '光源颜色 3', type: 'color' },
+            { key: 'tubesLightColor4', label: '光源颜色 4', type: 'color' },
+            { key: 'tubesLightIntensity', label: '光照强度', min: 0, max: 400, step: 1 }
         ]
     },
     {
@@ -393,12 +421,17 @@ function normalizeSiteSettings(settings) {
     const nextSettings = { ...defaultSiteSettings, ...settings };
 
     Object.keys(defaultSiteSettings).forEach(key => {
-        if (key === 'backgroundMode') return;
+        if (key === 'backgroundMode' || tubesColorSettingKeys.includes(key)) return;
         const numericValue = Number(nextSettings[key]);
         nextSettings[key] = Number.isNaN(numericValue) ? defaultSiteSettings[key] : numericValue;
     });
 
-    nextSettings.backgroundMode = nextSettings.backgroundMode === 'neural-noise' ? 'neural-noise' : 'starfield';
+    tubesColorSettingKeys.forEach(key => {
+        nextSettings[key] = /^#[0-9a-f]{6}$/i.test(nextSettings[key]) ? nextSettings[key] : defaultSiteSettings[key];
+    });
+    nextSettings.backgroundMode = ['starfield', 'neural-noise', 'tubes-cursor'].includes(nextSettings.backgroundMode)
+        ? nextSettings.backgroundMode
+        : 'starfield';
     nextSettings.starCount = Math.max(0, Math.floor(nextSettings.starCount));
     if (nextSettings.maxRadius < nextSettings.minRadius) {
         [nextSettings.minRadius, nextSettings.maxRadius] = [nextSettings.maxRadius, nextSettings.minRadius];
@@ -431,6 +464,11 @@ function initSettingsPage() {
                 nextSettings[control.key] = select ? select.value : defaultSiteSettings[control.key];
                 return;
             }
+            if (control.type === 'color') {
+                const color = grid.querySelector(`[data-setting-color="${control.key}"]`);
+                nextSettings[control.key] = color ? color.value : defaultSiteSettings[control.key];
+                return;
+            }
             const input = grid.querySelector(`[data-setting-number="${control.key}"]`);
             nextSettings[control.key] = input ? Number(input.value) : defaultSiteSettings[control.key];
         });
@@ -442,6 +480,13 @@ function initSettingsPage() {
             if (control.type === 'select') {
                 const select = grid.querySelector(`[data-setting-select="${control.key}"]`);
                 if (select) select.value = settings[control.key];
+                return;
+            }
+            if (control.type === 'color') {
+                const color = grid.querySelector(`[data-setting-color="${control.key}"]`);
+                const value = grid.querySelector(`[data-setting-color-value="${control.key}"]`);
+                if (color) color.value = settings[control.key];
+                if (value) value.textContent = settings[control.key].toUpperCase();
                 return;
             }
             const range = grid.querySelector(`[data-setting-range="${control.key}"]`);
@@ -462,9 +507,11 @@ function initSettingsPage() {
             ${group.controls.map(control => `
                 <label class="setting-control">
                     <span>${control.label}</span>
-                    <div class="setting-inputs${control.type === 'select' ? ' setting-inputs--select' : ''}">
+                    <div class="setting-inputs${control.type === 'select' ? ' setting-inputs--select' : control.type === 'color' ? ' setting-inputs--color' : ''}">
                         ${control.type === 'select'
                             ? `<select data-setting-select="${control.key}">${control.options.map(option => `<option value="${option.value}">${option.label}</option>`).join('')}</select>`
+                            : control.type === 'color'
+                                ? `<input type="color" data-setting-color="${control.key}"><output data-setting-color-value="${control.key}"></output>`
                             : `<input type="range" min="${control.min}" max="${control.max}" step="${control.step}" data-setting-range="${control.key}">
                                <input type="number" step="${control.step}" data-setting-number="${control.key}">`
                         }
@@ -503,6 +550,15 @@ function initSettingsPage() {
     });
     grid.querySelectorAll('[data-setting-select]').forEach(select => {
         select.addEventListener('change', () => {
+            currentSettings = readForm();
+            applySiteSettings(currentSettings);
+            showStatus('预览中，点击保存后生效记录。');
+        });
+    });
+    grid.querySelectorAll('[data-setting-color]').forEach(color => {
+        color.addEventListener('input', () => {
+            const value = grid.querySelector(`[data-setting-color-value="${color.dataset.settingColor}"]`);
+            if (value) value.textContent = color.value.toUpperCase();
             currentSettings = readForm();
             applySiteSettings(currentSettings);
             showStatus('预览中，点击保存后生效记录。');
@@ -836,6 +892,12 @@ function getCommandPaletteCommands(query) {
             meta: '背景命令',
             keywords: '星空 starfield 背景',
             run: () => updateBackgroundMode('starfield')
+        },
+        {
+            title: '切换为 Tubes Cursor',
+            meta: '背景命令',
+            keywords: 'tubes cursor 管道 背景 动效',
+            run: () => updateBackgroundMode('tubes-cursor')
         },
         {
             title: '打开设置',
@@ -2839,12 +2901,37 @@ function initBackgroundController() {
     const starfield = initStarfield();
     const neuralNoise = initNeuralNoise();
     if (!starfield || !neuralNoise) return;
+    let appliedSettings = normalizeSiteSettings(loadSiteSettings());
+    const tubesCursor = initTubesCursor({
+        onReady() {
+            if (appliedSettings.backgroundMode === 'tubes-cursor') {
+                starfield.setActive(false);
+            }
+        },
+        onUnavailable() {
+            if (appliedSettings.backgroundMode === 'tubes-cursor') {
+                starfield.setActive(true);
+            }
+        }
+    });
+    if (!tubesCursor) return;
 
     backgroundController = {
         applySettings(nextSettings) {
             const settings = normalizeSiteSettings(nextSettings);
+            appliedSettings = settings;
             starfield.applySettings(settings);
             neuralNoise.applySettings(settings);
+            tubesCursor.applySettings(settings);
+
+            if (settings.backgroundMode === 'tubes-cursor') {
+                neuralNoise.setActive(false);
+                tubesCursor.setActive(true);
+                starfield.setActive(!tubesCursor.isReady());
+                return;
+            }
+
+            tubesCursor.setActive(false);
 
             if (settings.backgroundMode === 'neural-noise' && neuralNoise.setActive(true)) {
                 starfield.setActive(false);
@@ -2857,6 +2944,123 @@ function initBackgroundController() {
     };
 
     backgroundController.applySettings(loadSiteSettings());
+}
+
+function initTubesCursor({ onReady, onUnavailable }) {
+    const canvas = document.getElementById('tubes-cursor');
+    if (!canvas) return null;
+
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let app = null;
+    let initializationTimer = null;
+    let modulePromise = null;
+    let isActive = false;
+    let settings = normalizeSiteSettings(loadSiteSettings());
+
+    function getTubeColors() {
+        return [settings.tubesColor1, settings.tubesColor2, settings.tubesColor3];
+    }
+
+    function getTubeLightColors() {
+        return [settings.tubesLightColor1, settings.tubesLightColor2, settings.tubesLightColor3, settings.tubesLightColor4];
+    }
+
+    function applyTubeSettings() {
+        if (!app || !app.tubes) return;
+        app.tubes.setColors(getTubeColors());
+        app.tubes.setLightsColors(getTubeLightColors());
+        app.tubes.setLightsIntensity(settings.tubesLightIntensity);
+    }
+
+    function disposeApp() {
+        if (!app) return;
+        if (typeof app.dispose === 'function') app.dispose();
+        app = null;
+    }
+
+    function initialize() {
+        if (modulePromise || initializationTimer) return;
+        modulePromise = import(TUBES_CURSOR_MODULE_URL)
+            .then(module => {
+                initializationTimer = window.setTimeout(() => {
+                    initializationTimer = null;
+                    if (!isActive || reducedMotion.matches) return;
+                    try {
+                        const createTubesCursor = module.default;
+                        app = createTubesCursor(canvas, {
+                            tubes: {
+                                colors: getTubeColors(),
+                                lights: {
+                                    intensity: settings.tubesLightIntensity,
+                                    colors: getTubeLightColors()
+                                }
+                            }
+                        });
+                        applyTubeSettings();
+                        canvas.style.opacity = '1';
+                        onReady();
+                    } catch (error) {
+                        console.error('Failed to initialize Tubes Cursor:', error);
+                        canvas.hidden = true;
+                        canvas.style.opacity = '';
+                        onUnavailable();
+                    }
+                }, 100);
+            })
+            .catch(error => {
+                console.error('Failed to load Tubes Cursor module:', error);
+                canvas.hidden = true;
+                canvas.style.opacity = '';
+                onUnavailable();
+            })
+            .finally(() => {
+                modulePromise = null;
+            });
+    }
+
+    function setActive(active) {
+        isActive = Boolean(active);
+        if (!isActive) {
+            if (initializationTimer) {
+                window.clearTimeout(initializationTimer);
+                initializationTimer = null;
+            }
+            canvas.hidden = true;
+            canvas.style.opacity = '';
+            disposeApp();
+            return true;
+        }
+        if (reducedMotion.matches) {
+            canvas.hidden = true;
+            canvas.style.opacity = '';
+            onUnavailable();
+            return false;
+        }
+        canvas.hidden = false;
+        if (app) {
+            canvas.style.opacity = '1';
+            applyTubeSettings();
+        } else {
+            canvas.style.opacity = '0';
+            initialize();
+        }
+        return true;
+    }
+
+    reducedMotion.addEventListener('change', () => {
+        if (isActive) setActive(true);
+    });
+
+    return {
+        applySettings(nextSettings) {
+            settings = normalizeSiteSettings(nextSettings);
+            applyTubeSettings();
+        },
+        setActive,
+        isReady() {
+            return Boolean(app);
+        }
+    };
 }
 
 function initStarfield() {
