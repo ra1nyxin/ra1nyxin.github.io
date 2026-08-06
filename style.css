@@ -233,13 +233,14 @@ body {
 
 .home-command-shell {
     position: relative;
-    width: min(680px, 100%);
+    width: min(780px, 100%);
+    transform: translateY(clamp(-48px, -4vh, -24px));
 }
 
 .home-command-input {
     width: 100%;
     box-sizing: border-box;
-    padding: 18px 22px;
+    padding: 14px 22px;
     border: 1px solid var(--soft-border-color);
     border-radius: calc(var(--card-radius) + 2px);
     outline: none;
@@ -255,6 +256,11 @@ body {
 .home-command-input::placeholder {
     color: var(--muted-color);
     opacity: 1;
+    transition: opacity 320ms ease;
+}
+
+.home-command-input.is-placeholder-fading::placeholder {
+    opacity: 0;
 }
 
 .home-command-input:focus {

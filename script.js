@@ -664,6 +664,7 @@ function initHomeCommandPalette() {
     let resultItems = [];
     let placeholderIndex = 0;
     let hideTimer = null;
+    let placeholderFadeTimer = null;
 
     const setPlaceholder = () => {
         if (!input.value) input.placeholder = commandPalettePlaceholders[placeholderIndex];
@@ -754,7 +755,10 @@ function initHomeCommandPalette() {
         });
     };
 
-    const handleInput = () => updateResults();
+    const handleInput = () => {
+        input.classList.remove('is-placeholder-fading');
+        updateResults();
+    };
     const handleFocus = () => {
         if (hideTimer) window.clearTimeout(hideTimer);
         if (input.value) updateResults();
@@ -790,10 +794,17 @@ function initHomeCommandPalette() {
     input.addEventListener('keydown', handleKeyDown);
     setPlaceholder();
 
-    const placeholderTimer = window.setInterval(() => {
-        placeholderIndex = (placeholderIndex + 1) % commandPalettePlaceholders.length;
-        setPlaceholder();
-    }, 3600);
+    const rotatePlaceholder = () => {
+        if (input.value) return;
+        input.classList.add('is-placeholder-fading');
+        placeholderFadeTimer = window.setTimeout(() => {
+            if (destroyed) return;
+            placeholderIndex = (placeholderIndex + 1) % commandPalettePlaceholders.length;
+            setPlaceholder();
+            input.classList.remove('is-placeholder-fading');
+        }, 320);
+    };
+    const placeholderTimer = window.setInterval(rotatePlaceholder, 3900);
 
     if (commandPaletteFocusRequested) {
         commandPaletteFocusRequested = false;
@@ -803,6 +814,7 @@ function initHomeCommandPalette() {
     return () => {
         destroyed = true;
         if (hideTimer) window.clearTimeout(hideTimer);
+        if (placeholderFadeTimer) window.clearTimeout(placeholderFadeTimer);
         window.clearInterval(placeholderTimer);
         input.removeEventListener('input', handleInput);
         input.removeEventListener('focus', handleFocus);
