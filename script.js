@@ -1,5 +1,9 @@
 const pageContents = {
-    home: '',
+    home: `
+        <div class="home-minimal">
+            <h1 class="home-minimal-title">Owo</h1>
+        </div>
+    `,
     notes: `
         <div class="container">
             <h1>笔记</h1>

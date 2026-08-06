@@ -224,6 +224,23 @@ body {
     margin-bottom: 16px;
 }
 
+.home-minimal {
+    min-height: calc(100svh - 136px);
+    display: grid;
+    place-items: center;
+    pointer-events: none;
+}
+
+.home-minimal-title {
+    margin: 0;
+    padding-left: 0.34em;
+    color: var(--text-color) !important;
+    font-size: clamp(20px, 2.4vw, 30px);
+    font-weight: 500;
+    letter-spacing: 0.34em;
+    line-height: 1;
+}
+
 .card {
     background-color: var(--panel-bg);
     border: 1px solid var(--soft-border-color);
