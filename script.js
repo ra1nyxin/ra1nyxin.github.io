@@ -208,7 +208,7 @@ const musicTracks = [
 ];
 
 const defaultSiteSettings = {
-    backgroundMode: 'neural-noise',
+    backgroundMode: 'phosphor-30',
     starCount: 200,
     minRadius: 0.4,
     maxRadius: 1.2,
