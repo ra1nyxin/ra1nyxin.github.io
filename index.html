@@ -35,7 +35,9 @@
 <body>
     <canvas id="starfield" class="background-canvas"></canvas>
     <canvas id="neural-noise" class="background-canvas" hidden></canvas>
-    <canvas id="tubes-cursor" class="background-canvas" hidden></canvas>
+    <div id="tubes-cursor-layer" class="background-layer" aria-hidden="true" hidden>
+        <canvas id="tubes-cursor" class="tubes-cursor-canvas"></canvas>
+    </div>
     <header class="navbar">
         <div class="container">
             <div class="navbar-brand">

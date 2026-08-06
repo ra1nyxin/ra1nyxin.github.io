@@ -90,6 +90,28 @@ body {
     display: none;
 }
 
+.background-layer {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1;
+    overflow: hidden;
+    background-color: var(--starfield-bg);
+    pointer-events: none;
+    transition: background-color var(--transition-speed) ease, opacity 0.24s ease;
+}
+
+.background-layer[hidden] {
+    display: none;
+}
+
+.tubes-cursor-canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
 .container {
     max-width: var(--content-max-width);
     margin: 0 auto;

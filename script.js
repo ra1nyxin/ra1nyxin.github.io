@@ -2948,7 +2948,8 @@ function initBackgroundController() {
 
 function initTubesCursor({ onReady, onUnavailable }) {
     const canvas = document.getElementById('tubes-cursor');
-    if (!canvas) return null;
+    const layer = document.getElementById('tubes-cursor-layer');
+    if (!canvas || !layer) return null;
 
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
     let app = null;
@@ -2997,20 +2998,20 @@ function initTubesCursor({ onReady, onUnavailable }) {
                             }
                         });
                         applyTubeSettings();
-                        canvas.style.opacity = '1';
+                        layer.style.opacity = '1';
                         onReady();
                     } catch (error) {
                         console.error('Failed to initialize Tubes Cursor:', error);
-                        canvas.hidden = true;
-                        canvas.style.opacity = '';
+                        layer.hidden = true;
+                        layer.style.opacity = '';
                         onUnavailable();
                     }
                 }, 100);
             })
             .catch(error => {
                 console.error('Failed to load Tubes Cursor module:', error);
-                canvas.hidden = true;
-                canvas.style.opacity = '';
+                layer.hidden = true;
+                layer.style.opacity = '';
                 onUnavailable();
             })
             .finally(() => {
@@ -3025,23 +3026,23 @@ function initTubesCursor({ onReady, onUnavailable }) {
                 window.clearTimeout(initializationTimer);
                 initializationTimer = null;
             }
-            canvas.hidden = true;
-            canvas.style.opacity = '';
+            layer.hidden = true;
+            layer.style.opacity = '';
             disposeApp();
             return true;
         }
         if (reducedMotion.matches) {
-            canvas.hidden = true;
-            canvas.style.opacity = '';
+            layer.hidden = true;
+            layer.style.opacity = '';
             onUnavailable();
             return false;
         }
-        canvas.hidden = false;
+        layer.hidden = false;
         if (app) {
-            canvas.style.opacity = '1';
+            layer.style.opacity = '1';
             applyTubeSettings();
         } else {
-            canvas.style.opacity = '0';
+            layer.style.opacity = '0';
             initialize();
         }
         return true;
