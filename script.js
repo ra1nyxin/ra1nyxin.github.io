@@ -249,7 +249,10 @@ const defaultSiteSettings = {
     tubesLightColor2: '#b721ff',
     tubesLightColor3: '#f4d03f',
     tubesLightColor4: '#11cdef',
-    tubesLightIntensity: 200
+    tubesLightIntensity: 200,
+    phosphorSpeed: 1,
+    phosphorBrightness: 1,
+    phosphorPixelRatio: 1
 };
 
 const tubesColorSettingKeys = [
@@ -269,7 +272,8 @@ const settingsGroups = [
                 options: [
                     { value: 'starfield', label: '星空' },
                     { value: 'neural-noise', label: 'Neural Noise' },
-                    { value: 'tubes-cursor', label: 'Tubes Cursor' }
+                    { value: 'tubes-cursor', label: 'Tubes Cursor' },
+                    { value: 'phosphor-30', label: 'Phosphor 30' }
                 ]
             },
             { key: 'neuralHue', label: 'Neural Noise 色相', min: 0, max: 360, step: 1 },
@@ -290,6 +294,14 @@ const settingsGroups = [
             { key: 'tubesLightColor3', label: '光源颜色 3', type: 'color' },
             { key: 'tubesLightColor4', label: '光源颜色 4', type: 'color' },
             { key: 'tubesLightIntensity', label: '光照强度', min: 0, max: 400, step: 1 }
+        ]
+    },
+    {
+        title: 'Phosphor 30 参数',
+        controls: [
+            { key: 'phosphorSpeed', label: '动画速度', min: 0, max: 2, step: 0.05 },
+            { key: 'phosphorBrightness', label: '画面亮度', min: 0, max: 2, step: 0.05 },
+            { key: 'phosphorPixelRatio', label: '渲染倍率', min: 0.5, max: 1.5, step: 0.1 }
         ]
     },
     {
@@ -429,7 +441,7 @@ function normalizeSiteSettings(settings) {
     tubesColorSettingKeys.forEach(key => {
         nextSettings[key] = /^#[0-9a-f]{6}$/i.test(nextSettings[key]) ? nextSettings[key] : defaultSiteSettings[key];
     });
-    nextSettings.backgroundMode = ['starfield', 'neural-noise', 'tubes-cursor'].includes(nextSettings.backgroundMode)
+    nextSettings.backgroundMode = ['starfield', 'neural-noise', 'tubes-cursor', 'phosphor-30'].includes(nextSettings.backgroundMode)
         ? nextSettings.backgroundMode
         : 'starfield';
     nextSettings.starCount = Math.max(0, Math.floor(nextSettings.starCount));
@@ -898,6 +910,12 @@ function getCommandPaletteCommands(query) {
             meta: '背景命令',
             keywords: 'tubes cursor 管道 背景 动效',
             run: () => updateBackgroundMode('tubes-cursor')
+        },
+        {
+            title: '切换为 Phosphor 30',
+            meta: '背景命令',
+            keywords: 'phosphor 30 荧光 着色器 背景 动效',
+            run: () => updateBackgroundMode('phosphor-30')
         },
         {
             title: '打开设置',
@@ -2915,6 +2933,19 @@ function initBackgroundController() {
         }
     });
     if (!tubesCursor) return;
+    const phosphor30 = initPhosphor30({
+        onReady() {
+            if (appliedSettings.backgroundMode === 'phosphor-30') {
+                starfield.setActive(false);
+            }
+        },
+        onUnavailable() {
+            if (appliedSettings.backgroundMode === 'phosphor-30') {
+                starfield.setActive(true);
+            }
+        }
+    });
+    if (!phosphor30) return;
 
     backgroundController = {
         applySettings(nextSettings) {
@@ -2923,15 +2954,26 @@ function initBackgroundController() {
             starfield.applySettings(settings);
             neuralNoise.applySettings(settings);
             tubesCursor.applySettings(settings);
+            phosphor30.applySettings(settings);
+
+            if (settings.backgroundMode === 'phosphor-30') {
+                neuralNoise.setActive(false);
+                tubesCursor.setActive(false);
+                phosphor30.setActive(true);
+                starfield.setActive(!phosphor30.isReady());
+                return;
+            }
 
             if (settings.backgroundMode === 'tubes-cursor') {
                 neuralNoise.setActive(false);
+                phosphor30.setActive(false);
                 tubesCursor.setActive(true);
                 starfield.setActive(!tubesCursor.isReady());
                 return;
             }
 
             tubesCursor.setActive(false);
+            phosphor30.setActive(false);
 
             if (settings.backgroundMode === 'neural-noise' && neuralNoise.setActive(true)) {
                 starfield.setActive(false);
@@ -3060,6 +3102,276 @@ function initTubesCursor({ onReady, onUnavailable }) {
         setActive,
         isReady() {
             return Boolean(app);
+        }
+    };
+}
+
+function initPhosphor30({ onReady, onUnavailable }) {
+    const canvas = document.getElementById('phosphor-30');
+    const layer = document.getElementById('phosphor-30-layer');
+    if (!canvas || !layer) return null;
+
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const vertexSource = `#version 300 es
+        precision highp float;
+        layout(location = 0) in vec2 a_pos;
+        out vec2 v_uv;
+        void main() {
+            v_uv = a_pos * 0.5 + 0.5;
+            gl_Position = vec4(a_pos, 0.0, 1.0);
+        }
+    `;
+    const fragmentSource = `#version 300 es
+        precision highp float;
+        out vec4 fragColor;
+        in vec2 v_uv;
+        uniform vec3 iResolution;
+        uniform float iTime;
+        uniform int iFrame;
+        uniform vec4 iMouse;
+        uniform float u_brightness;
+        void mainImage(out vec4 color, in vec2 fragCoord) {
+            vec2 r = iResolution.xy;
+            float t = iTime;
+            vec3 FC = vec3(fragCoord, t);
+            vec4 o = vec4(0.0);
+            float s = 0.0;
+            for (float i = 0.0, z = 0.0, d = 0.0; i++ < 80.0; o += (cos(s + vec4(0.0, 1.0, 8.0, 0.0)) + 1.0) / d) {
+                vec3 p = z * normalize(FC.rgb * 2.0 - r.xyy);
+                vec3 a = normalize(cos(vec3(5.0, 0.0, 1.0) + t - d * 4.0));
+                p.z += 5.0;
+                a = a * dot(a, p) - cross(a, p);
+                for (d = 1.0; d++ < 9.0; ) a -= sin(a * d + t).zxy / d;
+                z += d = 0.1 * abs(length(p) - 3.0) + 0.07 * abs(cos(s = a.y));
+            }
+            o = tanh(o / 5000.0);
+            color = vec4(o.rgb * u_brightness, 1.0);
+        }
+        void main() {
+            mainImage(fragColor, gl_FragCoord.xy);
+        }
+    `;
+
+    let gl = null;
+    let program = null;
+    let vao = null;
+    let vertexBuffer = null;
+    let uniforms = null;
+    let animationFrameId = null;
+    let resizeFrameId = null;
+    let resourcesReady = false;
+    let wantsActive = false;
+    let isActive = false;
+    let startTime = 0;
+    let frame = 0;
+    let settings = normalizeSiteSettings(loadSiteSettings());
+
+    function getPixelRatio() {
+        const devicePixelRatio = window.devicePixelRatio || 1;
+        const deviceCap = window.innerWidth < 768 ? 1 : 1.5;
+        return Math.max(0.5, Math.min(settings.phosphorPixelRatio, devicePixelRatio, deviceCap));
+    }
+
+    function compileShader(type, source) {
+        const shader = gl.createShader(type);
+        gl.shaderSource(shader, source);
+        gl.compileShader(shader);
+        if (gl.getShaderParameter(shader, gl.COMPILE_STATUS)) return shader;
+        console.error('Phosphor 30 shader compile error:', gl.getShaderInfoLog(shader));
+        gl.deleteShader(shader);
+        return null;
+    }
+
+    function releaseResources() {
+        if (animationFrameId) {
+            cancelAnimationFrame(animationFrameId);
+            animationFrameId = null;
+        }
+        if (!gl) return;
+        if (vertexBuffer) gl.deleteBuffer(vertexBuffer);
+        if (vao) gl.deleteVertexArray(vao);
+        if (program) gl.deleteProgram(program);
+        vertexBuffer = null;
+        vao = null;
+        program = null;
+        uniforms = null;
+        resourcesReady = false;
+    }
+
+    function resizeCanvas() {
+        resizeFrameId = null;
+        if (!gl || !resourcesReady || !isActive) return;
+        const width = Math.max(1, Math.floor(layer.clientWidth * getPixelRatio()));
+        const height = Math.max(1, Math.floor(layer.clientHeight * getPixelRatio()));
+        if (canvas.width !== width || canvas.height !== height) {
+            canvas.width = width;
+            canvas.height = height;
+            gl.viewport(0, 0, width, height);
+        }
+    }
+
+    function scheduleResize() {
+        if (resizeFrameId) return;
+        resizeFrameId = requestAnimationFrame(() => {
+            resizeCanvas();
+            startRendering(false);
+        });
+    }
+
+    function setupResources() {
+        gl = canvas.getContext('webgl2', { premultipliedAlpha: false, antialias: false });
+        if (!gl) {
+            console.error('Phosphor 30 requires WebGL2.');
+            return false;
+        }
+        const vertexShader = compileShader(gl.VERTEX_SHADER, vertexSource);
+        const fragmentShader = compileShader(gl.FRAGMENT_SHADER, fragmentSource);
+        if (!vertexShader || !fragmentShader) {
+            if (vertexShader) gl.deleteShader(vertexShader);
+            if (fragmentShader) gl.deleteShader(fragmentShader);
+            return false;
+        }
+        program = gl.createProgram();
+        gl.attachShader(program, vertexShader);
+        gl.attachShader(program, fragmentShader);
+        gl.linkProgram(program);
+        gl.deleteShader(vertexShader);
+        gl.deleteShader(fragmentShader);
+        if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+            console.error('Phosphor 30 program link error:', gl.getProgramInfoLog(program));
+            releaseResources();
+            return false;
+        }
+        vao = gl.createVertexArray();
+        vertexBuffer = gl.createBuffer();
+        if (!vao || !vertexBuffer) {
+            releaseResources();
+            return false;
+        }
+        gl.bindVertexArray(vao);
+        gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
+        gl.enableVertexAttribArray(0);
+        gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0);
+        gl.bindVertexArray(null);
+        uniforms = {
+            resolution: gl.getUniformLocation(program, 'iResolution'),
+            time: gl.getUniformLocation(program, 'iTime'),
+            frame: gl.getUniformLocation(program, 'iFrame'),
+            mouse: gl.getUniformLocation(program, 'iMouse'),
+            brightness: gl.getUniformLocation(program, 'u_brightness')
+        };
+        gl.clearColor(0, 0, 0, 1);
+        resourcesReady = true;
+        resizeCanvas();
+        return true;
+    }
+
+    function shouldAnimate() {
+        return isActive && resourcesReady && !document.hidden && !reducedMotion.matches;
+    }
+
+    function draw(now) {
+        animationFrameId = null;
+        if (!shouldAnimate() || gl.isContextLost()) return;
+        gl.useProgram(program);
+        gl.clear(gl.COLOR_BUFFER_BIT);
+        gl.uniform3f(uniforms.resolution, canvas.width, canvas.height, getPixelRatio());
+        gl.uniform1f(uniforms.time, ((now - startTime) / 1000) * settings.phosphorSpeed);
+        if (uniforms.frame) gl.uniform1i(uniforms.frame, frame++);
+        if (uniforms.mouse) gl.uniform4f(uniforms.mouse, 0, 0, 0, 0);
+        gl.uniform1f(uniforms.brightness, settings.phosphorBrightness);
+        gl.bindVertexArray(vao);
+        gl.drawArrays(gl.TRIANGLES, 0, 3);
+        gl.bindVertexArray(null);
+        animationFrameId = requestAnimationFrame(draw);
+    }
+
+    function startRendering(resetTime) {
+        if (animationFrameId) {
+            cancelAnimationFrame(animationFrameId);
+            animationFrameId = null;
+        }
+        if (!shouldAnimate()) return;
+        if (resetTime) {
+            startTime = performance.now();
+            frame = 0;
+        }
+        draw(performance.now());
+    }
+
+    function setActive(active) {
+        wantsActive = Boolean(active);
+        if (!wantsActive) {
+            isActive = false;
+            layer.hidden = true;
+            layer.style.opacity = '';
+            releaseResources();
+            return true;
+        }
+        if (reducedMotion.matches) {
+            isActive = false;
+            layer.hidden = true;
+            layer.style.opacity = '';
+            releaseResources();
+            onUnavailable();
+            return false;
+        }
+        if (isActive && resourcesReady) {
+            layer.hidden = false;
+            layer.style.opacity = '1';
+            startRendering(false);
+            return true;
+        }
+        isActive = true;
+        layer.hidden = false;
+        layer.style.opacity = '0';
+        releaseResources();
+        if (!setupResources()) {
+            isActive = false;
+            layer.hidden = true;
+            layer.style.opacity = '';
+            onUnavailable();
+            return false;
+        }
+        layer.style.opacity = '1';
+        onReady();
+        startRendering(true);
+        return true;
+    }
+
+    const resizeObserver = new ResizeObserver(scheduleResize);
+    resizeObserver.observe(layer);
+    document.addEventListener('visibilitychange', () => {
+        if (isActive) startRendering(false);
+    });
+    reducedMotion.addEventListener('change', () => {
+        if (wantsActive) setActive(true);
+    });
+    canvas.addEventListener('webglcontextlost', event => {
+        event.preventDefault();
+        resourcesReady = false;
+        if (animationFrameId) cancelAnimationFrame(animationFrameId);
+        animationFrameId = null;
+        layer.hidden = true;
+        layer.style.opacity = '';
+        onUnavailable();
+    });
+    canvas.addEventListener('webglcontextrestored', () => {
+        if (wantsActive) setActive(true);
+    });
+
+    return {
+        applySettings(nextSettings) {
+            settings = normalizeSiteSettings(nextSettings);
+            if (isActive) {
+                scheduleResize();
+                startRendering(false);
+            }
+        },
+        setActive,
+        isReady() {
+            return resourcesReady;
         }
     };
 }
