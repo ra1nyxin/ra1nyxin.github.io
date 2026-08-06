@@ -764,7 +764,7 @@ const docFallbackFiles = [
 function getInitialPage() {
     const params = new URLSearchParams(window.location.search);
     const requestedPage = params.get('page') || 'home';
-    return pageContents[requestedPage] ? requestedPage : 'home';
+    return Object.prototype.hasOwnProperty.call(pageContents, requestedPage) ? requestedPage : 'home';
 }
 
 function setPageUrl(page) {
@@ -778,7 +778,7 @@ function setPageUrl(page) {
 function loadContent(page, options = {}) {
     cleanupPage();
     const mainContent = document.querySelector('main.content');
-    if (pageContents[page]) {
+    if (Object.prototype.hasOwnProperty.call(pageContents, page)) {
         setPageMetadata(page);
         if (options.updateUrl !== false) {
             setPageUrl(page);
