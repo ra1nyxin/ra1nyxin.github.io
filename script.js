@@ -1,98 +1,5 @@
 const pageContents = {
-    home: `
-        <div class="container about-home">
-            <section class="about-quiet-hero" aria-labelledby="about-home-title" data-aos="fade-up">
-                <div class="about-hero-copy">
-                    <p class="about-kicker">Owo / profile</p>
-                    <h1 id="about-home-title">一些留在网络里的痕迹</h1>
-                    <p>关于小雨..</p>
-                </div>
-                <div class="about-particle-orb" aria-hidden="true">
-                    <css-doodle click-to-update experimental>
-                        :doodle {
-                            @grid: 150x1;
-                            width: 380px;
-                            height: 380px;
-                            font-size: 2vmin;
-                        }
-                        :container {
-                            transform-style: preserve-3d;
-                            animation: orb-spin 40s linear infinite;
-                        }
-                        @place-cell: center;
-                        @size: @r(.24em, .66em);
-                        color: var(--orb-primary);
-                        opacity: @r(.42, .96);
-                        transform:
-                            rotateZ(calc(@i * 137.5deg))
-                            rotateY(calc(@i * 47deg))
-                            translateX(@r(2.4em, 11.6em))
-                            rotateY(calc(@i * 1deg));
-                        transform-style: preserve-3d;
-                        will-change: transform;
-                        :after {
-                            content: '';
-                            position: absolute;
-                            left: 0;
-                            top: 0;
-                            border-radius: 50%;
-                            @size: 100%;
-                            background: currentColor;
-                            box-shadow: @m2(
-                                0 calc(@lr * @n) 0 calc(-.04em - @n * .04em)
-                                currentColor
-                            );
-                        }
-                        :before {
-                            content: '';
-                            position: absolute;
-                            left: 50%;
-                            top: 0;
-                            width: 1px;
-                            height: @r(1em, 5.8em);
-                            border-left: 1px @p(solid, dashed, dotted) currentColor;
-                            opacity: .34;
-                            transform: rotateY(calc(@i * 1deg));
-                        }
-                        @keyframes orb-spin {
-                            to { transform: rotateY(1turn); }
-                        }
-                    </css-doodle>
-                </div>
-            </section>
-            <section class="about-signal-grid" aria-label="profile overview" data-aos="fade-up" data-aos-delay="80">
-                <div>
-                    <span>01</span>
-                    <strong>网络生活</strong>
-                    <p>多数连接发生在屏幕、文档、仓库、社区和游戏里。</p>
-                </div>
-                <div>
-                    <span>02</span>
-                    <strong>复现路径</strong>
-                    <p>更关注复现、影响、修复路径和长期可验证的工程动作。</p>
-                </div>
-                <div>
-                    <span>03</span>
-                    <strong>边界意识</strong>
-                    <p>信息不会被当成孤立碎片，亲近也不等于索取现实细节。</p>
-                </div>
-                <div>
-                    <span>04</span>
-                    <strong>长期协作</strong>
-                    <p>通过文字、代码、issue、报告和项目维护建立稳定关系。</p>
-                </div>
-            </section>
-            <section class="about-profile-shell" aria-label="about profile" data-aos="fade-up" data-aos-delay="120">
-                <aside class="about-profile-nav">
-                    <p>Profile</p>
-                    <nav id="about-profile-toc" aria-label="AboutMe sections"></nav>
-                </aside>
-                <article id="about-profile-content" class="about-profile-content">
-                    <p class="about-loading">正在读取 AboutMe.md</p>
-                </article>
-            </section>
-        </div>
-    `,
+    home: '',
     notes: `
         <div class="container">
             <h1>笔记</h1>
@@ -220,7 +127,7 @@ const DEVTOOLS_REDIRECT_URL = 'https://ys.mihoyo.com/';
 const pageMeta = {
     home: {
         title: 'Owo - 小雨的个人网站',
-        description: 'Owo 是小雨托管在 GitHub Pages 上的个人网站，主页收录一份关于文字、边界、网络生活和长期协作的个人档案。'
+        description: 'Owo 是一个轻量的 GitHub Pages 站点入口。'
     },
     notes: {
         title: '笔记 - Owo',
@@ -458,7 +365,6 @@ function applySiteSettings(settings) {
     rootStyle.setProperty('--starfield-hue', String(normalizedSettings.backgroundHue));
     rootStyle.setProperty('--starfield-saturation', `${normalizedSettings.backgroundSaturation}%`);
     rootStyle.setProperty('--starfield-lightness', `${normalizedSettings.backgroundLightness}%`);
-    document.documentElement.dataset.backgroundMode = normalizedSettings.backgroundMode;
 
     if (backgroundController) {
         backgroundController.applySettings(normalizedSettings);
@@ -666,53 +572,6 @@ async function loadMarkdownContent(filePath, targetElementId) {
         if (targetElement) {
             targetElement.innerHTML = `<p style="color: red;">加载内容失败: ${error.message}</p>`;
         }
-    }
-}
-
-function slugifyHeading(text, index) {
-    const slug = text
-        .trim()
-        .toLowerCase()
-        .replace(/[^\p{L}\p{N}]+/gu, '-')
-        .replace(/^-+|-+$/g, '');
-    return slug || `section-${index + 1}`;
-}
-
-async function loadAboutProfile() {
-    const contentElement = document.getElementById('about-profile-content');
-    const tocElement = document.getElementById('about-profile-toc');
-    if (!contentElement || !tocElement) return;
-
-    try {
-        const response = await fetch('AboutMe.md');
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const markdown = await response.text();
-        contentElement.innerHTML = marked.parse(markdown);
-
-        const headings = Array.from(contentElement.querySelectorAll('h2'));
-        tocElement.innerHTML = '';
-        headings.forEach((heading, index) => {
-            const id = `about-${slugifyHeading(heading.textContent, index)}`;
-            heading.id = id;
-
-            const link = document.createElement('a');
-            link.href = `#${id}`;
-            link.textContent = heading.textContent;
-            tocElement.appendChild(link);
-        });
-
-        if (!headings.length) {
-            tocElement.innerHTML = '<span>暂无章节</span>';
-        }
-        refreshScrollAnimations();
-    } catch (error) {
-        console.error('Error loading about profile:', error);
-        contentElement.innerHTML = `<p class="about-error">AboutMe.md 读取失败：${error.message}</p>`;
-        tocElement.innerHTML = '<span>读取失败</span>';
-        refreshScrollAnimations();
     }
 }
 
@@ -926,9 +785,7 @@ function loadContent(page, options = {}) {
         }
         mainContent.innerHTML = pageContents[page];
         applyDefaultScrollAnimations(mainContent);
-        if (page === 'home') {
-            loadAboutProfile();
-        } else if (page === 'notes') {
+        if (page === 'notes') {
             loadMarkdownContent('notes_git_commands.md', 'git-commands-tutorial');
             loadMarkdownContent('notes_terminal_commands.md', 'terminal-commands-tutorial');
             loadMarkdownContent('notes_proxy_settings.md', 'proxy-settings-tutorial');
