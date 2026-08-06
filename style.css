@@ -9,7 +9,7 @@
     --control-radius: 6px;
     --card-gap: 24px;
     --panel-opacity: 0.45;
-    --navbar-opacity: 0.55;
+    --navbar-opacity: 0;
     --panel-blur: 8px;
     --navbar-blur: 10px;
     --shadow-strength: 1;
@@ -30,14 +30,14 @@
     --soft-border-color: rgba(33, 38, 45, 0.4);
     --panel-bg: rgba(var(--panel-rgb), var(--panel-opacity));
     --navbar-bg: rgba(var(--navbar-rgb), var(--navbar-opacity));
-    --navbar-border: rgba(33, 38, 45, 0.6);
+    --navbar-border: rgba(33, 38, 45, calc(0.6 * var(--navbar-opacity)));
     --input-bg: #0d1117;
     --button-bg: #21262d;
     --button-hover-bg: #30363d;
     --table-alt-bg: #161b22;
     --table-hover-bg: #1f242b;
     --shadow-color: rgba(0, 0, 0, calc(0.3 * var(--shadow-strength)));
-    --navbar-shadow: rgba(0, 0, 0, calc(0.25 * var(--shadow-strength)));
+    --navbar-shadow: rgba(0, 0, 0, calc(0.25 * var(--shadow-strength) * var(--navbar-opacity)));
     --starfield-bg: hsl(var(--starfield-hue), var(--starfield-saturation), var(--starfield-lightness));
     --star-color: hsl(var(--star-hue), var(--star-saturation), var(--star-lightness));
 }
@@ -53,14 +53,14 @@
     --soft-border-color: rgba(208, 215, 222, 0.8);
     --panel-bg: rgba(var(--panel-rgb), var(--panel-opacity));
     --navbar-bg: rgba(var(--navbar-rgb), var(--navbar-opacity));
-    --navbar-border: rgba(208, 215, 222, 0.8);
+    --navbar-border: rgba(208, 215, 222, calc(0.8 * var(--navbar-opacity)));
     --input-bg: #ffffff;
     --button-bg: #f6f8fa;
     --button-hover-bg: #eef2f6;
     --table-alt-bg: #f6f8fa;
     --table-hover-bg: #eef2f6;
     --shadow-color: rgba(31, 35, 40, calc(0.12 * var(--shadow-strength)));
-    --navbar-shadow: rgba(31, 35, 40, calc(0.12 * var(--shadow-strength)));
+    --navbar-shadow: rgba(31, 35, 40, calc(0.12 * var(--shadow-strength) * var(--navbar-opacity)));
     --starfield-bg: #f4f7fb;
     --star-color: hsl(var(--star-hue), var(--star-saturation), var(--star-lightness));
 }
@@ -264,6 +264,14 @@ body {
     gap: 40px;
     align-items: center;
     border-bottom: 1px solid var(--soft-border-color);
+}
+
+:root[data-background-mode="neural-noise"] .about-quiet-hero {
+    grid-template-columns: 1fr;
+}
+
+:root[data-background-mode="neural-noise"] .about-particle-orb {
+    display: none;
 }
 
 .about-hero-copy {

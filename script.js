@@ -283,7 +283,7 @@ const musicTracks = [
 ];
 
 const defaultSiteSettings = {
-    backgroundMode: 'starfield',
+    backgroundMode: 'neural-noise',
     starCount: 200,
     minRadius: 0.4,
     maxRadius: 1.2,
@@ -307,7 +307,7 @@ const defaultSiteSettings = {
     controlRadius: 6,
     cardGap: 24,
     panelOpacity: 0.45,
-    navbarOpacity: 0.55,
+    navbarOpacity: 0,
     panelBlur: 8,
     navbarBlur: 10,
     shadowStrength: 1,
@@ -458,6 +458,7 @@ function applySiteSettings(settings) {
     rootStyle.setProperty('--starfield-hue', String(normalizedSettings.backgroundHue));
     rootStyle.setProperty('--starfield-saturation', `${normalizedSettings.backgroundSaturation}%`);
     rootStyle.setProperty('--starfield-lightness', `${normalizedSettings.backgroundLightness}%`);
+    document.documentElement.dataset.backgroundMode = normalizedSettings.backgroundMode;
 
     if (backgroundController) {
         backgroundController.applySettings(normalizedSettings);
