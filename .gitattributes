@@ -6,8 +6,9 @@
 *.jpg binary
 *.jpeg binary
 *.gif binary
-*.svg binary
+*.svg text eol=lf
 *.mp4 binary
+*.mp3 binary
 *.zip binary
 *.ico binary
 *.woff binary
