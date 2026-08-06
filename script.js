@@ -1,8 +1,20 @@
 const pageContents = {
     home: `
-        <div class="home-minimal">
-            <h1 class="home-minimal-title">Owo</h1>
-        </div>
+        <section class="home-command" aria-label="站内快速检索">
+            <div class="home-command-shell" id="home-command-shell">
+                <input
+                    id="home-command-input"
+                    class="home-command-input"
+                    type="search"
+                    autocomplete="off"
+                    spellcheck="false"
+                    aria-label="搜索笔记、文档或输入命令"
+                    aria-autocomplete="list"
+                    aria-controls="home-command-results"
+                >
+                <div id="home-command-results" class="home-command-results" role="listbox" hidden></div>
+            </div>
+        </section>
     `,
     notes: `
         <div class="container">
@@ -182,6 +194,8 @@ let cleanupCurrentPage = null;
 let backgroundController = null;
 let musicPlayer = null;
 let hasRedirectedForDevtools = false;
+let commandPaletteFocusRequested = false;
+let commandSearchIndexPromise = null;
 
 const musicTracks = [
     { name: 'K歌之王', artist: '小雨的歌单', url: 'music/K歌之王.mp3' },
@@ -606,6 +620,401 @@ function applyDefaultScrollAnimations(scope = document) {
     });
 }
 
+const commandPalettePlaceholders = [
+    '尝试搜点什么…',
+    '使用 > 进行一些设置…',
+    '今天吃点什么…',
+    '搜索笔记、文档和命令…'
+];
+
+const commandPaletteNoteSources = [
+    { filePath: 'notes_git_commands.md', title: 'Git 命令笔记', anchor: 'git-commands-tutorial' },
+    { filePath: 'notes_terminal_commands.md', title: '终端命令笔记', anchor: 'terminal-commands-tutorial' },
+    { filePath: 'notes_proxy_settings.md', title: '代理设置笔记', anchor: 'proxy-settings-tutorial' },
+    { filePath: 'notes_npm_commands.md', title: 'npm 命令笔记', anchor: 'npm-commands-tutorial' },
+    { filePath: 'notes_gcc_g++_commands.md', title: 'GCC / G++ 命令笔记', anchor: 'gcc-gpp-commands-tutorial' },
+    { filePath: 'notes_dotnet_commands.md', title: '.NET 命令笔记', anchor: 'dotnet-commands-tutorial' },
+    { filePath: 'notes_powershell_commands.md', title: 'PowerShell 命令笔记', anchor: 'powershell-commands-tutorial' }
+];
+
+function initCommandPaletteShortcut() {
+    window.addEventListener('keydown', event => {
+        if (!(event.metaKey || event.ctrlKey) || event.key.toLowerCase() !== 'k') return;
+        event.preventDefault();
+        commandPaletteFocusRequested = true;
+
+        const input = document.getElementById('home-command-input');
+        if (input) {
+            commandPaletteFocusRequested = false;
+            input.focus();
+            return;
+        }
+        loadContent('home');
+    });
+}
+
+function initHomeCommandPalette() {
+    const shell = document.getElementById('home-command-shell');
+    const input = document.getElementById('home-command-input');
+    const resultsElement = document.getElementById('home-command-results');
+    if (!shell || !input || !resultsElement) return null;
+
+    let destroyed = false;
+    let selectedIndex = 0;
+    let resultItems = [];
+    let placeholderIndex = 0;
+    let hideTimer = null;
+
+    const setPlaceholder = () => {
+        if (!input.value) input.placeholder = commandPalettePlaceholders[placeholderIndex];
+    };
+
+    const renderMessage = message => {
+        resultsElement.hidden = false;
+        resultsElement.replaceChildren();
+        const element = document.createElement('p');
+        element.className = 'home-command-message';
+        element.textContent = message;
+        resultsElement.appendChild(element);
+    };
+
+    const runResult = item => {
+        if (!item) return;
+        input.value = '';
+        resultItems = [];
+        resultsElement.hidden = true;
+        if (item.type === 'command') {
+            item.run();
+            return;
+        }
+        openSearchResult(item);
+    };
+
+    const renderResults = () => {
+        resultsElement.hidden = false;
+        resultsElement.replaceChildren();
+
+        if (!resultItems.length) {
+            renderMessage(input.value.trim().startsWith('>') ? '没有匹配的本地命令。' : '没有找到相关的笔记或文档。');
+            return;
+        }
+
+        resultItems.forEach((item, index) => {
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.className = 'home-command-result';
+            button.setAttribute('role', 'option');
+            button.setAttribute('aria-selected', String(index === selectedIndex));
+            if (index === selectedIndex) button.classList.add('is-selected');
+
+            const title = document.createElement('span');
+            title.className = 'home-command-result-title';
+            title.textContent = item.title;
+            const meta = document.createElement('span');
+            meta.className = 'home-command-result-meta';
+            meta.textContent = item.meta;
+            button.append(title, meta);
+
+            if (item.snippet) {
+                const snippet = document.createElement('span');
+                snippet.className = 'home-command-result-snippet';
+                snippet.textContent = item.snippet;
+                button.appendChild(snippet);
+            }
+
+            button.addEventListener('pointerdown', event => {
+                event.preventDefault();
+                runResult(item);
+            });
+            resultsElement.appendChild(button);
+        });
+    };
+
+    const updateResults = () => {
+        const query = input.value.trim();
+        selectedIndex = 0;
+        if (!query) {
+            resultItems = [];
+            resultsElement.hidden = true;
+            return;
+        }
+
+        if (query.startsWith('>')) {
+            resultItems = getCommandPaletteCommands(query.slice(1));
+            renderResults();
+            return;
+        }
+
+        renderMessage('正在建立本地索引…');
+        getCommandSearchIndex().then(index => {
+            if (destroyed || input.value.trim() !== query) return;
+            resultItems = searchCommandIndex(index, query);
+            selectedIndex = 0;
+            renderResults();
+        });
+    };
+
+    const handleInput = () => updateResults();
+    const handleFocus = () => {
+        if (hideTimer) window.clearTimeout(hideTimer);
+        if (input.value) updateResults();
+    };
+    const handleBlur = () => {
+        hideTimer = window.setTimeout(() => {
+            if (!shell.contains(document.activeElement)) resultsElement.hidden = true;
+        }, 120);
+    };
+    const handleKeyDown = event => {
+        if (!resultItems.length) {
+            if (event.key === 'Escape') input.blur();
+            return;
+        }
+        if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+            event.preventDefault();
+            selectedIndex = event.key === 'ArrowDown'
+                ? (selectedIndex + 1) % resultItems.length
+                : (selectedIndex - 1 + resultItems.length) % resultItems.length;
+            renderResults();
+        } else if (event.key === 'Enter') {
+            event.preventDefault();
+            runResult(resultItems[selectedIndex]);
+        } else if (event.key === 'Escape') {
+            event.preventDefault();
+            input.blur();
+        }
+    };
+
+    input.addEventListener('input', handleInput);
+    input.addEventListener('focus', handleFocus);
+    input.addEventListener('blur', handleBlur);
+    input.addEventListener('keydown', handleKeyDown);
+    setPlaceholder();
+
+    const placeholderTimer = window.setInterval(() => {
+        placeholderIndex = (placeholderIndex + 1) % commandPalettePlaceholders.length;
+        setPlaceholder();
+    }, 3600);
+
+    if (commandPaletteFocusRequested) {
+        commandPaletteFocusRequested = false;
+        requestAnimationFrame(() => input.focus());
+    }
+
+    return () => {
+        destroyed = true;
+        if (hideTimer) window.clearTimeout(hideTimer);
+        window.clearInterval(placeholderTimer);
+        input.removeEventListener('input', handleInput);
+        input.removeEventListener('focus', handleFocus);
+        input.removeEventListener('blur', handleBlur);
+        input.removeEventListener('keydown', handleKeyDown);
+    };
+}
+
+function getCommandPaletteCommands(query) {
+    const commands = [
+        {
+            title: '切换为 Neural Noise',
+            meta: '背景命令',
+            keywords: 'neural noise 背景 动效',
+            run: () => updateBackgroundMode('neural-noise')
+        },
+        {
+            title: '切换为星空',
+            meta: '背景命令',
+            keywords: '星空 starfield 背景',
+            run: () => updateBackgroundMode('starfield')
+        },
+        {
+            title: '打开设置',
+            meta: '跳转命令',
+            keywords: '设置 外观 背景',
+            run: () => loadContent('settings')
+        },
+        {
+            title: '打开主页',
+            meta: '跳转命令',
+            keywords: '主页 home',
+            run: () => loadContent('home')
+        },
+        {
+            title: '打开笔记',
+            meta: '跳转命令',
+            keywords: '笔记 notes',
+            run: () => loadContent('notes')
+        },
+        {
+            title: '打开文档',
+            meta: '跳转命令',
+            keywords: '文档 docs',
+            run: () => loadContent('docs')
+        },
+        {
+            title: '打开手册',
+            meta: '跳转命令',
+            keywords: '手册 manual',
+            run: () => loadContent('manual')
+        },
+        {
+            title: '打开图库',
+            meta: '跳转命令',
+            keywords: '图库 gallery 图片',
+            run: () => loadContent('gallery')
+        },
+        {
+            title: '打开游戏',
+            meta: '跳转命令',
+            keywords: '游戏 game',
+            run: () => loadContent('game')
+        },
+        {
+            title: '打开留言',
+            meta: '跳转命令',
+            keywords: '留言 message',
+            run: () => loadContent('message')
+        },
+        {
+            title: '打开测试页面',
+            meta: '跳转命令',
+            keywords: '测试 test',
+            run: () => loadContent('test')
+        },
+        {
+            title: '打开其他页面',
+            meta: '跳转命令',
+            keywords: '其他 other',
+            run: () => loadContent('other')
+        }
+    ];
+    const normalizedQuery = normalizeCommandSearchText(query);
+    return commands
+        .map(command => ({ ...command, type: 'command', score: getFuzzyScore(`${command.title} ${command.keywords}`, normalizedQuery) }))
+        .filter(command => !normalizedQuery || command.score >= 0)
+        .sort((left, right) => right.score - left.score)
+        .slice(0, 8);
+}
+
+function updateBackgroundMode(backgroundMode) {
+    const settings = loadSiteSettings();
+    settings.backgroundMode = backgroundMode;
+    saveSiteSettings(settings);
+    applySiteSettings(settings);
+}
+
+function getCommandSearchIndex() {
+    if (!commandSearchIndexPromise) {
+        commandSearchIndexPromise = buildCommandSearchIndex().catch(error => {
+            console.error('Failed to build command search index:', error);
+            return [];
+        });
+    }
+    return commandSearchIndexPromise;
+}
+
+async function buildCommandSearchIndex() {
+    const docFiles = await fetchDocFileList();
+    const sources = [
+        ...commandPaletteNoteSources.map(source => ({ ...source, type: '笔记', page: 'notes' })),
+        ...docFiles.map(fileName => ({
+            filePath: fileName,
+            title: formatDocTitle(fileName),
+            type: '文档',
+            page: 'docs',
+            anchor: `doc-section-${sanitizeId(fileName)}`
+        }))
+    ];
+    const uniqueSources = sources.filter((source, index) => sources.findIndex(item => item.filePath === source.filePath) === index);
+    const indexedSources = await Promise.all(uniqueSources.map(async source => {
+        try {
+            const response = await fetch(source.filePath);
+            if (!response.ok) return null;
+            const markdown = await response.text();
+            return { ...source, text: markdownToSearchText(markdown) };
+        } catch (error) {
+            console.error(`Failed to index ${source.filePath}:`, error);
+            return null;
+        }
+    }));
+    return indexedSources.filter(Boolean);
+}
+
+function markdownToSearchText(markdown) {
+    return markdown
+        .replace(/```/g, ' ')
+        .replace(/!\[[^\]]*\]\([^)]*\)/g, ' ')
+        .replace(/\[([^\]]+)\]\([^)]*\)/g, '$1')
+        .replace(/[#>*_`~|]/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+}
+
+function normalizeCommandSearchText(text) {
+    return text.toLocaleLowerCase().replace(/\s+/g, '');
+}
+
+function getFuzzyScore(text, normalizedQuery) {
+    if (!normalizedQuery) return 0;
+    const normalizedText = normalizeCommandSearchText(text);
+    const exactPosition = normalizedText.indexOf(normalizedQuery);
+    if (exactPosition >= 0) return 5000 - Math.min(exactPosition, 1000);
+
+    let cursor = 0;
+    let score = 0;
+    for (const character of normalizedQuery) {
+        const position = normalizedText.indexOf(character, cursor);
+        if (position < 0) return -1;
+        score += Math.max(1, 12 - (position - cursor));
+        cursor = position + 1;
+    }
+    return score;
+}
+
+function searchCommandIndex(index, query) {
+    const normalizedQuery = normalizeCommandSearchText(query);
+    return index
+        .map(source => {
+            const titleScore = getFuzzyScore(source.title, normalizedQuery);
+            const textScore = getFuzzyScore(source.text, normalizedQuery);
+            const score = Math.max(titleScore >= 0 ? titleScore + 6000 : -1, textScore);
+            return score < 0 ? null : {
+                ...source,
+                type: 'document',
+                meta: source.type,
+                score,
+                snippet: getSearchSnippet(source.text, query)
+            };
+        })
+        .filter(Boolean)
+        .sort((left, right) => right.score - left.score)
+        .slice(0, 8);
+}
+
+function getSearchSnippet(text, query) {
+    const normalizedText = text.toLocaleLowerCase();
+    const position = normalizedText.indexOf(query.toLocaleLowerCase());
+    if (position < 0) return text.slice(0, 128);
+    const start = Math.max(0, position - 52);
+    const end = Math.min(text.length, position + query.length + 92);
+    return `${start > 0 ? '…' : ''}${text.slice(start, end)}${end < text.length ? '…' : ''}`;
+}
+
+function openSearchResult(result) {
+    loadContent(result.page);
+    if (!result.anchor) return;
+
+    let attempts = 0;
+    const scrollToTarget = () => {
+        const target = document.getElementById(result.anchor);
+        if (target) {
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            return;
+        }
+        attempts += 1;
+        if (attempts < 24) window.setTimeout(scrollToTarget, 120);
+    };
+    window.setTimeout(scrollToTarget, 80);
+}
+
 function githubSearch() {
     const query = document.getElementById('github-search-input').value;
     if (query) {
@@ -789,7 +1198,9 @@ function loadContent(page, options = {}) {
         }
         mainContent.innerHTML = pageContents[page];
         applyDefaultScrollAnimations(mainContent);
-        if (page === 'notes') {
+        if (page === 'home') {
+            cleanupCurrentPage = initHomeCommandPalette();
+        } else if (page === 'notes') {
             loadMarkdownContent('notes_git_commands.md', 'git-commands-tutorial');
             loadMarkdownContent('notes_terminal_commands.md', 'terminal-commands-tutorial');
             loadMarkdownContent('notes_proxy_settings.md', 'proxy-settings-tutorial');
@@ -2254,6 +2665,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initDevtoolsRedirect();
     initThemeToggle();
     initScrollAnimations();
+    initCommandPaletteShortcut();
     applySiteSettings(loadSiteSettings());
     loadContent(getInitialPage(), { updateUrl: false });
     initBackgroundController();
