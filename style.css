@@ -861,6 +861,13 @@ body {
     bottom: 18px;
     z-index: 20;
     width: min(360px, calc(100vw - 36px));
+    opacity: 0;
+    transition: opacity 0.36s ease;
+}
+
+.floating-music-player.is-visible,
+.floating-music-player:focus-within {
+    opacity: 1;
 }
 
 .floating-music-player .aplayer {

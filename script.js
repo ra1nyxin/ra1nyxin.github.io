@@ -208,7 +208,7 @@ const musicTracks = [
 ];
 
 const defaultSiteSettings = {
-    backgroundMode: 'quantum-nebula',
+    backgroundMode: 'neural-noise',
     starCount: 200,
     minRadius: 0.4,
     maxRadius: 1.2,
@@ -2863,6 +2863,31 @@ function initMusicPlayer() {
         listFolded: true,
         audio
     });
+    initMusicPlayerVisibility(playerElement);
+}
+
+function initMusicPlayerVisibility(playerElement) {
+    let hideTimer = null;
+
+    const showPlayer = () => {
+        if (hideTimer) {
+            window.clearTimeout(hideTimer);
+            hideTimer = null;
+        }
+        playerElement.classList.add('is-visible');
+    };
+    const hidePlayerLater = () => {
+        if (hideTimer) window.clearTimeout(hideTimer);
+        hideTimer = window.setTimeout(() => {
+            playerElement.classList.remove('is-visible');
+            hideTimer = null;
+        }, 3000);
+    };
+
+    playerElement.addEventListener('pointerenter', showPlayer);
+    playerElement.addEventListener('pointerleave', hidePlayerLater);
+    playerElement.addEventListener('focusin', showPlayer);
+    playerElement.addEventListener('focusout', hidePlayerLater);
 }
 
 function copyCode(button) {
