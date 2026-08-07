@@ -825,6 +825,17 @@ function initHomeCommandPalette() {
             });
             resultsElement.appendChild(button);
         });
+
+        const selectedElement = resultsElement.querySelector('.home-command-result.is-selected');
+        if (selectedElement) {
+            const selectedTop = selectedElement.offsetTop;
+            const selectedBottom = selectedTop + selectedElement.offsetHeight;
+            if (selectedTop < resultsElement.scrollTop) {
+                resultsElement.scrollTop = selectedTop;
+            } else if (selectedBottom > resultsElement.scrollTop + resultsElement.clientHeight) {
+                resultsElement.scrollTop = selectedBottom - resultsElement.clientHeight;
+            }
+        }
     };
 
     const updateResults = () => {

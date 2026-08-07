@@ -256,7 +256,7 @@ body {
 .home-command-shell {
     position: relative;
     width: min(780px, 100%);
-    transform: translateY(clamp(-48px, -4vh, -24px));
+    transform: translateY(clamp(-52px, calc(-4vh - 4px), -28px));
 }
 
 .home-command-input {
@@ -297,7 +297,7 @@ body {
     top: calc(100% + 10px);
     left: 0;
     right: 0;
-    max-height: min(480px, calc(100svh - 220px));
+    max-height: min(360px, calc(100svh - 250px));
     overflow-x: hidden;
     overflow-y: auto;
     border: 1px solid var(--soft-border-color);
@@ -310,8 +310,8 @@ body {
 .home-command-result {
     width: 100%;
     display: grid;
-    gap: 4px;
-    padding: 13px 16px;
+    gap: 2px;
+    padding: 10px 14px;
     border: 0;
     border-bottom: 1px solid var(--soft-border-color);
     background: transparent;
@@ -338,20 +338,20 @@ body {
 .home-command-result-snippet,
 .home-command-message {
     color: var(--muted-color);
-    font-size: 13px;
-    line-height: 1.5;
+    font-size: 12px;
+    line-height: 1.35;
 }
 
 .home-command-result-snippet {
     overflow: hidden;
     display: -webkit-box;
     -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
+    -webkit-line-clamp: 1;
 }
 
 .home-command-message {
     margin: 0;
-    padding: 14px 16px;
+    padding: 12px 14px;
 }
 
 .card {
