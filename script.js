@@ -208,7 +208,7 @@ const musicTracks = [
 ];
 
 const defaultSiteSettings = {
-    backgroundMode: 'phosphor-30',
+    backgroundMode: 'quantum-nebula',
     starCount: 200,
     minRadius: 0.4,
     maxRadius: 1.2,
@@ -252,7 +252,18 @@ const defaultSiteSettings = {
     tubesLightIntensity: 200,
     phosphorSpeed: 1,
     phosphorBrightness: 1,
-    phosphorPixelRatio: 1
+    phosphorPixelRatio: 1,
+    nebulaCount: 50000,
+    nebulaPointSize: 0.02,
+    nebulaBoxSize: 5,
+    nebulaBaseHue: 200,
+    nebulaHueVariance: 20,
+    nebulaNoiseSpeed: 0.1,
+    nebulaNoiseScale: 1.2,
+    nebulaMouseRepulsion: 0.005,
+    nebulaFriction: 0.95,
+    nebulaBrightness: 1,
+    nebulaPixelRatio: 1
 };
 
 const tubesColorSettingKeys = [
@@ -273,7 +284,8 @@ const settingsGroups = [
                     { value: 'starfield', label: '星空' },
                     { value: 'neural-noise', label: 'Neural Noise' },
                     { value: 'tubes-cursor', label: 'Tubes Cursor' },
-                    { value: 'phosphor-30', label: 'Phosphor 30' }
+                    { value: 'phosphor-30', label: 'Phosphor 30' },
+                    { value: 'quantum-nebula', label: 'Quantum Nebula' }
                 ]
             },
             { key: 'neuralHue', label: 'Neural Noise 色相', min: 0, max: 360, step: 1 },
@@ -302,6 +314,22 @@ const settingsGroups = [
             { key: 'phosphorSpeed', label: '动画速度', min: 0, max: 2, step: 0.05 },
             { key: 'phosphorBrightness', label: '画面亮度', min: 0, max: 2, step: 0.05 },
             { key: 'phosphorPixelRatio', label: '渲染倍率', min: 0.5, max: 1.5, step: 0.1 }
+        ]
+    },
+    {
+        title: 'Quantum Nebula 参数',
+        controls: [
+            { key: 'nebulaCount', label: '粒子数量', min: 1000, max: 50000, step: 1000 },
+            { key: 'nebulaPointSize', label: '粒子大小', min: 0.005, max: 0.08, step: 0.005 },
+            { key: 'nebulaBoxSize', label: '粒子范围', min: 2, max: 10, step: 0.5 },
+            { key: 'nebulaBaseHue', label: '基础色相', min: 0, max: 360, step: 1 },
+            { key: 'nebulaHueVariance', label: '色相变化', min: 0, max: 180, step: 1 },
+            { key: 'nebulaNoiseSpeed', label: '流动速度', min: 0, max: 1, step: 0.01 },
+            { key: 'nebulaNoiseScale', label: '流动尺度', min: 0.1, max: 3, step: 0.1 },
+            { key: 'nebulaMouseRepulsion', label: '鼠标排斥', min: 0, max: 0.05, step: 0.001 },
+            { key: 'nebulaFriction', label: '流动阻尼', min: 0.5, max: 1, step: 0.01 },
+            { key: 'nebulaBrightness', label: '发光强度', min: 0, max: 2, step: 0.05 },
+            { key: 'nebulaPixelRatio', label: '渲染倍率', min: 0.5, max: 1.5, step: 0.1 }
         ]
     },
     {
@@ -441,7 +469,7 @@ function normalizeSiteSettings(settings) {
     tubesColorSettingKeys.forEach(key => {
         nextSettings[key] = /^#[0-9a-f]{6}$/i.test(nextSettings[key]) ? nextSettings[key] : defaultSiteSettings[key];
     });
-    nextSettings.backgroundMode = ['starfield', 'neural-noise', 'tubes-cursor', 'phosphor-30'].includes(nextSettings.backgroundMode)
+    nextSettings.backgroundMode = ['starfield', 'neural-noise', 'tubes-cursor', 'phosphor-30', 'quantum-nebula'].includes(nextSettings.backgroundMode)
         ? nextSettings.backgroundMode
         : 'starfield';
     nextSettings.starCount = Math.max(0, Math.floor(nextSettings.starCount));
@@ -916,6 +944,12 @@ function getCommandPaletteCommands(query) {
             meta: '背景命令',
             keywords: 'phosphor 30 荧光 着色器 背景 动效',
             run: () => updateBackgroundMode('phosphor-30')
+        },
+        {
+            title: '切换为 Quantum Nebula',
+            meta: '背景命令',
+            keywords: 'quantum nebula 粒子 星云 背景 动效',
+            run: () => updateBackgroundMode('quantum-nebula')
         },
         {
             title: '打开设置',
@@ -2946,6 +2980,15 @@ function initBackgroundController() {
         }
     });
     if (!phosphor30) return;
+    const quantumNebula = initQuantumNebula({
+        onReady() {
+            if (appliedSettings.backgroundMode === 'quantum-nebula') starfield.setActive(false);
+        },
+        onUnavailable() {
+            if (appliedSettings.backgroundMode === 'quantum-nebula') starfield.setActive(true);
+        }
+    });
+    if (!quantumNebula) return;
 
     backgroundController = {
         applySettings(nextSettings) {
@@ -2955,10 +2998,21 @@ function initBackgroundController() {
             neuralNoise.applySettings(settings);
             tubesCursor.applySettings(settings);
             phosphor30.applySettings(settings);
+            quantumNebula.applySettings(settings);
+
+            if (settings.backgroundMode === 'quantum-nebula') {
+                neuralNoise.setActive(false);
+                tubesCursor.setActive(false);
+                phosphor30.setActive(false);
+                quantumNebula.setActive(true);
+                starfield.setActive(!quantumNebula.isReady());
+                return;
+            }
 
             if (settings.backgroundMode === 'phosphor-30') {
                 neuralNoise.setActive(false);
                 tubesCursor.setActive(false);
+                quantumNebula.setActive(false);
                 phosphor30.setActive(true);
                 starfield.setActive(!phosphor30.isReady());
                 return;
@@ -2967,6 +3021,7 @@ function initBackgroundController() {
             if (settings.backgroundMode === 'tubes-cursor') {
                 neuralNoise.setActive(false);
                 phosphor30.setActive(false);
+                quantumNebula.setActive(false);
                 tubesCursor.setActive(true);
                 starfield.setActive(!tubesCursor.isReady());
                 return;
@@ -2974,6 +3029,7 @@ function initBackgroundController() {
 
             tubesCursor.setActive(false);
             phosphor30.setActive(false);
+            quantumNebula.setActive(false);
 
             if (settings.backgroundMode === 'neural-noise' && neuralNoise.setActive(true)) {
                 starfield.setActive(false);
@@ -3103,6 +3159,231 @@ function initTubesCursor({ onReady, onUnavailable }) {
         isReady() {
             return Boolean(app);
         }
+    };
+}
+
+function initQuantumNebula({ onReady, onUnavailable }) {
+    const canvas = document.getElementById('quantum-nebula');
+    const layer = document.getElementById('quantum-nebula-layer');
+    if (!canvas || !layer) return null;
+
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const vertexSource = `#version 300 es
+        precision highp float;
+        layout(location = 0) in vec3 a_position;
+        layout(location = 1) in vec3 a_color;
+        uniform float u_time;
+        uniform float u_noise_speed;
+        uniform float u_noise_scale;
+        uniform float u_mouse_repulsion;
+        uniform float u_friction;
+        uniform float u_point_size;
+        uniform vec2 u_mouse;
+        uniform float u_pixel_ratio;
+        out vec3 v_color;
+        void main() {
+            float t = u_time * u_noise_speed;
+            vec3 p = a_position;
+            vec3 flow = vec3(
+                sin(p.y * u_noise_scale + t),
+                cos(p.z * u_noise_scale + t * 1.13),
+                sin(p.x * u_noise_scale - t * 0.83)
+            );
+            p += flow * (1.15 - u_friction) * 1.8;
+            vec2 delta = p.xy - u_mouse * 2.5;
+            float distanceToMouse = length(delta);
+            if (distanceToMouse < 1.3) {
+                p.xy += normalize(delta + 0.0001) * (1.3 - distanceToMouse) * u_mouse_repulsion * 42.0;
+            }
+            float depth = 5.0 - p.z * 0.32;
+            vec2 projected = p.xy / max(depth, 1.0);
+            gl_Position = vec4(projected, 0.0, 1.0);
+            gl_PointSize = max(1.0, u_point_size * u_pixel_ratio * 120.0 / max(depth, 1.0));
+            v_color = a_color;
+        }
+    `;
+    const fragmentSource = `#version 300 es
+        precision highp float;
+        in vec3 v_color;
+        uniform float u_brightness;
+        out vec4 fragColor;
+        void main() {
+            float distanceToCenter = length(gl_PointCoord - vec2(0.5)) * 2.0;
+            float alpha = 1.0 - smoothstep(0.25, 1.0, distanceToCenter);
+            if (alpha < 0.01) discard;
+            fragColor = vec4(v_color * u_brightness, alpha);
+        }
+    `;
+
+    let gl = null;
+    let program = null;
+    let vao = null;
+    let positionBuffer = null;
+    let colorBuffer = null;
+    let uniforms = null;
+    let particleCount = 0;
+    let animationFrameId = null;
+    let resourcesReady = false;
+    let isActive = false;
+    let wantsActive = false;
+    let startTime = 0;
+    let settings = normalizeSiteSettings(loadSiteSettings());
+    let lastParticleSignature = '';
+
+    function getPixelRatio() {
+        return Math.max(0.5, Math.min(settings.nebulaPixelRatio, window.devicePixelRatio || 1, window.innerWidth < 768 ? 1 : 1.5));
+    }
+
+    function compileShader(type, source) {
+        const shader = gl.createShader(type);
+        gl.shaderSource(shader, source);
+        gl.compileShader(shader);
+        if (gl.getShaderParameter(shader, gl.COMPILE_STATUS)) return shader;
+        console.error('Quantum Nebula shader compile error:', gl.getShaderInfoLog(shader));
+        gl.deleteShader(shader);
+        return null;
+    }
+
+    function releaseResources() {
+        if (animationFrameId) cancelAnimationFrame(animationFrameId);
+        animationFrameId = null;
+        if (gl) {
+            if (positionBuffer) gl.deleteBuffer(positionBuffer);
+            if (colorBuffer) gl.deleteBuffer(colorBuffer);
+            if (vao) gl.deleteVertexArray(vao);
+            if (program) gl.deleteProgram(program);
+        }
+        program = null; vao = null; positionBuffer = null; colorBuffer = null; uniforms = null;
+        resourcesReady = false;
+    }
+
+    function hslToRgb(hue, saturation, lightness) {
+        const h = ((hue % 360) + 360) % 360 / 360;
+        const s = saturation / 100;
+        const l = lightness / 100;
+        const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+        const p = 2 * l - q;
+        const channel = value => {
+            const t = (value + 1) % 1;
+            if (t < 1 / 6) return p + (q - p) * 6 * t;
+            if (t < 1 / 2) return q;
+            if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
+            return p;
+        };
+        return [channel(h + 1 / 3), channel(h), channel(h - 1 / 3)];
+    }
+
+    function rebuildParticles() {
+        if (!gl || !resourcesReady) return;
+        particleCount = Math.floor(settings.nebulaCount);
+        const positions = new Float32Array(particleCount * 3);
+        const colors = new Float32Array(particleCount * 3);
+        for (let index = 0; index < particleCount; index++) {
+            const offset = index * 3;
+            positions[offset] = (Math.random() - 0.5) * settings.nebulaBoxSize;
+            positions[offset + 1] = (Math.random() - 0.5) * settings.nebulaBoxSize;
+            positions[offset + 2] = (Math.random() - 0.5) * settings.nebulaBoxSize;
+            const [red, green, blue] = hslToRgb(settings.nebulaBaseHue + (Math.random() - 0.5) * settings.nebulaHueVariance, 100, 60);
+            colors[offset] = red;
+            colors[offset + 1] = green;
+            colors[offset + 2] = blue;
+        }
+        gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+        gl.bufferData(gl.ARRAY_BUFFER, positions, gl.STATIC_DRAW);
+        gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
+        gl.bufferData(gl.ARRAY_BUFFER, colors, gl.STATIC_DRAW);
+        lastParticleSignature = `${settings.nebulaCount}|${settings.nebulaBoxSize}|${settings.nebulaBaseHue}|${settings.nebulaHueVariance}`;
+    }
+
+    function resizeCanvas() {
+        if (!gl || !resourcesReady || !isActive) return;
+        const width = Math.max(1, Math.floor(layer.clientWidth * getPixelRatio()));
+        const height = Math.max(1, Math.floor(layer.clientHeight * getPixelRatio()));
+        if (canvas.width !== width || canvas.height !== height) {
+            canvas.width = width;
+            canvas.height = height;
+            gl.viewport(0, 0, width, height);
+        }
+    }
+
+    function setupResources() {
+        gl = canvas.getContext('webgl2', { alpha: false, antialias: false });
+        if (!gl) return false;
+        const vertexShader = compileShader(gl.VERTEX_SHADER, vertexSource);
+        const fragmentShader = compileShader(gl.FRAGMENT_SHADER, fragmentSource);
+        if (!vertexShader || !fragmentShader) return false;
+        program = gl.createProgram();
+        gl.attachShader(program, vertexShader); gl.attachShader(program, fragmentShader); gl.linkProgram(program);
+        gl.deleteShader(vertexShader); gl.deleteShader(fragmentShader);
+        if (!gl.getProgramParameter(program, gl.LINK_STATUS)) { releaseResources(); return false; }
+        vao = gl.createVertexArray();
+        positionBuffer = gl.createBuffer();
+        colorBuffer = gl.createBuffer();
+        if (!vao || !positionBuffer || !colorBuffer) { releaseResources(); return false; }
+        gl.bindVertexArray(vao);
+        gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+        gl.enableVertexAttribArray(0); gl.vertexAttribPointer(0, 3, gl.FLOAT, false, 0, 0);
+        gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
+        gl.enableVertexAttribArray(1); gl.vertexAttribPointer(1, 3, gl.FLOAT, false, 0, 0);
+        gl.bindVertexArray(null);
+        uniforms = ['time', 'noiseSpeed', 'noiseScale', 'mouseRepulsion', 'friction', 'pointSize', 'mouse', 'pixelRatio', 'brightness']
+            .reduce((result, key) => ({ ...result, [key]: gl.getUniformLocation(program, `u_${key.replace(/[A-Z]/g, char => `_${char.toLowerCase()}`)}`) }), {});
+        gl.enable(gl.BLEND); gl.blendFunc(gl.SRC_ALPHA, gl.ONE); gl.disable(gl.DEPTH_TEST); gl.clearColor(0, 0, 0, 1);
+        resourcesReady = true;
+        rebuildParticles();
+        resizeCanvas();
+        return true;
+    }
+
+    function draw(now) {
+        animationFrameId = null;
+        if (!isActive || !resourcesReady || document.hidden || reducedMotion.matches || gl.isContextLost()) return;
+        gl.useProgram(program); gl.clear(gl.COLOR_BUFFER_BIT);
+        gl.uniform1f(uniforms.time, (now - startTime) / 1000);
+        gl.uniform1f(uniforms.noiseSpeed, settings.nebulaNoiseSpeed);
+        gl.uniform1f(uniforms.noiseScale, settings.nebulaNoiseScale);
+        gl.uniform1f(uniforms.mouseRepulsion, settings.nebulaMouseRepulsion);
+        gl.uniform1f(uniforms.friction, settings.nebulaFriction);
+        gl.uniform1f(uniforms.pointSize, settings.nebulaPointSize);
+        gl.uniform2f(uniforms.mouse, mouse.x, mouse.y);
+        gl.uniform1f(uniforms.pixelRatio, getPixelRatio());
+        gl.uniform1f(uniforms.brightness, settings.nebulaBrightness);
+        gl.bindVertexArray(vao); gl.drawArrays(gl.POINTS, 0, particleCount); gl.bindVertexArray(null);
+        animationFrameId = requestAnimationFrame(draw);
+    }
+
+    const mouse = { x: 0, y: 0 };
+    const updateMouse = event => { mouse.x = event.clientX / Math.max(1, window.innerWidth) * 2 - 1; mouse.y = -(event.clientY / Math.max(1, window.innerHeight) * 2 - 1); };
+    const restart = resetTime => { if (animationFrameId) cancelAnimationFrame(animationFrameId); if (isActive && resourcesReady && !document.hidden && !reducedMotion.matches) { if (resetTime) startTime = performance.now(); draw(performance.now()); } };
+    const resizeObserver = new ResizeObserver(() => { resizeCanvas(); restart(false); });
+    resizeObserver.observe(layer);
+    window.addEventListener('pointermove', updateMouse, { passive: true });
+    document.addEventListener('visibilitychange', () => restart(false));
+
+    function setActive(active) {
+        wantsActive = Boolean(active);
+        if (!wantsActive || reducedMotion.matches) {
+            isActive = false; layer.hidden = true; layer.style.opacity = ''; releaseResources(); if (wantsActive) onUnavailable(); return !wantsActive;
+        }
+        if (isActive && resourcesReady) { layer.hidden = false; layer.style.opacity = '1'; restart(false); return true; }
+        isActive = true; layer.hidden = false; layer.style.opacity = '0'; releaseResources();
+        if (!setupResources()) { isActive = false; layer.hidden = true; layer.style.opacity = ''; onUnavailable(); return false; }
+        layer.style.opacity = '1'; onReady(); restart(true); return true;
+    }
+
+    reducedMotion.addEventListener('change', () => { if (wantsActive) setActive(true); });
+    canvas.addEventListener('webglcontextlost', event => { event.preventDefault(); resourcesReady = false; layer.hidden = true; onUnavailable(); });
+    canvas.addEventListener('webglcontextrestored', () => { if (wantsActive) setActive(true); });
+
+    return {
+        applySettings(nextSettings) {
+            settings = normalizeSiteSettings(nextSettings);
+            const signature = `${settings.nebulaCount}|${settings.nebulaBoxSize}|${settings.nebulaBaseHue}|${settings.nebulaHueVariance}`;
+            if (isActive && signature !== lastParticleSignature) rebuildParticles();
+            if (isActive) { resizeCanvas(); restart(false); }
+        },
+        setActive,
+        isReady: () => resourcesReady
     };
 }
 
